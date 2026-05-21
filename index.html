@@ -496,9 +496,14 @@ function generatePreview(){
 
   var blob=new Blob([html],{type:'text/html'});
   var url=URL.createObjectURL(blob);
-  var w=window.open(url,'_blank');
-  if(!w){showToast('Allow pop-ups to open the preview');}
-  else showToast('Preview opened in new tab');
+    var a = document.createElement('a');
+  a.href = url;
+  a.target = '_blank';
+  a.rel = 'noopener noreferrer';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  showToast('Preview opened!');
 }
 
 function fr(label,value){

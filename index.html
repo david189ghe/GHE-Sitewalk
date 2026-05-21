@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>GHE Site Walk</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --green:#1a5c3a;--green-dark:#154d31;--green-light:#e8f2ec;
+  --warn:#92400e;--warn-bg:#fef3c7;--warn-border:#fcd34d;
+  --info:#1e40af;--info-bg:#eff6ff;--info-border:#93c5fd;
+  --danger:#991b1b;--danger-bg:#fef2f2;
+  --border:#e5e7eb;--bg:#f3f4f6;--surface:#fff;
+  --text:#111827;--muted:#6b7280;--subtle:#9ca3af;
+  --radius:12px;--radius-sm:8px;
+  font-family:'DM Sans',sans-serif;
+}
+body{background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:48px}
+.app-bar{background:var(--green);padding:0 18px;height:54px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:20;box-shadow:0 2px 8px rgba(0,0,0,.15)}
+.app-bar-brand{display:flex;align-items:center;gap:10px}
+.app-bar-monogram{width:32px;height:32px;background:rgba(255,255,255,.15);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;letter-spacing:.5px}
+.app-bar-title{color:#fff;font-size:13px;font-weight:500;opacity:.9}
+.progress-wrap{height:3px;background:rgba(255,255,255,.0);background-color:#d1fae5}
+.progress-fill{height:100%;background:var(--green);transition:width .4s cubic-bezier(.4,0,.2,1)}
+.step-row{display:flex;padding:10px 18px 2px;max-width:540px;margin:0 auto}
+.step-lbl{flex:1;text-align:center;font-size:11px;color:var(--subtle);font-weight:500;text-transform:uppercase;letter-spacing:.05em;transition:color .3s}
+.step-lbl.active{color:var(--green);font-weight:600}
+.step-lbl.done{color:var(--green);opacity:.55}
+.page{display:none;padding:10px 16px 20px;max-width:540px;margin:0 auto}
+.page.active{display:block}
+.sec-head{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin:14px 0 7px;display:flex;align-items:center;gap:5px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:15px;margin-bottom:11px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.fl{margin-bottom:12px}
+.fl:last-child{margin-bottom:0}
+.fl label{display:block;font-size:11px;font-weight:700;color:var(--muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:.05em}
+input[type=text],input[type=date],select,textarea{width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-family:'DM Sans',sans-serif;font-size:14px;color:var(--text);background:var(--surface);outline:none;transition:border-color .15s;-webkit-appearance:none}
+input:focus,select:focus,textarea:focus{border-color:var(--green)}
+textarea{resize:vertical;min-height:76px;line-height:1.55}
+.date-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.vendor-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:6px}
+.vbtn{padding:11px 8px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer;background:var(--surface);color:var(--muted);text-align:center;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:6px}
+.vbtn.on-g{background:var(--green-light);color:var(--green);border-color:var(--green)}
+.vbtn.on-b{background:var(--info-bg);color:var(--info);border-color:var(--info-border)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-top:6px}
+.wbtn,.fbtn{padding:9px 6px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;cursor:pointer;background:var(--surface);color:var(--muted);text-align:center;transition:all .15s}
+.wbtn:hover{border-color:var(--green);color:var(--green)}
+.wbtn.on{background:var(--green);color:#fff;border-color:var(--green)}
+.fbtn:hover{border-color:var(--warn);color:var(--warn)}
+.fbtn.on{background:var(--warn-bg);color:var(--warn);border-color:var(--warn-border)}
+.photo-strip{display:flex;flex-wrap:wrap;gap:7px;margin-top:8px}
+.pthumb-wrap{position:relative}
+.pthumb{width:72px;height:72px;object-fit:cover;border-radius:var(--radius-sm);border:1px solid var(--border)}
+.pdel{position:absolute;top:-5px;right:-5px;width:19px;height:19px;border-radius:50%;background:var(--danger-bg);color:var(--danger);border:1px solid #fca5a5;cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;font-family:'DM Sans',sans-serif;line-height:1}
+.padd{width:72px;height:72px;border-radius:var(--radius-sm);border:1.5px dashed var(--border);background:var(--bg);cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:var(--subtle);font-size:11px;font-family:'DM Sans',sans-serif;transition:all .15s}
+.padd:hover{border-color:var(--green);color:var(--green)}
+.padd svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.5}
+.addbtn{width:100%;padding:13px;background:var(--green);color:#fff;border:none;border-radius:var(--radius-sm);font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;transition:background .15s}
+.addbtn:hover{background:var(--green-dark)}
+.addbtn svg,.nbtn svg,.bbtn svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;flex-shrink:0}
+.area-card{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--green);border-radius:var(--radius);padding:12px 13px;margin-bottom:8px}
+.area-hd{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px}
+.area-nm{font-size:14px;font-weight:600}
+.area-ob{font-size:12px;color:var(--muted);line-height:1.5;margin-bottom:6px}
+.tags{display:flex;flex-wrap:wrap;gap:4px}
+.tag{font-size:11px;font-weight:500;padding:2px 8px;border-radius:20px}
+.tg{background:var(--green-light);color:var(--green)}
+.tb{background:var(--info-bg);color:var(--info)}
+.tw{background:var(--warn-bg);color:var(--warn)}
+.tn{background:#f3f4f6;color:var(--muted);border:1px solid var(--border)}
+.rmbtn{background:none;border:none;cursor:pointer;color:var(--subtle);padding:1px;font-size:18px;line-height:1;flex-shrink:0}
+.rmbtn:hover{color:var(--danger)}
+.empty{text-align:center;padding:18px 0;color:var(--subtle);font-size:13px}
+.qrow{display:flex;gap:8px;margin-top:10px}
+.qrow input{flex:1;padding:10px 12px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-family:'DM Sans',sans-serif;font-size:14px;outline:none}
+.qrow input:focus{border-color:var(--green)}
+.qadd{padding:0 14px;border:1.5px solid var(--border);border-radius:var(--radius-sm);background:var(--surface);cursor:pointer;font-size:20px;color:var(--muted);font-family:'DM Sans',sans-serif;transition:all .15s}
+.qadd:hover{border-color:var(--green);color:var(--green)}
+.qitem{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px}
+.qitem:last-child{border-bottom:none}
+.nav{display:flex;flex-direction:column;gap:8px;margin-top:8px}
+.nbtn{width:100%;padding:14px;background:var(--green);color:#fff;border:none;border-radius:var(--radius-sm);font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;transition:background .15s}
+.nbtn:hover{background:var(--green-dark)}
+.bbtn{width:100%;padding:12px;background:transparent;color:var(--muted);border:1.5px solid var(--border);border-radius:var(--radius-sm);font-family:'DM Sans',sans-serif;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;transition:all .15s}
+.bbtn:hover{background:var(--bg)}
+.gen-btn{width:100%;padding:18px;background:var(--green);color:#fff;border:none;border-radius:var(--radius-sm);font-family:'DM Sans',sans-serif;font-size:16px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:background .15s;letter-spacing:.2px}
+.gen-btn:hover{background:var(--green-dark)}
+.gen-btn svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#111827;color:#fff;padding:10px 18px;border-radius:99px;font-size:13px;font-weight:500;opacity:0;transition:opacity .3s;pointer-events:none;z-index:100;white-space:nowrap}
+.toast.show{opacity:1}
+</style>
+</head>
+<body>
+
+<div class="app-bar">
+  <div class="app-bar-brand">
+    <div class="app-bar-monogram">GHE</div>
+    <div class="app-bar-title">Site walk capture</div>
+  </div>
+</div>
+<div class="progress-wrap"><div class="progress-fill" id="prog" style="width:25%"></div></div>
+<div class="step-row">
+  <div class="step-lbl active" id="sl0">Project</div>
+  <div class="step-lbl" id="sl1">Areas</div>
+  <div class="step-lbl" id="sl2">Questions</div>
+  <div class="step-lbl" id="sl3">Preview</div>
+</div>
+
+<!-- PAGE 0 -->
+<div class="page active" id="page0">
+  <div class="sec-head">Project info</div>
+  <div class="card">
+    <div class="fl"><label>Client name</label><input type="text" id="p-client" placeholder="Company or contact name"></div>
+    <div class="fl"><label>Site address</label><input type="text" id="p-address" placeholder="Full address"></div>
+    <div class="fl"><label>Project type</label>
+      <select id="p-type"><option value="">— select —</option><option>TI</option><option>Aviation</option><option>Industrial</option><option>Ground-up</option><option>Other</option></select>
+    </div>
+    <div class="fl"><label>Walk conducted by</label><input type="text" id="p-walker" placeholder="Your name and title"></div>
+    <div class="date-row">
+      <div class="fl"><label>Proposal due date</label><input type="date" id="p-due"></div>
+      <div class="fl"><label>Work start date</label><input type="date" id="p-start"></div>
+    </div>
+    <div class="fl"><label>Overall scope description</label><textarea id="p-scope" placeholder="Brief description of what the client is requesting..."></textarea></div>
+  </div>
+  <div class="nav">
+    <button class="nbtn" onclick="goTo(1)">
+      <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      Start capturing areas
+    </button>
+  </div>
+</div>
+
+<!-- PAGE 1 -->
+<div class="page" id="page1">
+  <div class="sec-head">Add area or room</div>
+  <div class="card">
+    <div class="fl"><label>Area / room name</label><input type="text" id="a-name" placeholder="e.g. Main lobby, Suite 400, Restrooms..."></div>
+    <div class="fl"><label>Observations</label><textarea id="a-obs" placeholder="What did you see? What is the client asking for in this space?"></textarea></div>
+    <div class="fl"><label>Quantities (if known)</label><input type="text" id="a-qty" placeholder="e.g. 400 SF, 12 doors, 3 restrooms..."></div>
+    <div class="fl">
+      <label>Work performed by</label>
+      <div class="vendor-row">
+        <button class="vbtn" id="vbtn-ih" onclick="toggleVendor('inhouse')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          In house
+        </button>
+        <button class="vbtn" id="vbtn-ov" onclick="toggleVendor('outside')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+          Outside vendors
+        </button>
+      </div>
+    </div>
+    <div class="fl">
+      <label>Type of work</label>
+      <div class="grid2">
+        <button class="wbtn" onclick="toggleWork(this,'Demo')">Demo</button>
+        <button class="wbtn" onclick="toggleWork(this,'Framing')">Framing</button>
+        <button class="wbtn" onclick="toggleWork(this,'Drywall')">Drywall</button>
+        <button class="wbtn" onclick="toggleWork(this,'Ceiling')">Ceiling</button>
+        <button class="wbtn" onclick="toggleWork(this,'Electrical')">Electrical</button>
+        <button class="wbtn" onclick="toggleWork(this,'HVAC')">HVAC</button>
+        <button class="wbtn" onclick="toggleWork(this,'Plumbing')">Plumbing</button>
+        <button class="wbtn" onclick="toggleWork(this,'Fire protection')">Fire protection</button>
+        <button class="wbtn" onclick="toggleWork(this,'Flooring')">Flooring</button>
+        <button class="wbtn" onclick="toggleWork(this,'Painting')">Painting</button>
+        <button class="wbtn" onclick="toggleWork(this,'Doors &amp; hardware')">Doors &amp; hardware</button>
+        <button class="wbtn" onclick="toggleWork(this,'Concrete')">Concrete</button>
+        <button class="wbtn" onclick="toggleWork(this,'Fencing')">Fencing</button>
+        <button class="wbtn" onclick="toggleWork(this,'SwiftWall')">SwiftWall</button>
+        <button class="wbtn" onclick="toggleWork(this,'Other')">Other</button>
+      </div>
+    </div>
+    <div class="fl">
+      <label>Site flags</label>
+      <div class="grid2">
+        <button class="fbtn" onclick="toggleFlag(this,'Occupied space')">Occupied space</button>
+        <button class="fbtn" onclick="toggleFlag(this,'After hours only')">After hours only</button>
+        <button class="fbtn" onclick="toggleFlag(this,'Hazmat concern')">Hazmat concern</button>
+        <button class="fbtn" onclick="toggleFlag(this,'Access restricted')">Access restricted</button>
+        <button class="fbtn" onclick="toggleFlag(this,'Scope unclear')">Scope unclear</button>
+        <button class="fbtn" onclick="toggleFlag(this,'Verify dimensions')">Verify dimensions</button>
+      </div>
+    </div>
+    <div class="fl"><label>Client verbal requests in this area</label><textarea id="a-verbal" placeholder="Anything the client said that isn't on drawings — captured as UNCONFIRMED..."></textarea></div>
+    <div class="fl">
+      <label>Photos for this area</label>
+      <div class="photo-strip" id="photo-strip">
+        <button class="padd" onclick="document.getElementById('pf-lib').click()">
+          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          Library
+        </button>
+        <button class="padd" onclick="document.getElementById('pf-cam').click()">
+          <svg viewBox="0 0 24 24"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
+          Camera
+        </button>
+      </div>
+      <input type="file" id="pf-lib" accept="image/*" multiple style="display:none" onchange="handlePhotos(event)">
+      <input type="file" id="pf-cam" accept="image/*" capture="environment" style="display:none" onchange="handlePhotos(event)">
+    </div>
+    <button class="addbtn" onclick="addArea()">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>
+      Add area to walk
+    </button>
+  </div>
+  <div class="sec-head">Areas captured</div>
+  <div id="areas-list"><div class="empty">No areas added yet</div></div>
+  <div class="nav" style="margin-top:8px">
+    <button class="nbtn" onclick="goTo(2)">
+      <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      Continue to open questions
+    </button>
+    <button class="bbtn" onclick="goTo(0)">
+      <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      Back
+    </button>
+  </div>
+</div>
+
+<!-- PAGE 2 -->
+<div class="page" id="page2">
+  <div class="sec-head">Open questions for estimator</div>
+  <div class="card">
+    <p style="font-size:13px;color:var(--muted);margin-bottom:10px">Things the estimator must follow up on before pricing.</p>
+    <div id="q-list"></div>
+    <div class="qrow">
+      <input type="text" id="q-input" placeholder="Type a question and press Enter or +">
+      <button class="qadd" onclick="addQ()">+</button>
+    </div>
+  </div>
+  <div class="sec-head">Additional notes</div>
+  <div class="card">
+    <textarea id="p-notes" placeholder="Parking, site logistics, client personality, anything else the estimator needs to know..."></textarea>
+  </div>
+  <div class="nav">
+    <button class="nbtn" onclick="goTo(3)">
+      <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      Continue to preview
+    </button>
+    <button class="bbtn" onclick="goTo(1)">
+      <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      Back
+    </button>
+  </div>
+</div>
+
+<!-- PAGE 3 -->
+<div class="page" id="page3">
+  <div class="sec-head">Ready to generate</div>
+  <div class="card" style="text-align:center;padding:20px 16px">
+    <div style="font-size:15px;font-weight:600;margin-bottom:8px">Your site walk is complete</div>
+    <div style="font-size:13px;color:var(--muted);margin-bottom:18px;line-height:1.6">Tap the button below to open a full branded preview in a new tab. From there you can save as PDF, share via email, text, AirDrop, or print.</div>
+    <button class="gen-btn" onclick="generatePreview()">
+      <svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+      Generate preview
+    </button>
+    <div style="margin-top:14px;font-size:12px;color:var(--subtle)">Opens in a new tab &mdash; use your browser&rsquo;s share button to send or save</div>
+  </div>
+  <div class="nav" style="margin-top:4px">
+    <button class="bbtn" onclick="goTo(2)">
+      <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      Back
+    </button>
+    <button class="bbtn" onclick="startOver()">
+      <svg viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/></svg>
+      New site walk
+    </button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+var areas=[],questions=[],curVendor=[],curWork=[],curFlags=[],curPhotos=[];
+
+function goTo(n){
+  [0,1,2,3].forEach(function(i){
+    document.getElementById('page'+i).classList.toggle('active',i===n);
+    var s=document.getElementById('sl'+i);
+    s.className='step-lbl'+(i<n?' done':i===n?' active':'');
+  });
+  document.getElementById('prog').style.width=((n+1)/4*100)+'%';
+  window.scrollTo(0,0);
+}
+function toggleVendor(v){
+  var ih=document.getElementById('vbtn-ih'),ov=document.getElementById('vbtn-ov');
+  if(v==='inhouse'){
+    ih.classList.toggle('on-g');
+    if(ih.classList.contains('on-g')){if(!curVendor.includes('In house'))curVendor.push('In house');}
+    else curVendor=curVendor.filter(function(x){return x!=='In house';});
+  } else {
+    ov.classList.toggle('on-b');
+    if(ov.classList.contains('on-b')){if(!curVendor.includes('Outside vendors'))curVendor.push('Outside vendors');}
+    else curVendor=curVendor.filter(function(x){return x!=='Outside vendors';});
+  }
+}
+function toggleWork(btn,name){btn.classList.toggle('on');if(curWork.includes(name))curWork=curWork.filter(function(x){return x!==name;});else curWork.push(name);}
+function toggleFlag(btn,name){btn.classList.toggle('on');if(curFlags.includes(name))curFlags=curFlags.filter(function(x){return x!==name;});else curFlags.push(name);}
+function handlePhotos(e){
+  Array.from(e.target.files).forEach(function(f){
+    var r=new FileReader();
+    r.onload=function(ev){curPhotos.push({name:f.name,data:ev.target.result});renderStrip();};
+    r.readAsDataURL(f);
+  });
+  e.target.value='';
+}
+function delCurPhoto(i){curPhotos.splice(i,1);renderStrip();}
+function renderStrip(){
+  var s=document.getElementById('photo-strip');
+  var h=curPhotos.map(function(p,i){
+    return '<div class="pthumb-wrap"><img src="'+p.data+'" class="pthumb" alt="Photo '+(i+1)+'"><button class="pdel" onclick="delCurPhoto('+i+')">&times;</button></div>';
+  }).join('');
+  h+='<button class="padd" onclick="document.getElementById(\'pf-lib\').click()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="20" height="20"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>Library</button>';
+  h+='<button class="padd" onclick="document.getElementById(\'pf-cam\').click()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="20" height="20"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>Camera</button>';
+  s.innerHTML=h;
+}
+function resetForm(){
+  ['a-name','a-obs','a-qty','a-verbal'].forEach(function(id){document.getElementById(id).value='';});
+  curVendor=[];curWork=[];curFlags=[];curPhotos=[];
+  document.getElementById('vbtn-ih').classList.remove('on-g');
+  document.getElementById('vbtn-ov').classList.remove('on-b');
+  document.querySelectorAll('.wbtn,.fbtn').forEach(function(b){b.classList.remove('on');});
+  renderStrip();
+}
+function addArea(){
+  var nm=document.getElementById('a-name').value.trim();
+  var ob=document.getElementById('a-obs').value.trim();
+  if(!nm&&!ob){showToast('Add a name or observation first');return;}
+  areas.push({name:nm||'Unnamed area',obs:ob,qty:document.getElementById('a-qty').value.trim(),vendor:[].concat(curVendor),work:[].concat(curWork),flags:[].concat(curFlags),verbal:document.getElementById('a-verbal').value.trim(),photos:[].concat(curPhotos)});
+  renderAreas();resetForm();showToast('Area added');
+}
+function delArea(i){areas.splice(i,1);renderAreas();}
+function renderAreas(){
+  var el=document.getElementById('areas-list');
+  if(!areas.length){el.innerHTML='<div class="empty">No areas added yet</div>';return;}
+  el.innerHTML=areas.map(function(a,i){
+    var tags='';
+    a.vendor.forEach(function(v){tags+='<span class="tag '+(v==='In house'?'tg':'tb')+'">'+v+'</span>';});
+    a.work.forEach(function(w){tags+='<span class="tag tg">'+esc(w)+'</span>';});
+    a.flags.forEach(function(f){tags+='<span class="tag tw">&#9888; '+esc(f)+'</span>';});
+    if(a.photos.length)tags+='<span class="tag tn">&#128247; '+a.photos.length+' photo'+(a.photos.length>1?'s':'')+'</span>';
+    return'<div class="area-card"><div class="area-hd"><div class="area-nm">'+esc(a.name)+'</div><button class="rmbtn" onclick="delArea('+i+')">&times;</button></div>'+(a.obs?'<div class="area-ob">'+esc(a.obs)+'</div>':'')+(a.qty?'<div style="font-size:12px;color:var(--muted);margin-bottom:5px">Qty: '+esc(a.qty)+'</div>':'')+'<div class="tags">'+tags+'</div></div>';
+  }).join('');
+}
+function addQ(){var q=document.getElementById('q-input').value.trim();if(!q)return;questions.push(q);document.getElementById('q-input').value='';renderQs();}
+document.addEventListener('keydown',function(e){if(e.key==='Enter'&&document.activeElement===document.getElementById('q-input'))addQ();});
+function delQ(i){questions.splice(i,1);renderQs();}
+function renderQs(){
+  var el=document.getElementById('q-list');
+  if(!questions.length){el.innerHTML='';return;}
+  el.innerHTML=questions.map(function(q,i){return'<div class="qitem"><span style="flex:1">'+esc(q)+'</span><button class="rmbtn" onclick="delQ('+i+')">&times;</button></div>';}).join('');
+}
+function fmtDate(d){if(!d)return'TBD';var p=d.split('-');return p[1]+'/'+p[2]+'/'+p[0];}
+function daysUntil(d){if(!d)return null;return Math.ceil((new Date(d)-new Date())/(1000*60*60*24));}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+function generatePreview(){
+  var client=document.getElementById('p-client').value||'—';
+  var address=document.getElementById('p-address').value||'—';
+  var ptype=document.getElementById('p-type').value||'—';
+  var walker=document.getElementById('p-walker').value||'—';
+  var dueRaw=document.getElementById('p-due').value;
+  var due=fmtDate(dueRaw);
+  var start=fmtDate(document.getElementById('p-start').value);
+  var scope=document.getElementById('p-scope').value||'';
+  var notes=document.getElementById('p-notes').value||'';
+  var days=daysUntil(dueRaw);
+  var allWork=[]; areas.forEach(function(a){a.work.forEach(function(w){if(!allWork.includes(w))allWork.push(w);});});
+  var allFlags=[]; areas.forEach(function(a){a.flags.forEach(function(f){if(!allFlags.includes(f))allFlags.push(f);});});
+  var verbals=areas.filter(function(a){return a.verbal;}).map(function(a){return{area:a.name,text:a.verbal};});
+  var ih=areas.filter(function(a){return a.vendor.includes('In house');}).map(function(a){return a.name;});
+  var ov=areas.filter(function(a){return a.vendor.includes('Outside vendors');}).map(function(a){return a.name;});
+
+  var html='<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">';
+  html+='<title>GHE Site Walk — '+esc(client)+'</title>';
+  html+='<style>';
+  html+='@import url(\'https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,600;0,700;1,400&display=swap\');';
+  html+='*{box-sizing:border-box;margin:0;padding:0}';
+  html+='body{font-family:\'DM Sans\',sans-serif;background:#f3f4f6;color:#111827;padding:0 0 48px}';
+  html+='@media print{body{background:#fff}.no-print{display:none!important}.page-wrap{box-shadow:none!important}}';
+  html+='.header{background:#1a5c3a;color:#fff;padding:18px 24px 16px;display:flex;align-items:center;gap:14px}';
+  html+='.header-mono{width:42px;height:42px;background:rgba(255,255,255,.15);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;letter-spacing:.5px;flex-shrink:0}';
+  html+='.header-text .co{font-size:16px;font-weight:700;letter-spacing:.3px}';
+  html+='.header-text .sub{font-size:12px;opacity:.8;margin-top:2px}';
+  html+='.share-bar{background:#fff;border-bottom:1px solid #e5e7eb;padding:12px 24px;display:flex;align-items:center;justify-content:space-between;gap:10px;position:sticky;top:0;z-index:10}';
+  html+='.share-bar .hint{font-size:12px;color:#6b7280}';
+  html+='.share-bar .hint strong{color:#1a5c3a}';
+  html+='.page-wrap{max-width:700px;margin:20px auto;background:#fff;border-radius:12px;border:1px solid #e5e7eb;overflow:hidden;box-shadow:0 4px 16px rgba(0,0,0,.08)}';
+  html+='.doc-header{background:#1a5c3a;padding:20px 24px;color:#fff}';
+  html+='.doc-header .co{font-size:18px;font-weight:700;letter-spacing:.4px}';
+  html+='.doc-header .sub{font-size:11px;opacity:.75;margin-top:3px;text-transform:uppercase;letter-spacing:.08em}';
+  html+='.doc-header .date{font-size:12px;opacity:.8;margin-top:6px}';
+  html+='.doc-body{padding:0}';
+  html+='.section{padding:16px 24px;border-bottom:1px solid #e5e7eb}';
+  html+='.section:last-child{border-bottom:none}';
+  html+='.sec-title{font-size:10px;font-weight:700;color:#1a5c3a;text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px;padding-bottom:5px;border-bottom:2px solid #e8f2ec}';
+  html+='.field-row{display:grid;grid-template-columns:140px 1fr;gap:4px 12px;margin-bottom:7px;align-items:baseline}';
+  html+='.field-row:last-child{margin-bottom:0}';
+  html+='.fl{font-size:11px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:.05em}';
+  html+='.fv{font-size:14px;color:#111827;font-weight:400;line-height:1.5}';
+  html+='.area-block{background:#f9fafb;border-radius:8px;border-left:3px solid #1a5c3a;padding:12px 14px;margin-bottom:10px}';
+  html+='.area-block:last-child{margin-bottom:0}';
+  html+='.area-title{font-size:14px;font-weight:700;color:#111827;margin-bottom:6px}';
+  html+='.area-row{margin-bottom:5px}';
+  html+='.area-label{font-size:11px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:.05em;display:block;margin-bottom:1px}';
+  html+='.area-value{font-size:13px;color:#111827;font-weight:400;line-height:1.5}';
+  html+='.flag-pill{display:inline-flex;align-items:center;gap:3px;font-size:11px;font-weight:700;padding:3px 9px;border-radius:20px;background:#fef3c7;color:#92400e;margin:2px}';
+  html+='.verbal-box{background:#fffbeb;border:1px solid #fcd34d;border-radius:6px;padding:10px 12px;margin-top:6px}';
+  html+='.verbal-box .vb-label{font-size:10px;font-weight:700;color:#92400e;text-transform:uppercase;letter-spacing:.07em;margin-bottom:3px}';
+  html+='.verbal-box .vb-text{font-size:13px;color:#92400e;font-weight:400;line-height:1.5}';
+  html+='.photos-grid{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}';
+  html+='.photos-grid img{width:90px;height:90px;object-fit:cover;border-radius:6px;border:1px solid #e5e7eb}';
+  html+='.urgency-bar{background:#fef3c7;border:1px solid #fcd34d;padding:10px 16px;display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;color:#92400e}';
+  html+='.sig-row{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:8px}';
+  html+='.sig-line{border-bottom:1.5px solid #111827;height:32px}';
+  html+='.sig-lbl{font-size:10px;color:#6b7280;margin-top:3px;font-weight:700;text-transform:uppercase;letter-spacing:.05em}';
+  html+='</style></head><body>';
+
+  html+='<div class="header"><div class="header-mono">GHE</div><div class="header-text"><div class="co">Green Heart Enterprises</div><div class="sub">General Contractors — Site Walk Report</div></div></div>';
+
+  html+='<div class="share-bar no-print"><div class="hint">Tap your browser\'s <strong>Share</strong> button to save as PDF, email, or text</div></div>';
+
+  if(days!==null&&days<=7){
+    html+='<div class="urgency-bar" style="max-width:700px;margin:20px auto 0;border-radius:8px 8px 0 0">&#9201; Proposal due in '+days+' day'+(days!==1?'s':'')+' — '+due+'</div>';
+  }
+
+  html+='<div class="page-wrap"><div class="doc-header"><div class="co">Site Walk Report</div><div class="sub">Green Heart Enterprises — General Contractors</div><div class="date">'+new Date().toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'})+'</div></div>';
+  html+='<div class="doc-body">';
+
+  // Project details
+  html+='<div class="section"><div class="sec-title">Project details</div>';
+  html+=fr('Client',client)+fr('Address',address)+fr('Project type',ptype)+fr('Walk conducted by',walker)+fr('Proposal due',due+(days!==null&&days<=14?' &nbsp;<strong style="color:#92400e">'+days+' days</strong>':''))+fr('Work start date',start);
+  html+='</div>';
+
+  // Scope
+  if(scope){html+='<div class="section"><div class="sec-title">Scope overview</div><div class="fv" style="font-size:14px;line-height:1.65">'+esc(scope)+'</div></div>';}
+
+  // Areas
+  html+='<div class="section"><div class="sec-title">Areas walked ('+areas.length+')</div>';
+  if(!areas.length){html+='<div style="font-size:13px;color:#9ca3af">No areas captured.</div>';}
+  areas.forEach(function(a,i){
+    html+='<div class="area-block"><div class="area-title">'+(i+1)+'. '+esc(a.name)+'</div>';
+    if(a.obs){html+='<div class="area-row"><span class="area-label">Observations</span><span class="area-value">'+esc(a.obs)+'</span></div>';}
+    if(a.qty){html+='<div class="area-row"><span class="area-label">Quantities noted</span><span class="area-value">'+esc(a.qty)+'</span></div>';}
+    if(a.vendor.length){html+='<div class="area-row"><span class="area-label">Performed by</span><span class="area-value">'+a.vendor.map(esc).join(', ')+'</span></div>';}
+    if(a.work.length){html+='<div class="area-row"><span class="area-label">Work types</span><span class="area-value">'+a.work.map(esc).join(', ')+'</span></div>';}
+    if(a.flags.length){html+='<div class="area-row" style="margin-top:5px">'+a.flags.map(function(f){return'<span class="flag-pill">&#9888; '+esc(f)+'</span>';}).join('')+'</div>';}
+    if(a.verbal){html+='<div class="verbal-box"><div class="vb-label">&#9888; Client verbal request — Unconfirmed</div><div class="vb-text">'+esc(a.verbal)+'</div></div>';}
+    if(a.photos.length){html+='<div class="photos-grid">'+a.photos.map(function(p,pi){return'<img src="'+p.data+'" alt="Photo '+(pi+1)+' — '+esc(a.name)+'">';}).join('')+'</div>';}
+    html+='</div>';
+  });
+  html+='</div>';
+
+  // Work summary
+  html+='<div class="section"><div class="sec-title">Work summary</div>';
+  if(allWork.length) html+=fr('All work types',allWork.map(esc).join(', '));
+  if(ih.length) html+=fr('In-house areas',ih.map(esc).join(', '));
+  if(ov.length) html+=fr('Outside vendor areas',ov.map(esc).join(', '));
+  html+='</div>';
+
+  // Site flags
+  if(allFlags.length){
+    html+='<div class="section"><div class="sec-title">Site flags &amp; conditions</div>';
+    html+=allFlags.map(function(f){return'<span class="flag-pill">&#9888; '+esc(f)+'</span>';}).join('');
+    html+='</div>';
+  }
+
+  // Verbals
+  if(verbals.length){
+    html+='<div class="section"><div class="sec-title">&#9888; Client verbal requests — Unconfirmed</div>';
+    html+='<p style="font-size:12px;color:#92400e;font-style:italic;margin-bottom:10px">All items below were stated verbally by the client. Do not include in bid without written confirmation.</p>';
+    verbals.forEach(function(v,i){
+      html+='<div style="margin-bottom:7px"><span style="font-size:11px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:.05em;display:block;margin-bottom:1px">'+esc(v.area)+'</span><span style="font-size:14px;color:#92400e">'+esc(v.text)+'</span></div>';
+    });
+    html+='</div>';
+  }
+
+  // Open questions
+  if(questions.length){
+    html+='<div class="section"><div class="sec-title">Open questions for estimator</div>';
+    questions.forEach(function(q,i){
+      html+='<div style="margin-bottom:7px;display:flex;gap:8px"><span style="font-size:12px;font-weight:700;color:#1a5c3a;min-width:18px">'+(i+1)+'.</span><span style="font-size:14px;color:#111827">'+esc(q)+'</span></div>';
+    });
+    html+='</div>';
+  }
+
+  // Notes
+  if(notes){html+='<div class="section"><div class="sec-title">Additional notes</div><div class="fv" style="font-size:14px;line-height:1.65">'+esc(notes)+'</div></div>';}
+
+  // Signature
+  html+='<div class="section"><div class="sec-title">Estimator receipt</div>';
+  html+='<div class="sig-row"><div><div class="sig-line"></div><div class="sig-lbl">Signature</div></div><div><div class="sig-line"></div><div class="sig-lbl">Date received</div></div></div>';
+  html+='</div>';
+
+  html+='</div></div></body></html>';
+
+  var blob=new Blob([html],{type:'text/html'});
+  var url=URL.createObjectURL(blob);
+  var w=window.open(url,'_blank');
+  if(!w){showToast('Allow pop-ups to open the preview');}
+  else showToast('Preview opened in new tab');
+}
+
+function fr(label,value){
+  return'<div class="field-row"><span class="fl">'+label+'</span><span class="fv">'+value+'</span></div>';
+}
+
+function showToast(msg){
+  var t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(function(){t.classList.remove('show');},2500);
+}
+
+function startOver(){
+  areas=[];questions=[];curVendor=[];curWork=[];curFlags=[];curPhotos=[];
+  ['p-client','p-address','p-walker','p-scope','a-name','a-obs','a-qty','a-verbal','p-notes','q-input'].forEach(function(id){var el=document.getElementById(id);if(el)el.value='';});
+  document.getElementById('p-type').value='';
+  document.getElementById('p-due').value='';
+  document.getElementById('p-start').value='';
+  document.getElementById('vbtn-ih').classList.remove('on-g');
+  document.getElementById('vbtn-ov').classList.remove('on-b');
+  renderAreas();renderQs();renderStrip();
+  goTo(0);
+}
+</script>
+</body>
+</html>

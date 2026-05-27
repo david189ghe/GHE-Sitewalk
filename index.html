@@ -3,853 +3,191 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>GHE Site Walk Capture</title>
+<title>GHE Express Site Walk</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap');
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --green:#1a5c3a;--green-dark:#154d31;--green-light:#e8f2ec;--green-mid:#2d7a52;
+  --green:#1a5c3a;--green-dark:#154d31;--green-light:#e8f2ec;
   --warn:#92400e;--warn-bg:#fef3c7;--warn-border:#fcd34d;
-  --info:#1e40af;--info-bg:#eff6ff;--info-border:#93c5fd;
   --danger:#991b1b;--danger-bg:#fef2f2;--danger-border:#fca5a5;
   --border:#e5e7eb;--bg:#f3f4f6;--surface:#fff;
   --text:#111827;--muted:#6b7280;--subtle:#9ca3af;
-  --radius:12px;--radius-sm:8px;--radius-xs:5px;
+  --radius:12px;--radius-sm:8px;
   font-family:'DM Sans',sans-serif;
 }
 body{background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:60px}
- 
-/* AUTH */
 .auth-wrap{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;background:var(--bg)}
 .auth-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:28px 24px;width:100%;max-width:380px;box-shadow:0 4px 20px rgba(0,0,0,.08)}
-.auth-logo-wrap{text-align:center;margin-bottom:20px}
-.auth-logo{height:64px;width:auto}
-.auth-title{font-size:18px;font-weight:700;text-align:center;margin-bottom:4px}
-.auth-sub{font-size:13px;color:var(--muted);text-align:center;margin-bottom:20px}
-.auth-err{background:var(--danger-bg);color:var(--danger);border:1px solid var(--danger-border);border-radius:var(--radius-sm);padding:10px 12px;font-size:13px;margin-bottom:12px;display:none}
-.auth-btn{width:100%;padding:13px;background:var(--green);color:#fff;border:none;border-radius:var(--radius-sm);font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:background .15s;margin-top:4px}
-.auth-btn:hover{background:var(--green-dark)}
-.auth-switch{font-size:13px;color:var(--muted);text-align:center;margin-top:14px}
-.auth-switch a{color:var(--green);cursor:pointer;font-weight:500;text-decoration:none}
-.auth-switch a:hover{text-decoration:underline}
- 
-/* APP SHELL */
 .app{display:none}
 .app-bar{background:#fff;border-bottom:1px solid var(--border);padding:0 16px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:20;box-shadow:0 1px 4px rgba(0,0,0,.06)}
-.app-bar-logo{height:36px;width:auto}
-.app-bar-right{display:flex;align-items:center;gap:10px}
-.user-badge{font-size:12px;color:var(--muted);font-weight:500}
-.signout-btn{padding:6px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--surface);color:var(--muted);font-family:'DM Sans',sans-serif;font-size:12px;cursor:pointer;transition:all .15s}
-.signout-btn:hover{border-color:var(--danger);color:var(--danger)}
- 
-/* VIEWS */
-.view{display:none;padding:16px;max-width:600px;margin:0 auto}
-.view.active{display:block}
- 
-/* DASHBOARD */
-.dash-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
-.dash-title{font-size:18px;font-weight:700}
-.new-walk-btn{padding:10px 16px;background:var(--green);color:#fff;border:none;border-radius:var(--radius-sm);font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px;transition:background .15s}
-.new-walk-btn:hover{background:var(--green-dark)}
-.walk-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;margin-bottom:10px;cursor:pointer;transition:all .15s;box-shadow:0 1px 3px rgba(0,0,0,.04)}
-.walk-card:hover{border-color:var(--green);box-shadow:0 2px 8px rgba(26,92,58,.1)}
-.walk-card-hd{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:5px}
-.walk-card-name{font-size:15px;font-weight:600}
-.walk-status{font-size:11px;font-weight:600;padding:2px 8px;border-radius:20px}
-.status-draft{background:var(--warn-bg);color:var(--warn)}
-.status-complete{background:var(--green-light);color:var(--green)}
-.walk-card-meta{font-size:12px;color:var(--muted);display:flex;gap:10px;flex-wrap:wrap}
-.empty-dash{text-align:center;padding:40px 20px;color:var(--subtle)}
-.empty-dash svg{width:40px;height:40px;stroke:var(--subtle);fill:none;stroke-width:1.5;margin-bottom:10px}
-.loading-wrap{text-align:center;padding:32px;color:var(--muted);font-size:13px}
-.spinner{width:24px;height:24px;border:3px solid var(--border);border-top-color:var(--green);border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 10px}
-@keyframes spin{to{transform:rotate(360deg)}}
- 
-/* FORM */
-.form-header{display:flex;align-items:center;gap:10px;margin-bottom:14px}
-.back-btn{padding:8px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--surface);cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--muted);transition:all .15s}
-.back-btn:hover{border-color:var(--green);color:var(--green)}
-.back-btn svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2}
-.form-title{font-size:17px;font-weight:700}
-.progress-wrap{height:3px;background:var(--border);border-radius:2px;margin-bottom:4px}
-.progress-fill{height:100%;background:var(--green);border-radius:2px;transition:width .4s cubic-bezier(.4,0,.2,1)}
-.step-row{display:flex;margin-bottom:14px}
-.step-lbl{flex:1;text-align:center;font-size:10px;font-weight:600;color:var(--subtle);text-transform:uppercase;letter-spacing:.06em;transition:color .3s}
-.step-lbl.active{color:var(--green)}
-.step-lbl.done{color:var(--green);opacity:.55}
-.page{display:none}
-.page.active{display:block}
-.sec-head{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin:14px 0 7px}
-.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:15px;margin-bottom:11px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.screen{display:none;padding:16px;max-width:600px;margin:0 auto}
+.screen.active{display:block}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:12px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
 .fl{margin-bottom:12px}
-.fl:last-child{margin-bottom:0}
 .fl label{display:block;font-size:11px;font-weight:700;color:var(--muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:.05em}
-input[type=text],input[type=date],input[type=email],input[type=password],input[type=number],select,textarea{width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-family:'DM Sans',sans-serif;font-size:14px;color:var(--text);background:var(--surface);outline:none;transition:border-color .15s;-webkit-appearance:none}
-input:focus,select:focus,textarea:focus{border-color:var(--green)}
-textarea{resize:vertical;min-height:76px;line-height:1.55}
-.date-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-top:6px}
- 
-/* WORK TYPE TASK CARDS */
-.task-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-top:6px}
-.task-toggle{padding:9px 6px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;cursor:pointer;background:var(--surface);color:var(--muted);text-align:center;transition:all .15s}
-.task-toggle:hover{border-color:var(--green);color:var(--green)}
-.task-toggle.on{background:var(--green);color:#fff;border-color:var(--green)}
-.task-detail{background:var(--green-light);border:1px solid var(--green);border-radius:var(--radius-sm);padding:10px 12px;margin-top:6px;display:none}
-.task-detail.open{display:block}
-.task-detail-title{font-size:11px;font-weight:700;color:var(--green);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px}
-.task-detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px}
-.task-detail-field label{font-size:11px;font-weight:600;color:var(--muted);display:block;margin-bottom:3px;text-transform:uppercase;letter-spacing:.04em}
-.task-detail-field input,.task-detail-field select{padding:8px 10px;font-size:13px}
-.turnkey-row{display:flex;align-items:center;gap:8px;margin-top:4px}
-.turnkey-row label{font-size:13px;color:var(--text);font-weight:500;cursor:pointer}
-.turnkey-row input[type=checkbox]{width:16px;height:16px;accent-color:var(--green)}
- 
-/* FLAGS */
-.fbtn{padding:9px 6px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;cursor:pointer;background:var(--surface);color:var(--muted);text-align:center;transition:all .15s}
-.fbtn:hover{border-color:var(--warn);color:var(--warn)}
-.fbtn.on{background:var(--warn-bg);color:var(--warn);border-color:var(--warn-border)}
- 
-/* PHOTOS */
-.photo-strip{display:flex;flex-wrap:wrap;gap:7px;margin-top:8px}
-.pthumb-wrap{position:relative}
-.pthumb{width:72px;height:72px;object-fit:cover;border-radius:var(--radius-sm);border:1px solid var(--border)}
-.pdel{position:absolute;top:-5px;right:-5px;width:19px;height:19px;border-radius:50%;background:var(--danger-bg);color:var(--danger);border:1px solid var(--danger-border);cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;font-family:'DM Sans',sans-serif;line-height:1}
-.padd{width:72px;height:72px;border-radius:var(--radius-sm);border:1.5px dashed var(--border);background:var(--bg);cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:var(--subtle);font-size:11px;font-family:'DM Sans',sans-serif;transition:all .15s}
-.padd:hover{border-color:var(--green);color:var(--green)}
-.padd svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.5}
- 
-/* BUTTONS */
-.addbtn,.nbtn{width:100%;padding:13px;background:var(--green);color:#fff;border:none;border-radius:var(--radius-sm);font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;transition:background .15s}
-.addbtn:hover,.nbtn:hover{background:var(--green-dark)}
-.addbtn svg,.nbtn svg,.bbtn svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;flex-shrink:0}
-.bbtn{width:100%;padding:12px;background:transparent;color:var(--muted);border:1.5px solid var(--border);border-radius:var(--radius-sm);font-family:'DM Sans',sans-serif;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;transition:all .15s}
-.bbtn:hover{background:var(--bg)}
-.save-draft-btn{width:100%;padding:12px;background:transparent;color:var(--green);border:1.5px solid var(--green);border-radius:var(--radius-sm);font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;transition:all .15s}
-.save-draft-btn:hover{background:var(--green-light)}
-.nav{display:flex;flex-direction:column;gap:8px;margin-top:8px}
- 
-/* AREA CARDS */
-.area-card{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--green);border-radius:var(--radius);padding:12px 13px;margin-bottom:8px}
-.area-hd{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px}
-.area-nm{font-size:14px;font-weight:600}
-.area-ob{font-size:12px;color:var(--muted);line-height:1.5;margin-bottom:6px}
-.tags{display:flex;flex-wrap:wrap;gap:4px}
-.tag{font-size:11px;font-weight:500;padding:2px 8px;border-radius:20px}
-.tg{background:var(--green-light);color:var(--green)}
-.tw{background:var(--warn-bg);color:var(--warn)}
-.tn{background:#f3f4f6;color:var(--muted);border:1px solid var(--border)}
-.rmbtn{background:none;border:none;cursor:pointer;color:var(--subtle);padding:1px;font-size:18px;line-height:1;flex-shrink:0}
-.rmbtn:hover{color:var(--danger)}
-.empty{text-align:center;padding:18px 0;color:var(--subtle);font-size:13px}
- 
-/* QUESTIONS */
-.qrow{display:flex;gap:8px;margin-top:10px}
-.qrow input{flex:1;padding:10px 12px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-family:'DM Sans',sans-serif;font-size:14px;outline:none}
-.qrow input:focus{border-color:var(--green)}
-.qadd{padding:0 14px;border:1.5px solid var(--border);border-radius:var(--radius-sm);background:var(--surface);cursor:pointer;font-size:20px;color:var(--muted);font-family:'DM Sans',sans-serif;transition:all .15s}
-.qadd:hover{border-color:var(--green);color:var(--green)}
-.qitem{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px}
-.qitem:last-child{border-bottom:none}
- 
-/* PREVIEW PAGE */
-.gen-btn{width:100%;padding:18px;background:var(--green);color:#fff;border:none;border-radius:var(--radius-sm);font-family:'DM Sans',sans-serif;font-size:16px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:background .15s}
-.gen-btn:hover{background:var(--green-dark)}
-.gen-btn svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2}
- 
-.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#111827;color:#fff;padding:10px 18px;border-radius:99px;font-size:13px;font-weight:500;opacity:0;transition:opacity .3s;pointer-events:none;z-index:100;white-space:nowrap}
+input[type=text],input[type=date],input[type=email],input[type=password],textarea{width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-family:'DM Sans',sans-serif;font-size:14px}
+.btn-primary{width:100%;padding:14px;background:var(--green);color:#fff;border:none;border-radius:var(--radius-sm);font-weight:700;cursor:pointer}
+.pthumb-wrap{position:relative;display:inline-block;margin:4px}
+.pthumb{width:70px;height:70px;object-fit:cover;border-radius:var(--radius-sm)}
+.pdel{position:absolute;top:-5px;right:-5px;width:18px;height:18px;border-radius:50%;background:var(--danger-bg);color:var(--danger);border:none;cursor:pointer}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#111827;color:#fff;padding:10px 18px;border-radius:99px;opacity:0;transition:opacity .3s;pointer-events:none}
 .toast.show{opacity:1}
 </style>
 </head>
 <body>
- 
-<!-- AUTH SCREEN -->
+
 <div class="auth-wrap" id="auth-wrap">
   <div class="auth-card">
-    <div class="auth-logo-wrap">
-      <img class="auth-logo" src="https://i.imgur.com/placeholder.png" id="auth-logo-img" alt="Green Heart Enterprises" onerror="this.style.display='none';document.getElementById('auth-logo-text').style.display='block'">
-      <div id="auth-logo-text" style="display:none;font-size:20px;font-weight:700;color:var(--green)">GREEN HEART<br>ENTERPRISES</div>
-    </div>
-    <div class="auth-title" id="auth-title">Sign in to GHE</div>
-    <div class="auth-sub" id="auth-sub">Site Walk Capture — Internal Use Only</div>
-    <div class="auth-err" id="auth-err"></div>
-    <div id="login-form">
-      <div class="fl"><label>Email</label><input type="email" id="login-email" placeholder="your@email.com"></div>
-      <div class="fl"><label>Password</label><input type="password" id="login-pass" placeholder="Password"></div>
-      <button class="auth-btn" onclick="signIn()">Sign in</button>
-      <div class="auth-switch">New to GHE Site Walk? <a onclick="showSignup()">Create account</a></div>
-    </div>
-    <div id="signup-form" style="display:none">
-      <div class="fl"><label>Full name</label><input type="text" id="signup-name" placeholder="Your name"></div>
-      <div class="fl"><label>Email</label><input type="email" id="signup-email" placeholder="your@email.com"></div>
-      <div class="fl"><label>Password</label><input type="password" id="signup-pass" placeholder="Min 6 characters"></div>
-      <button class="auth-btn" onclick="signUp()">Create account</button>
-      <div class="auth-switch">Already have an account? <a onclick="showLogin()">Sign in</a></div>
-    </div>
+    <div style="font-size:22px;font-weight:700;color:var(--green);text-align:center">GHE SITE WALK</div>
+    <div class="fl"><label>Email</label><input type="email" id="login-email"></div>
+    <div class="fl"><label>Password</label><input type="password" id="login-pass"></div>
+    <button class="btn-primary" onclick="signIn()">Sign in</button>
   </div>
 </div>
- 
-<!-- APP -->
+
 <div class="app" id="app">
   <div class="app-bar">
-    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='40'%3E%3Crect width='120' height='40' fill='white'/%3E%3Ctext x='4' y='16' font-family='Arial' font-weight='bold' font-size='11' fill='%231a5c3a'%3EGREEN HEART%3C/text%3E%3Ctext x='4' y='29' font-family='Arial' font-weight='bold' font-size='11' fill='%231a5c3a'%3EENTERPRISES%3C/text%3E%3Ctext x='4' y='39' font-family='Arial' font-size='8' fill='%236b7280'%3EGeneral Contractors%3C/text%3E%3C/svg%3E" alt="GHE" id="app-logo" style="height:36px;width:auto">
-    <div class="app-bar-right">
-      <span class="user-badge" id="user-badge"></span>
-      <button class="signout-btn" onclick="signOut()">Sign out</button>
-    </div>
+    <div style="font-weight:700;color:var(--green)">GHE Site Walk</div>
+    <button onclick="signOut()">Sign out</button>
   </div>
- 
-  <!-- DASHBOARD -->
-  <div class="view active" id="view-dashboard">
-    <div style="max-width:600px;margin:0 auto;padding:16px">
-      <div class="dash-header">
-        <div class="dash-title">Site walks</div>
-        <button class="new-walk-btn" onclick="startNewWalk()">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
-          New walk
-        </button>
-      </div>
-      <div id="walks-list">
-        <div class="loading-wrap"><div class="spinner"></div>Loading walks...</div>
-      </div>
-    </div>
+
+  <div class="screen active" id="screen-dash">
+    <button class="btn-primary" onclick="startExpress()">New express walk</button>
+    <div id="walks-list" style="margin-top:20px"></div>
   </div>
- 
-  <!-- WALK FORM -->
-  <div class="view" id="view-form">
-    <div class="form-header">
-      <button class="back-btn" onclick="goToDashboard()">
-        <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-      </button>
-      <div class="form-title" id="form-title">New site walk</div>
-    </div>
-    <div class="progress-wrap"><div class="progress-fill" id="prog" style="width:25%"></div></div>
-    <div class="step-row">
-      <div class="step-lbl active" id="sl0">Project</div>
-      <div class="step-lbl" id="sl1">Areas</div>
-      <div class="step-lbl" id="sl2">Questions</div>
-      <div class="step-lbl" id="sl3">Preview</div>
-    </div>
- 
-    <!-- PAGE 0: PROJECT -->
-    <div class="page active" id="page0">
-      <div class="sec-head">Project info</div>
-      <div class="card">
-        <div class="fl"><label>Client name</label><input type="text" id="p-client" placeholder="Company or contact name"></div>
-        <div class="fl"><label>Site location</label><input type="text" id="p-address" placeholder="Address, gate, terminal, or area"></div>
-        <div class="fl"><label>Project type</label>
-          <select id="p-type"><option value="">— select —</option><option>TI</option><option>Aviation</option><option>Industrial</option><option>Ground-up</option><option>Other</option></select>
-        </div>
-        <div class="fl"><label>Walk conducted by</label><input type="text" id="p-walker" placeholder="Your name and title"></div>
-        <div class="date-row">
-          <div class="fl"><label>Proposal due date</label><input type="date" id="p-due"></div>
-          <div class="fl"><label>Work start date</label><input type="date" id="p-start"></div>
-        </div>
-        <div class="fl"><label>Total work duration (days)</label><input type="number" id="p-duration" placeholder="Estimated days to complete" min="1"></div>
-        <div class="fl"><label>Overall scope description</label><textarea id="p-scope" placeholder="Brief description of what the client is requesting..."></textarea></div>
-      </div>
-      <div class="nav">
-        <button class="save-draft-btn" onclick="saveDraft()">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
-          Save draft
-        </button>
-        <button class="nbtn" onclick="goTo(1)">
-          <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-          Start capturing areas
-        </button>
+
+  <div class="screen" id="screen-1">
+    <div class="card">
+      <div class="fl"><label>Client name</label><input type="text" id="e-client"></div>
+      <div class="fl"><label>Site location</label><input type="text" id="e-location"></div>
+      <div class="fl"><label>Notes</label><textarea id="e-notes"></textarea></div>
+      <div class="fl">
+        <label>Photos</label>
+        <input type="file" id="photo-input" accept="image/*" multiple capture="environment" onchange="handlePhotos(event)">
+        <div id="photo-strip-2"></div>
       </div>
     </div>
- 
-    <!-- PAGE 1: AREAS -->
-    <div class="page" id="page1">
-      <div class="sec-head">Add area or room</div>
-      <div class="card">
-        <div class="fl"><label>Area / room name</label><input type="text" id="a-name" placeholder="e.g. Main lobby, Suite 400, Gate D16..."></div>
-        <div class="fl"><label>Observations</label><textarea id="a-obs" placeholder="What did you see? What is the client asking for in this space?"></textarea></div>
-        <div class="fl"><label>Quantities (if known)</label><input type="text" id="a-qty" placeholder="e.g. 400 SF, 12 doors, 3 restrooms..."></div>
- 
-        <div class="fl">
-          <label>Type of work — select all that apply</label>
-          <div class="task-grid" id="task-grid">
-            <button class="task-toggle" onclick="toggleTask(this,'Demo')">Demo</button>
-            <button class="task-toggle" onclick="toggleTask(this,'Framing')">Framing</button>
-            <button class="task-toggle" onclick="toggleTask(this,'Drywall')">Drywall</button>
-            <button class="task-toggle" onclick="toggleTask(this,'Ceiling')">Ceiling</button>
-            <button class="task-toggle" onclick="toggleTask(this,'Electrical')">Electrical</button>
-            <button class="task-toggle" onclick="toggleTask(this,'HVAC')">HVAC</button>
-            <button class="task-toggle" onclick="toggleTask(this,'Plumbing')">Plumbing</button>
-            <button class="task-toggle" onclick="toggleTask(this,'Fire protection')">Fire protection</button>
-            <button class="task-toggle" onclick="toggleTask(this,'Flooring')">Flooring</button>
-            <button class="task-toggle" onclick="toggleTask(this,'Painting')">Painting</button>
-            <button class="task-toggle" onclick="toggleTask(this,'Doors &amp; hardware')">Doors &amp; hardware</button>
-            <button class="task-toggle" onclick="toggleTask(this,'Concrete')">Concrete</button>
-            <button class="task-toggle" onclick="toggleTask(this,'Fencing')">Fencing</button>
-            <button class="task-toggle" onclick="toggleTask(this,'SwiftWall')">SwiftWall</button>
-            <button class="task-toggle" onclick="toggleTask(this,'Other')">Other</button>
-          </div>
-          <div id="task-details"></div>
-        </div>
- 
-        <div class="fl">
-          <label>Site flags</label>
-          <div class="grid2">
-            <button class="fbtn" onclick="toggleFlag(this,'Occupied space')">Occupied space</button>
-            <button class="fbtn" onclick="toggleFlag(this,'After hours only')">After hours only</button>
-            <button class="fbtn" onclick="toggleFlag(this,'Hazmat concern')">Hazmat concern</button>
-            <button class="fbtn" onclick="toggleFlag(this,'Access restricted')">Access restricted</button>
-            <button class="fbtn" onclick="toggleFlag(this,'Scope unclear')">Scope unclear</button>
-            <button class="fbtn" onclick="toggleFlag(this,'Verify dimensions')">Verify dimensions</button>
-          </div>
-        </div>
- 
-        <div class="fl"><label>Client verbal requests in this area</label><textarea id="a-verbal" placeholder="Anything the client said that isn't on drawings — captured as UNCONFIRMED..."></textarea></div>
- 
-        <div class="fl">
-          <label>Photos for this area</label>
-          <div class="photo-strip" id="photo-strip">
-            <button class="padd" onclick="document.getElementById('pf-lib').click()">
-              <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>Library
-            </button>
-            <button class="padd" onclick="document.getElementById('pf-cam').click()">
-              <svg viewBox="0 0 24 24"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>Camera
-            </button>
-          </div>
-          <input type="file" id="pf-lib" accept="image/*" multiple style="display:none" onchange="handlePhotos(event)">
-          <input type="file" id="pf-cam" accept="image/*" capture="environment" style="display:none" onchange="handlePhotos(event)">
-        </div>
-        <button class="addbtn" onclick="addArea()">
-          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>
-          Add area to walk
-        </button>
-      </div>
- 
-      <div class="sec-head">Areas captured</div>
-      <div id="areas-list"><div class="empty">No areas added yet</div></div>
- 
-      <div class="nav" style="margin-top:8px">
-        <button class="save-draft-btn" onclick="saveDraft()">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
-          Save draft &amp; pause
-        </button>
-        <button class="nbtn" onclick="goTo(2)">
-          <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-          Continue to questions
-        </button>
-        <button class="bbtn" onclick="goTo(0)">
-          <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-          Back
-        </button>
-      </div>
-    </div>
- 
-    <!-- PAGE 2: QUESTIONS -->
-    <div class="page" id="page2">
-      <div class="sec-head">Open questions for estimator</div>
-      <div class="card">
-        <p style="font-size:13px;color:var(--muted);margin-bottom:10px">Things the estimator must follow up on before pricing.</p>
-        <div id="q-list"></div>
-        <div class="qrow">
-          <input type="text" id="q-input" placeholder="Type a question and press Enter or +">
-          <button class="qadd" onclick="addQ()">+</button>
-        </div>
-      </div>
-      <div class="sec-head">Additional notes</div>
-      <div class="card">
-        <textarea id="p-notes" placeholder="Parking, site logistics, access requirements, anything else the estimator needs to know..."></textarea>
-      </div>
-      <div class="nav">
-        <button class="save-draft-btn" onclick="saveDraft()">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
-          Save draft &amp; pause
-        </button>
-        <button class="nbtn" onclick="goTo(3)">
-          <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-          Continue to preview
-        </button>
-        <button class="bbtn" onclick="goTo(1)">
-          <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-          Back
-        </button>
-      </div>
-    </div>
- 
-    <!-- PAGE 3: PREVIEW -->
-    <div class="page" id="page3">
-      <div class="sec-head">Ready to generate</div>
-      <div class="card" style="text-align:center;padding:20px 16px">
-        <div style="font-size:15px;font-weight:700;margin-bottom:8px">Site walk complete</div>
-        <div style="font-size:13px;color:var(--muted);margin-bottom:18px;line-height:1.6">Tap Generate Preview to open the full branded document in a new tab. Use your browser's share button to save as PDF, email, or text.</div>
-        <button class="gen-btn" onclick="generatePreview()">
-          <svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-          Generate preview
-        </button>
-        <div style="margin-top:12px;font-size:12px;color:var(--subtle)">Opens in a new tab — use your browser's share button to send or save</div>
-      </div>
-      <div class="nav">
-        <button class="save-draft-btn" onclick="saveComplete()">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-          Mark complete &amp; save
-        </button>
-        <button class="bbtn" onclick="goTo(2)">
-          <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-          Back
-        </button>
-      </div>
-    </div>
+    <button class="btn-primary" onclick="goScreen('dash')">Save & Dashboard</button>
   </div>
 </div>
- 
+
 <div class="toast" id="toast"></div>
- 
+
 <script>
-// ─── SUPABASE INIT ───────────────────────────────────────────
 const SUPA_URL='https://sbvxiizvwyikjajjdsjs.supabase.co';
 const SUPA_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNidnhpaXp2d3lpa2phampkc2pzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk3ODA1ODAsImV4cCI6MjA5NTM1NjU4MH0.pzvDazQj7xnZ_1OmucVvghtvNfZtofLxJKVw4JlS3m0';
-const sb=supabase.createClient(SUPA_URL,SUPA_KEY);
- 
-// ─── GHE LOGO (base64 embedded) ─────────────────────────────
-const GHE_LOGO_B64='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMgAAADICAYAAACtWK6eAAAABmJLR0QA/wD/AP+gvaeTAAAGJ0lEQVR4nO3dT4hVZRjH8d+5c2fGcRxHx3HUMRMdR8dxdBxHR8dxHB0dHR0dHR0dHR0dHf8PDhgQBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQE';
- 
-// ─── STATE ───────────────────────────────────────────────────
-var currentUser=null;
-var currentWalkId=null;
-var areas=[], questions=[], curTasks={}, curFlags=[], curPhotos=[];
- 
-// ─── AUTH ────────────────────────────────────────────────────
-async function checkSession(){
-  var s=await sb.auth.getSession();
-  if(s.data.session){
-    currentUser=s.data.session.user;
-    showApp();
-  }
+const sb = supabase.createClient(SUPA_URL, SUPA_KEY);
+
+let currentUser = null, currentWalkId = null, isDirty = false;
+let photos = [];
+
+async function checkSession() {
+    const { data } = await sb.auth.getSession();
+    if (data.session) {
+        currentUser = data.session.user;
+        document.getElementById('auth-wrap').style.display = 'none';
+        document.getElementById('app').style.display = 'block';
+        loadWalks();
+    }
 }
- 
-async function signIn(){
-  var email=document.getElementById('login-email').value.trim();
-  var pass=document.getElementById('login-pass').value;
-  var err=document.getElementById('auth-err');
-  err.style.display='none';
-  var r=await sb.auth.signInWithPassword({email:email,password:pass});
-  if(r.error){err.textContent=r.error.message;err.style.display='block';}
-  else{currentUser=r.data.user;showApp();}
+
+async function signIn() {
+    const email = document.getElementById('login-email').value;
+    const pass = document.getElementById('login-pass').value;
+    await sb.auth.signInWithPassword({email, password: pass});
+    location.reload();
 }
- 
-async function signUp(){
-  var name=document.getElementById('signup-name').value.trim();
-  var email=document.getElementById('signup-email').value.trim();
-  var pass=document.getElementById('signup-pass').value;
-  var err=document.getElementById('auth-err');
-  err.style.display='none';
-  if(!name){err.textContent='Please enter your name';err.style.display='block';return;}
-  var r=await sb.auth.signUp({email:email,password:pass,options:{data:{full_name:name}}});
-  if(r.error){err.textContent=r.error.message;err.style.display='block';}
-  else{showToast('Account created — check your email to confirm');showLogin();}
+
+async function signOut() { await sb.auth.signOut(); location.reload(); }
+
+async function loadWalks() {
+    const el = document.getElementById('walks-list');
+    const { data } = await sb.from('site_walks').select('*').order('updated_at', {ascending: false});
+    el.innerHTML = (data||[]).map(w => `
+        <div class="card" style="display:flex;justify-content:space-between">
+            <div onclick="openWalk('${w.id}')" style="cursor:pointer"><b>${w.client||'Untitled'}</b></div>
+            <button onclick="deleteWalk('${w.id}')" style="color:red">Delete</button>
+        </div>
+    `).join('');
 }
- 
-async function signOut(){
-  await sb.auth.signOut();
-  currentUser=null;
-  document.getElementById('app').style.display='none';
-  document.getElementById('auth-wrap').style.display='flex';
-  showLogin();
+
+async function startExpress() {
+    const { data } = await sb.from('site_walks').insert({created_by:currentUser.id, status:'draft'}).select().single();
+    currentWalkId = data.id;
+    goScreen(1);
 }
- 
-function showSignup(){
-  document.getElementById('login-form').style.display='none';
-  document.getElementById('signup-form').style.display='block';
-  document.getElementById('auth-title').textContent='Create account';
-  document.getElementById('auth-err').style.display='none';
+
+async function openWalk(id) {
+    currentWalkId = id;
+    const { data } = await sb.from('site_walks').select('*').eq('id', id).single();
+    document.getElementById('e-client').value = data.client || '';
+    document.getElementById('e-location').value = data.address || '';
+    document.getElementById('e-notes').value = data.notes || '';
+    goScreen(1);
 }
- 
-function showLogin(){
-  document.getElementById('signup-form').style.display='none';
-  document.getElementById('login-form').style.display='block';
-  document.getElementById('auth-title').textContent='Sign in to GHE';
-  document.getElementById('auth-err').style.display='none';
+
+async function deleteWalk(id) {
+    if(!confirm('Permanently delete?')) return;
+    await sb.from('site_walks').delete().eq('id', id);
+    loadWalks();
 }
- 
-function showApp(){
-  document.getElementById('auth-wrap').style.display='none';
-  document.getElementById('app').style.display='block';
-  var name=currentUser.user_metadata&&currentUser.user_metadata.full_name?currentUser.user_metadata.full_name:currentUser.email;
-  document.getElementById('user-badge').textContent=name;
-  loadWalks();
+
+function handlePhotos(e) {
+    Array.from(e.target.files).forEach(f => {
+        const r = new FileReader();
+        r.onload = ev => {
+            photos.push({data: ev.target.result});
+            renderPhotoStrip();
+            markDirty();
+        };
+        r.readAsDataURL(f);
+    });
 }
- 
-// ─── DASHBOARD ───────────────────────────────────────────────
-async function loadWalks(){
-  var el=document.getElementById('walks-list');
-  el.innerHTML='<div class="loading-wrap"><div class="spinner"></div>Loading walks...</div>';
-  var r=await sb.from('site_walks').select('*').order('updated_at',{ascending:false});
-  if(r.error){el.innerHTML='<div class="empty">Error loading walks. Please refresh.</div>';return;}
-  if(!r.data||!r.data.length){el.innerHTML='<div class="empty-dash"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><div style="font-size:14px;font-weight:600;margin-bottom:4px">No site walks yet</div><div style="font-size:13px">Tap New walk to get started</div></div>';return;}
-  el.innerHTML=r.data.map(function(w){
-    var statusClass=w.status==='complete'?'status-complete':'status-draft';
-    var statusLabel=w.status==='complete'?'Complete':'Draft';
-    var areas=w.areas||[];
-    var date=new Date(w.updated_at).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
-    return '<div class="walk-card" onclick="openWalk(\''+w.id+'\')"><div class="walk-card-hd"><div class="walk-card-name">'+(w.client||'Untitled walk')+'</div><span class="walk-status '+statusClass+'">'+statusLabel+'</span></div><div style="font-size:13px;color:var(--muted);margin-bottom:5px">'+(w.address||'No location')+(w.project_type?' · '+w.project_type:'')+'</div><div class="walk-card-meta"><span>'+areas.length+' area'+(areas.length!==1?'s':'')+'</span>'+(w.proposal_due?'<span>Due '+fmtDate(w.proposal_due)+'</span>':'')+'<span>Updated '+date+'</span></div></div>';
-  }).join('');
+
+function renderPhotoStrip() {
+    document.getElementById('photo-strip-2').innerHTML = photos.map((p, i) => `
+        <div class="pthumb-wrap"><img src="${p.data}" class="pthumb"><button class="pdel" onclick="photos.splice(${i},1);renderPhotoStrip();markDirty();">&times;</button></div>
+    `).join('');
 }
- 
-function startNewWalk(){
-  currentWalkId=null;
-  areas=[];questions=[];curTasks={};curFlags=[];curPhotos=[];
-  clearForm();
-  showView('view-form');
-  goTo(0);
-  document.getElementById('form-title').textContent='New site walk';
+
+function markDirty() { isDirty = true; }
+
+async function autoSave() {
+    if (!currentWalkId || !isDirty) return;
+    await sb.from('site_walks').update({
+        client: document.getElementById('e-client').value,
+        address: document.getElementById('e-location').value,
+        notes: document.getElementById('e-notes').value,
+        updated_at: new Date().toISOString()
+    }).eq('id', currentWalkId);
+    isDirty = false;
+    showToast('Auto-saved');
 }
- 
-async function openWalk(id){
-  var r=await sb.from('site_walks').select('*').eq('id',id).single();
-  if(r.error){showToast('Could not load walk');return;}
-  var w=r.data;
-  currentWalkId=id;
-  areas=w.areas||[];
-  questions=w.questions||[];
-  curTasks={};curFlags=[];curPhotos=[];
-  document.getElementById('p-client').value=w.client||'';
-  document.getElementById('p-address').value=w.address||'';
-  document.getElementById('p-type').value=w.project_type||'';
-  document.getElementById('p-walker').value=w.walker||'';
-  document.getElementById('p-due').value=w.proposal_due||'';
-  document.getElementById('p-start').value=w.work_start||'';
-  document.getElementById('p-duration').value=w.total_duration_days||'';
-  document.getElementById('p-scope').value=w.overall_scope||'';
-  document.getElementById('p-notes').value=w.notes||'';
-  renderAreas();renderQs();renderStrip();
-  document.getElementById('form-title').textContent=w.client||'Site walk';
-  showView('view-form');
-  goTo(0);
-}
- 
-function goToDashboard(){
-  showView('view-dashboard');
-  loadWalks();
-}
- 
-function showView(id){
-  document.querySelectorAll('.view').forEach(function(v){v.classList.remove('active');});
-  document.getElementById(id).classList.add('active');
-  window.scrollTo(0,0);
-}
- 
-// ─── WALK STATE ──────────────────────────────────────────────
-function getWalkData(){
-  return{
-    client:document.getElementById('p-client').value||null,
-    address:document.getElementById('p-address').value||null,
-    project_type:document.getElementById('p-type').value||null,
-    walker:document.getElementById('p-walker').value||null,
-    proposal_due:document.getElementById('p-due').value||null,
-    work_start:document.getElementById('p-start').value||null,
-    total_duration_days:parseInt(document.getElementById('p-duration').value)||null,
-    overall_scope:document.getElementById('p-scope').value||null,
-    notes:document.getElementById('p-notes').value||null,
-    areas:areas,
-    questions:questions,
-    updated_at:new Date().toISOString()
-  };
-}
- 
-async function saveDraft(){
-  var data=getWalkData();
-  data.status='draft';
-  data.created_by=currentUser.id;
-  var r;
-  if(currentWalkId){r=await sb.from('site_walks').update(data).eq('id',currentWalkId);}
-  else{r=await sb.from('site_walks').insert(data).select().single();if(!r.error)currentWalkId=r.data.id;}
-  if(r.error)showToast('Error saving — check connection');
-  else showToast('Draft saved');
-}
- 
-async function saveComplete(){
-  var data=getWalkData();
-  data.status='complete';
-  data.created_by=currentUser.id;
-  var r;
-  if(currentWalkId){r=await sb.from('site_walks').update(data).eq('id',currentWalkId);}
-  else{r=await sb.from('site_walks').insert(data).select().single();if(!r.error)currentWalkId=r.data.id;}
-  if(r.error)showToast('Error saving');
-  else{showToast('Walk saved as complete');setTimeout(goToDashboard,1200);}
-}
- 
-// ─── FORM NAV ────────────────────────────────────────────────
-function goTo(n){
-  [0,1,2,3].forEach(function(i){
-    document.getElementById('page'+i).classList.toggle('active',i===n);
-    var s=document.getElementById('sl'+i);
-    s.className='step-lbl'+(i<n?' done':i===n?' active':'');
-  });
-  document.getElementById('prog').style.width=((n+1)/4*100)+'%';
-  window.scrollTo(0,0);
-}
- 
-function clearForm(){
-  ['p-client','p-address','p-walker','p-scope','p-duration','p-notes','a-name','a-obs','a-qty','a-verbal','q-input'].forEach(function(id){var el=document.getElementById(id);if(el)el.value='';});
-  document.getElementById('p-type').value='';
-  document.getElementById('p-due').value='';
-  document.getElementById('p-start').value='';
-  document.getElementById('p-notes').value='';
-  resetAreaForm();
-  renderAreas();renderQs();renderStrip();
-}
- 
-// ─── TASK TOGGLES ────────────────────────────────────────────
-function toggleTask(btn,name){
-  btn.classList.toggle('on');
-  var detailsWrap=document.getElementById('task-details');
-  var detailId='td-'+name.replace(/[^a-z]/gi,'');
-  if(btn.classList.contains('on')){
-    if(!curTasks[name])curTasks[name]={workers:'',days:'',vendor:'In house',turnkey:false};
-    if(!document.getElementById(detailId)){
-      var d=document.createElement('div');
-      d.className='task-detail open';
-      d.id=detailId;
-      d.innerHTML='<div class="task-detail-title">'+name+' — details</div>'+
-        '<div class="task-detail-grid">'+
-        '<div class="task-detail-field"><label>No. of workers</label><input type="number" min="1" id="tw-'+detailId+'" placeholder="e.g. 2" value="'+(curTasks[name].workers||'')+'" onchange="updateTask(\''+name+'\',\'workers\',this.value)"></div>'+
-        '<div class="task-detail-field"><label>Est. days</label><input type="number" min="1" id="td2-'+detailId+'" placeholder="e.g. 3" value="'+(curTasks[name].days||'')+'" onchange="updateTask(\''+name+'\',\'days\',this.value)"></div>'+
-        '</div>'+
-        '<div class="task-detail-field" style="margin-bottom:8px"><label>Performed by</label><select id="tv-'+detailId+'" onchange="updateTask(\''+name+'\',\'vendor\',this.value)"><option value="In house">In house (GHE)</option><option value="Outside vendor">Outside vendor</option></select></div>'+
-        '<div class="turnkey-row"><input type="checkbox" id="tk-'+detailId+'" onchange="updateTask(\''+name+'\',\'turnkey\',this.checked)"'+(curTasks[name].turnkey?' checked':'')+'><label for="tk-'+detailId+'">Turn key (vendor handles start to finish — GHE superintendent oversight)</label></div>';
-      detailsWrap.appendChild(d);
-      if(curTasks[name].vendor){document.getElementById('tv-'+detailId).value=curTasks[name].vendor;}
+
+window.onbeforeunload = () => { if(isDirty) return "Unsaved changes!"; };
+
+function goScreen(n) {
+    if (isDirty) autoSave();
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    if (n === 'dash') {
+        document.getElementById('screen-dash').classList.add('active');
+        loadWalks();
     } else {
-      document.getElementById(detailId).classList.add('open');
+        document.getElementById('screen-' + n).classList.add('active');
     }
-  } else {
-    delete curTasks[name];
-    var el=document.getElementById(detailId);
-    if(el)el.remove();
-  }
 }
- 
-function updateTask(name,field,value){
-  if(!curTasks[name])curTasks[name]={};
-  curTasks[name][field]=field==='turnkey'?value:value;
+
+function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg; t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2000);
 }
- 
-// ─── FLAGS ───────────────────────────────────────────────────
-function toggleFlag(btn,name){
-  btn.classList.toggle('on');
-  if(curFlags.includes(name))curFlags=curFlags.filter(function(x){return x!==name;});
-  else curFlags.push(name);
-}
- 
-// ─── PHOTOS ──────────────────────────────────────────────────
-function handlePhotos(e){
-  Array.from(e.target.files).forEach(function(f){
-    var r=new FileReader();
-    r.onload=function(ev){curPhotos.push({name:f.name,data:ev.target.result});renderStrip();};
-    r.readAsDataURL(f);
-  });
-  e.target.value='';
-}
-function delCurPhoto(i){curPhotos.splice(i,1);renderStrip();}
-function renderStrip(){
-  var s=document.getElementById('photo-strip');
-  var h=curPhotos.map(function(p,i){
-    return'<div class="pthumb-wrap"><img src="'+p.data+'" class="pthumb" alt="Photo '+(i+1)+'"><button class="pdel" onclick="delCurPhoto('+i+')">&times;</button></div>';
-  }).join('');
-  h+='<button class="padd" onclick="document.getElementById(\'pf-lib\').click()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="20" height="20"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>Library</button>';
-  h+='<button class="padd" onclick="document.getElementById(\'pf-cam\').click()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="20" height="20"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>Camera</button>';
-  s.innerHTML=h;
-}
- 
-// ─── AREAS ───────────────────────────────────────────────────
-function resetAreaForm(){
-  ['a-name','a-obs','a-qty','a-verbal'].forEach(function(id){var el=document.getElementById(id);if(el)el.value='';});
-  curTasks={};curFlags=[];curPhotos=[];
-  document.querySelectorAll('.task-toggle').forEach(function(b){b.classList.remove('on');});
-  document.querySelectorAll('.fbtn').forEach(function(b){b.classList.remove('on');});
-  document.getElementById('task-details').innerHTML='';
-  renderStrip();
-}
- 
-function addArea(){
-  var nm=document.getElementById('a-name').value.trim();
-  var ob=document.getElementById('a-obs').value.trim();
-  if(!nm&&!ob){showToast('Add a name or observation first');return;}
-  areas.push({
-    name:nm||'Unnamed area',
-    obs:ob,
-    qty:document.getElementById('a-qty').value.trim(),
-    tasks:JSON.parse(JSON.stringify(curTasks)),
-    flags:[].concat(curFlags),
-    verbal:document.getElementById('a-verbal').value.trim(),
-    photos:[].concat(curPhotos)
-  });
-  renderAreas();resetAreaForm();showToast('Area added');
-}
- 
-function delArea(i){areas.splice(i,1);renderAreas();}
- 
-function renderAreas(){
-  var el=document.getElementById('areas-list');
-  if(!areas.length){el.innerHTML='<div class="empty">No areas added yet</div>';return;}
-  el.innerHTML=areas.map(function(a,i){
-    var tags='';
-    Object.keys(a.tasks||{}).forEach(function(t){tags+='<span class="tag tg">'+t+'</span>';});
-    (a.flags||[]).forEach(function(f){tags+='<span class="tag tw">&#9888; '+esc(f)+'</span>';});
-    if((a.photos||[]).length)tags+='<span class="tag tn">&#128247; '+a.photos.length+' photo'+(a.photos.length>1?'s':'')+'</span>';
-    return'<div class="area-card"><div class="area-hd"><div class="area-nm">'+esc(a.name)+'</div><button class="rmbtn" onclick="delArea('+i+')">&times;</button></div>'+(a.obs?'<div class="area-ob">'+esc(a.obs)+'</div>':'')+(a.qty?'<div style="font-size:12px;color:var(--muted);margin-bottom:5px">Qty: '+esc(a.qty)+'</div>':'')+'<div class="tags">'+tags+'</div></div>';
-  }).join('');
-}
- 
-// ─── QUESTIONS ───────────────────────────────────────────────
-function addQ(){var q=document.getElementById('q-input').value.trim();if(!q)return;questions.push(q);document.getElementById('q-input').value='';renderQs();}
-document.addEventListener('keydown',function(e){if(e.key==='Enter'&&document.activeElement===document.getElementById('q-input'))addQ();});
-function delQ(i){questions.splice(i,1);renderQs();}
-function renderQs(){
-  var el=document.getElementById('q-list');
-  if(!questions.length){el.innerHTML='';return;}
-  el.innerHTML=questions.map(function(q,i){return'<div class="qitem"><span style="flex:1">'+esc(q)+'</span><button class="rmbtn" onclick="delQ('+i+')">&times;</button></div>';}).join('');
-}
- 
-// ─── PREVIEW ─────────────────────────────────────────────────
-function generatePreview(){
-  var client=document.getElementById('p-client').value||'—';
-  var address=document.getElementById('p-address').value||'—';
-  var ptype=document.getElementById('p-type').value||'—';
-  var walker=document.getElementById('p-walker').value||'—';
-  var dueRaw=document.getElementById('p-due').value;
-  var due=fmtDate(dueRaw);
-  var start=fmtDate(document.getElementById('p-start').value);
-  var duration=document.getElementById('p-duration').value;
-  var scope=document.getElementById('p-scope').value||'';
-  var notes=document.getElementById('p-notes').value||'';
-  var days=daysUntil(dueRaw);
-  var allWork=[]; areas.forEach(function(a){Object.keys(a.tasks||{}).forEach(function(t){if(!allWork.includes(t))allWork.push(t);});});
-  var allFlags=[]; areas.forEach(function(a){(a.flags||[]).forEach(function(f){if(!allFlags.includes(f))allFlags.push(f);});});
-  var verbals=areas.filter(function(a){return a.verbal;}).map(function(a){return{area:a.name,text:a.verbal};});
- 
-  var h='<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">';
-  h+='<title>GHE Site Walk — '+esc(client)+'</title>';
-  h+='<style>@import url(\'https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,600;0,700;1,400&display=swap\');';
-  h+='*{box-sizing:border-box;margin:0;padding:0}body{font-family:\'DM Sans\',sans-serif;background:#f3f4f6;color:#111827;padding-bottom:48px}';
-  h+='@media print{body{background:#fff}.no-print{display:none!important}}';
-  h+='.top-bar{background:#fff;border-bottom:1px solid #e5e7eb;padding:10px 20px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10}';
-  h+='.top-bar-logo{display:flex;align-items:center;gap:10px}.top-bar-name{font-size:13px;font-weight:700;color:#1a5c3a}.top-bar-sub{font-size:11px;color:#6b7280}';
-  h+='.hint{font-size:12px;color:#6b7280;font-style:italic}';
-  h+='.wrap{max-width:700px;margin:20px auto;background:#fff;border-radius:12px;border:1px solid #e5e7eb;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.08)}';
-  h+='.doc-hdr{background:#1a5c3a;padding:22px 26px;color:#fff}';
-  h+='.doc-hdr-top{display:flex;align-items:center;gap:14px;margin-bottom:10px}';
-  h+='.doc-mono{width:44px;height:44px;background:rgba(255,255,255,.15);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;letter-spacing:.5px;flex-shrink:0}';
-  h+='.doc-co{font-size:17px;font-weight:700;letter-spacing:.3px}.doc-sub{font-size:11px;opacity:.75;margin-top:2px;text-transform:uppercase;letter-spacing:.08em}';
-  h+='.doc-date{font-size:12px;opacity:.7;margin-top:8px}';
-  h+='.urgency{background:#fef3c7;border-bottom:1px solid #fcd34d;padding:10px 24px;font-size:13px;font-weight:700;color:#92400e;display:flex;align-items:center;gap:8px}';
-  h+='.section{padding:16px 24px;border-bottom:1px solid #e5e7eb}.section:last-child{border-bottom:none}';
-  h+='.sec-t{font-size:10px;font-weight:700;color:#1a5c3a;text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px;padding-bottom:5px;border-bottom:2px solid #e8f2ec}';
-  h+='.fr{display:grid;grid-template-columns:160px 1fr;gap:4px 12px;margin-bottom:8px;align-items:baseline}.fr:last-child{margin-bottom:0}';
-  h+='.fl{font-size:11px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:.05em}';
-  h+='.fv{font-size:14px;color:#111827;font-weight:400;line-height:1.5}';
-  h+='.area-blk{background:#f9fafb;border-radius:8px;border-left:3px solid #1a5c3a;padding:12px 14px;margin-bottom:10px}.area-blk:last-child{margin-bottom:0}';
-  h+='.area-t{font-size:14px;font-weight:700;margin-bottom:8px}';
-  h+='.arow{margin-bottom:6px}.albl{font-size:11px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:.05em;display:block;margin-bottom:1px}';
-  h+='.aval{font-size:13px;color:#111827;font-weight:400;line-height:1.5}';
-  h+='.task-row{background:#fff;border:1px solid #e5e7eb;border-radius:6px;padding:8px 10px;margin-bottom:5px}';
-  h+='.task-name{font-size:12px;font-weight:700;color:#1a5c3a;margin-bottom:4px}';
-  h+='.task-meta{display:flex;flex-wrap:wrap;gap:8px;font-size:12px;color:#6b7280}';
-  h+='.task-meta strong{color:#111827}';
-  h+='.flag-pill{display:inline-flex;align-items:center;gap:3px;font-size:11px;font-weight:700;padding:3px 9px;border-radius:20px;background:#fef3c7;color:#92400e;margin:2px}';
-  h+='.verbal-box{background:#fffbeb;border:1px solid #fcd34d;border-radius:6px;padding:10px 12px;margin-top:6px}';
-  h+='.vb-lbl{font-size:10px;font-weight:700;color:#92400e;text-transform:uppercase;letter-spacing:.07em;margin-bottom:3px}';
-  h+='.vb-txt{font-size:13px;color:#92400e;font-weight:400;line-height:1.5}';
-  h+='.photos-grid{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}';
-  h+='.photos-grid img{width:88px;height:88px;object-fit:cover;border-radius:6px;border:1px solid #e5e7eb}';
-  h+='</style></head><body>';
- 
-  h+='<div class="top-bar no-print"><div class="top-bar-logo"><div class="top-bar-name">GREEN HEART ENTERPRISES</div><div class="top-bar-sub">Site Walk Report</div></div><div class="hint">Use your browser share button to save or send</div></div>';
- 
-  if(days!==null&&days<=7){h+='<div class="urgency" style="max-width:700px;margin:16px auto 0;border-radius:8px 8px 0 0;border-left:1px solid #fcd34d;border-right:1px solid #fcd34d">&#9201; Proposal due in '+days+' day'+(days===1?'':'s')+' — '+due+'</div>';}
- 
-  h+='<div class="wrap">';
-  h+='<div class="doc-hdr"><div class="doc-hdr-top"><div class="doc-mono">GHE</div><div><div class="doc-co">Green Heart Enterprises</div><div class="doc-sub">General Contractors — Site Walk Report</div></div></div><div class="doc-date">'+new Date().toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'})+'</div></div>';
- 
-  h+='<div class="section"><div class="sec-t">Project details</div>';
-  h+=fr('Client',esc(client))+fr('Site location',esc(address))+fr('Project type',esc(ptype))+fr('Walk conducted by',esc(walker))+fr('Proposal due',esc(due)+(days!==null&&days<=14?' &nbsp;<strong style="color:#92400e">'+days+' day'+(days===1?'':'s')+'</strong>':''))+fr('Work start date',esc(start))+(duration?fr('Total work duration',esc(duration)+' day'+(parseInt(duration)===1?'':'s')):'');
-  h+='</div>';
- 
-  if(scope){h+='<div class="section"><div class="sec-t">Scope overview</div><div class="fv" style="font-size:14px;line-height:1.65">'+esc(scope)+'</div></div>';}
- 
-  h+='<div class="section"><div class="sec-t">Areas walked ('+areas.length+')</div>';
-  if(!areas.length)h+='<div style="font-size:13px;color:#9ca3af">No areas captured.</div>';
-  areas.forEach(function(a,i){
-    h+='<div class="area-blk"><div class="area-t">'+(i+1)+'. '+esc(a.name)+'</div>';
-    if(a.obs)h+='<div class="arow"><span class="albl">Observations</span><span class="aval">'+esc(a.obs)+'</span></div>';
-    if(a.qty)h+='<div class="arow"><span class="albl">Quantities noted</span><span class="aval">'+esc(a.qty)+'</span></div>';
-    var taskKeys=Object.keys(a.tasks||{});
-    if(taskKeys.length){
-      h+='<div class="arow"><span class="albl">Work types</span></div>';
-      taskKeys.forEach(function(t){
-        var td=a.tasks[t];
-        h+='<div class="task-row"><div class="task-name">'+esc(t)+'</div><div class="task-meta">';
-        if(td.workers)h+='<span><strong>Workers:</strong> '+esc(td.workers)+'</span>';
-        if(td.days)h+='<span><strong>Est. days:</strong> '+esc(td.days)+'</span>';
-        if(td.vendor)h+='<span><strong>Performed by:</strong> '+esc(td.vendor)+'</span>';
-        if(td.turnkey)h+='<span style="color:#1a5c3a;font-weight:600">&#10003; Turn key (GHE superintendent oversight)</span>';
-        h+='</div></div>';
-      });
-    }
-    if((a.flags||[]).length)h+='<div class="arow" style="margin-top:5px">'+(a.flags||[]).map(function(f){return'<span class="flag-pill">&#9888; '+esc(f)+'</span>';}).join('')+'</div>';
-    if(a.verbal)h+='<div class="verbal-box"><div class="vb-lbl">&#9888; Client verbal request — Unconfirmed</div><div class="vb-txt">'+esc(a.verbal)+'</div></div>';
-    if((a.photos||[]).length)h+='<div class="photos-grid">'+(a.photos||[]).map(function(p,pi){return'<img src="'+p.data+'" alt="Photo '+(pi+1)+'">';}).join('')+'</div>';
-    h+='</div>';
-  });
-  h+='</div>';
- 
-  if(allWork.length){h+='<div class="section"><div class="sec-t">Work summary</div>'+fr('All work types',allWork.map(esc).join(', '))+'</div>';}
- 
-  if(allFlags.length){h+='<div class="section"><div class="sec-t">Site flags &amp; conditions</div>'+allFlags.map(function(f){return'<span class="flag-pill">&#9888; '+esc(f)+'</span>';}).join('')+'</div>';}
- 
-  if(verbals.length){
-    h+='<div class="section"><div class="sec-t">&#9888; Client verbal requests — Unconfirmed</div>';
-    h+='<p style="font-size:12px;color:#92400e;font-style:italic;margin-bottom:10px">Stated verbally by client. Do not include in bid without written confirmation.</p>';
-    verbals.forEach(function(v){h+='<div style="margin-bottom:8px"><span style="font-size:11px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:.05em;display:block;margin-bottom:2px">'+esc(v.area)+'</span><span style="font-size:14px;color:#92400e">'+esc(v.text)+'</span></div>';});
-    h+='</div>';
-  }
- 
-  if(questions.length){
-    h+='<div class="section"><div class="sec-t">Open questions for estimator</div>';
-    questions.forEach(function(q,i){h+='<div style="margin-bottom:7px;display:flex;gap:8px"><span style="font-size:12px;font-weight:700;color:#1a5c3a;min-width:18px">'+(i+1)+'.</span><span style="font-size:14px;color:#111827">'+esc(q)+'</span></div>';});
-    h+='</div>';
-  }
- 
-  if(notes)h+='<div class="section"><div class="sec-t">Additional notes</div><div class="fv" style="font-size:14px;line-height:1.65">'+esc(notes)+'</div></div>';
- 
-  h+='</div></body></html>';
- 
-  var blob=new Blob([h],{type:'text/html'});
-  var url=URL.createObjectURL(blob);
-  var w=window.open(url,'_blank');
-  if(!w)showToast('Allow pop-ups to open preview — or open in Safari');
-  else showToast('Preview opened');
-}
- 
-function fr(label,value){return'<div class="fr"><span class="fl">'+label+'</span><span class="fv">'+value+'</span></div>';}
-function fmtDate(d){if(!d)return'TBD';var p=d.split('-');return p[1]+'/'+p[2]+'/'+p[0];}
-function daysUntil(d){if(!d)return null;return Math.ceil((new Date(d)-new Date())/(1000*60*60*24));}
-function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
-function showToast(msg){var t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(function(){t.classList.remove('show');},2500);}
- 
-// ─── LOGO LOADER ─────────────────────────────────────────────
-(function loadLogo(){
-  var logoData='';
-  var img=new Image();
-  img.onload=function(){
-    document.getElementById('app-logo').src=img.src;
-    var authImg=document.getElementById('auth-logo-img');
-    if(authImg){authImg.src=img.src;authImg.style.display='block';document.getElementById('auth-logo-text').style.display='none';}
-  };
-  img.src='https://sbvxiizvwyikjajjdsjs.supabase.co/storage/v1/object/public/assets/ghe-logo.png';
-})();
- 
-// ─── INIT ────────────────────────────────────────────────────
+
+document.addEventListener('blur', (e) => { if (['INPUT', 'TEXTAREA'].includes(e.target.tagName)) markDirty(); }, true);
+
 checkSession();
 </script>
 </body>
 </html>
- 

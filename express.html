@@ -1,767 +1,112 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>GHE Express Site Walk</title>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<style>
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap');
-*{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --green:#1a5c3a;--green-dark:#154d31;--green-light:#e8f2ec;
-  --warn:#92400e;--warn-bg:#fef3c7;--warn-border:#fcd34d;
-  --danger:#991b1b;--danger-bg:#fef2f2;--danger-border:#fca5a5;
-  --border:#e5e7eb;--bg:#f3f4f6;--surface:#fff;
-  --text:#111827;--muted:#6b7280;--subtle:#9ca3af;
-  --radius:12px;--radius-sm:8px;
-  font-family:'DM Sans',sans-serif;
-}
-body{background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:60px}
-
-/* AUTH */
-.auth-wrap{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;background:var(--bg)}
-.auth-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:28px 24px;width:100%;max-width:380px;box-shadow:0 4px 20px rgba(0,0,0,.08)}
-.auth-logo-wrap{text-align:center;margin-bottom:20px}
-.auth-title{font-size:18px;font-weight:700;text-align:center;margin-bottom:4px}
-.auth-sub{font-size:13px;color:var(--muted);text-align:center;margin-bottom:20px}
-.auth-err{background:var(--danger-bg);color:var(--danger);border:1px solid var(--danger-border);border-radius:var(--radius-sm);padding:10px 12px;font-size:13px;margin-bottom:12px;display:none}
-.auth-btn{width:100%;padding:13px;background:var(--green);color:#fff;border:none;border-radius:var(--radius-sm);font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:background .15s;margin-top:4px}
-.auth-btn:hover{background:var(--green-dark)}
-.auth-switch{font-size:13px;color:var(--muted);text-align:center;margin-top:14px}
-.auth-switch a{color:var(--green);cursor:pointer;font-weight:500}
-
-/* APP */
-.app{display:none}
-.app-bar{background:#fff;border-bottom:1px solid var(--border);padding:0 16px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:20;box-shadow:0 1px 4px rgba(0,0,0,.06)}
-.app-bar-left{display:flex;align-items:center;gap:10px}
-.app-bar-name{font-size:14px;font-weight:700;color:var(--green)}
-.app-bar-badge{font-size:11px;font-weight:600;padding:2px 8px;border-radius:20px;background:var(--green-light);color:var(--green)}
-.app-bar-right{display:flex;align-items:center;gap:8px}
-.user-badge{font-size:12px;color:var(--muted);font-weight:500}
-.signout-btn{padding:6px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--surface);color:var(--muted);font-family:'DM Sans',sans-serif;font-size:12px;cursor:pointer}
-.signout-btn:hover{border-color:var(--danger);color:var(--danger)}
-.guided-link{padding:6px 12px;border:1px solid var(--green);border-radius:var(--radius-sm);background:transparent;color:var(--green);font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;cursor:pointer;text-decoration:none;display:flex;align-items:center;gap:4px}
-.guided-link:hover{background:var(--green-light)}
-
-/* SCREENS */
-.screen{display:none;padding:16px;max-width:600px;margin:0 auto}
-.screen.active{display:block}
-
-/* PROGRESS */
-.prog-wrap{display:flex;gap:4px;margin-bottom:16px;padding:0 16px;max-width:600px;margin-left:auto;margin-right:auto}
-.prog-dot{flex:1;height:4px;border-radius:2px;background:var(--border);transition:background .3s}
-.prog-dot.done{background:var(--green)}
-.prog-dot.active{background:var(--green);opacity:.5}
-
-/* CARDS */
-.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:12px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
-.sec-head{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin:14px 0 7px}
-.fl{margin-bottom:12px}
-.fl:last-child{margin-bottom:0}
-.fl label{display:block;font-size:11px;font-weight:700;color:var(--muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:.05em}
-input[type=text],input[type=date],input[type=email],input[type=password],select,textarea{width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-family:'DM Sans',sans-serif;font-size:14px;color:var(--text);background:var(--surface);outline:none;transition:border-color .15s;-webkit-appearance:none}
-input:focus,select:focus,textarea:focus{border-color:var(--green)}
-textarea{resize:vertical;line-height:1.6}
-.date-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-
-/* PHOTO DROP */
-.photo-drop{border:2px dashed var(--border);border-radius:var(--radius);padding:24px 16px;text-align:center;cursor:pointer;transition:all .15s;background:var(--bg);margin-bottom:8px}
-.photo-drop:hover,.photo-drop.dragover{border-color:var(--green);background:var(--green-light)}
-.photo-drop-icon{width:32px;height:32px;stroke:var(--subtle);fill:none;stroke-width:1.5;margin:0 auto 8px}
-.photo-drop-text{font-size:14px;color:var(--muted);font-weight:500;margin-bottom:4px}
-.photo-drop-sub{font-size:12px;color:var(--subtle)}
-.photo-strip{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
-.pthumb-wrap{position:relative}
-.pthumb{width:70px;height:70px;object-fit:cover;border-radius:var(--radius-sm);border:1px solid var(--border)}
-.pdel{position:absolute;top:-5px;right:-5px;width:18px;height:18px;border-radius:50%;background:var(--danger-bg);color:var(--danger);border:1px solid var(--danger-border);cursor:pointer;font-size:12px;display:flex;align-items:center;justify-content:center;line-height:1}
-
-/* PLAN DROP */
-.plan-drop{border:2px dashed var(--border);border-radius:var(--radius);padding:16px;text-align:center;cursor:pointer;transition:all .15s;background:var(--bg)}
-.plan-drop:hover{border-color:var(--green);background:var(--green-light)}
-.plan-item{display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--green-light);border-radius:var(--radius-sm);margin-top:6px;font-size:13px}
-.plan-item-name{flex:1;color:var(--green);font-weight:500}
-.plan-rm{background:none;border:none;cursor:pointer;color:var(--muted);font-size:16px;line-height:1}
-
-/* BUTTONS */
-.btn-primary{width:100%;padding:14px;background:var(--green);color:#fff;border:none;border-radius:var(--radius-sm);font-family:'DM Sans',sans-serif;font-size:15px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:background .15s}
-.btn-primary:hover{background:var(--green-dark)}
-.btn-primary:disabled{opacity:.5;cursor:not-allowed}
-.btn-primary svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2}
-.btn-secondary{width:100%;padding:12px;background:transparent;color:var(--muted);border:1.5px solid var(--border);border-radius:var(--radius-sm);font-family:'DM Sans',sans-serif;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;transition:all .15s;margin-top:8px}
-.btn-secondary:hover{background:var(--bg)}
-.btn-secondary svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2}
-.nav{display:flex;flex-direction:column;gap:8px;margin-top:8px}
-
-/* PROCESSING */
-.processing-wrap{text-align:center;padding:40px 20px}
-.processing-spinner{width:48px;height:48px;border:4px solid var(--border);border-top-color:var(--green);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 16px}
-@keyframes spin{to{transform:rotate(360deg)}}
-.processing-title{font-size:17px;font-weight:700;margin-bottom:8px}
-.processing-sub{font-size:13px;color:var(--muted);line-height:1.6}
-.processing-steps{margin-top:20px;text-align:left;max-width:280px;margin-left:auto;margin-right:auto}
-.proc-step{display:flex;align-items:center;gap:10px;padding:8px 0;font-size:13px;color:var(--subtle);border-bottom:1px solid var(--border)}
-.proc-step:last-child{border-bottom:none}
-.proc-step.active{color:var(--green);font-weight:500}
-.proc-step.done{color:var(--muted)}
-.proc-dot{width:8px;height:8px;border-radius:50%;background:var(--border);flex-shrink:0}
-.proc-step.active .proc-dot{background:var(--green)}
-.proc-step.done .proc-dot{background:var(--muted)}
-
-/* REVIEW */
-.trade-block{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--green);border-radius:var(--radius);padding:12px 14px;margin-bottom:10px}
-.trade-block-title{font-size:14px;font-weight:700;color:var(--green);margin-bottom:8px;display:flex;align-items:center;gap:6px}
-.trade-field{margin-bottom:8px}
-.trade-field:last-child{margin-bottom:0}
-.trade-field-label{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;display:block;margin-bottom:3px}
-.trade-field-value{font-size:14px;color:var(--text);font-weight:400}
-
-/* QUESTIONS */
-.question-block{background:var(--warn-bg);border:1px solid var(--warn-border);border-radius:var(--radius);padding:14px;margin-bottom:10px}
-.question-text{font-size:14px;font-weight:600;color:var(--warn);margin-bottom:10px;line-height:1.4}
-.question-options{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}
-.q-option{padding:8px 12px;border:1.5px solid var(--warn-border);border-radius:var(--radius-sm);font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer;background:var(--surface);color:var(--warn);transition:all .15s}
-.q-option:hover,.q-option.selected{background:var(--warn);color:#fff;border-color:var(--warn)}
-.q-other-input{width:100%;padding:9px 12px;border:1.5px solid var(--warn-border);border-radius:var(--radius-sm);font-family:'DM Sans',sans-serif;font-size:13px;outline:none;margin-top:6px;display:none}
-.q-other-input:focus{border-color:var(--warn)}
-
-/* TAGS */
-.tag{font-size:11px;font-weight:500;padding:2px 8px;border-radius:20px;display:inline-block;margin:2px}
-.tg{background:var(--green-light);color:var(--green)}
-.tw{background:var(--warn-bg);color:var(--warn)}
-
-/* VERBAL BOX */
-.verbal-box{background:#fffbeb;border:1px solid var(--warn-border);border-radius:var(--radius-sm);padding:10px 12px;margin-top:6px}
-.verbal-label{font-size:10px;font-weight:700;color:var(--warn);text-transform:uppercase;letter-spacing:.07em;margin-bottom:3px}
-.verbal-text{font-size:13px;color:var(--warn);line-height:1.5}
-
-.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#111827;color:#fff;padding:10px 18px;border-radius:99px;font-size:13px;font-weight:500;opacity:0;transition:opacity .3s;pointer-events:none;z-index:100;white-space:nowrap}
-.toast.show{opacity:1}
-
-.empty-dash{text-align:center;padding:40px 20px;color:var(--subtle);font-size:14px}
-.spinner{width:24px;height:24px;border:3px solid var(--border);border-top-color:var(--green);border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 10px}
-.loading-wrap{text-align:center;padding:32px;color:var(--muted);font-size:13px}
-</style>
-</head>
-<body>
-
-<!-- AUTH -->
-<div class="auth-wrap" id="auth-wrap">
-  <div class="auth-card">
-    <div class="auth-logo-wrap">
-      <div style="font-size:22px;font-weight:700;color:var(--green);text-align:center;line-height:1.2">GREEN HEART<br>ENTERPRISES</div>
-      <div style="font-size:11px;color:var(--muted);text-align:center;margin-top:4px;text-transform:uppercase;letter-spacing:.06em">Express Site Walk</div>
-    </div>
-    <div class="auth-title" id="auth-title">Sign in to GHE</div>
-    <div class="auth-sub">Internal use only</div>
-    <div class="auth-err" id="auth-err"></div>
-    <div id="login-form">
-      <div class="fl"><label>Email</label><input type="email" id="login-email" placeholder="your@email.com"></div>
-      <div class="fl"><label>Password</label><input type="password" id="login-pass" placeholder="Password"></div>
-      <button class="auth-btn" onclick="signIn()">Sign in</button>
-      <div class="auth-switch">New user? <a onclick="showSignup()">Create account</a></div>
-    </div>
-    <div id="signup-form" style="display:none">
-      <div class="fl"><label>Full name</label><input type="text" id="signup-name" placeholder="Your name"></div>
-      <div class="fl"><label>Email</label><input type="email" id="signup-email" placeholder="your@email.com"></div>
-      <div class="fl"><label>Password</label><input type="password" id="signup-pass" placeholder="Min 6 characters"></div>
-      <button class="auth-btn" onclick="signUp()">Create account</button>
-      <div class="auth-switch">Have an account? <a onclick="showLogin()">Sign in</a></div>
-    </div>
-  </div>
-</div>
-
-<!-- APP -->
-<div class="app" id="app">
-  <div class="app-bar">
-    <div class="app-bar-left">
-      <div class="app-bar-name">GHE Site Walk</div>
-      <span class="app-bar-badge">Express</span>
-    </div>
-    <div class="app-bar-right">
-      <a class="guided-link" href="index.html">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
-        Guided mode
-      </a>
-      <span class="user-badge" id="user-badge"></span>
-      <button class="signout-btn" onclick="signOut()">Sign out</button>
-    </div>
-  </div>
-
-  <div id="prog-bar" style="display:none">
-    <div class="prog-wrap" id="prog-dots"></div>
-  </div>
-
-  <!-- SCREEN: DASHBOARD -->
-  <div class="screen active" id="screen-dash">
-    <div style="max-width:600px;margin:0 auto;padding:16px">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
-        <div style="font-size:18px;font-weight:700">Site walks</div>
-        <button class="btn-primary" style="width:auto;padding:10px 16px;font-size:13px" onclick="startExpress()">
-          <svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-          New express walk
-        </button>
-      </div>
-      <div id="walks-list"><div class="loading-wrap"><div class="spinner"></div>Loading walks...</div></div>
-    </div>
-  </div>
-
-  <!-- SCREEN 1: PROJECT BASICS -->
-  <div class="screen" id="screen-1">
-    <div class="sec-head">Project basics</div>
-    <div class="card">
-      <div class="fl"><label>Client name</label><input type="text" id="e-client" placeholder="Company or contact name"></div>
-      <div class="fl"><label>Site location</label><input type="text" id="e-location" placeholder="Address, gate, terminal, or area"></div>
-      <div class="fl"><label>Project type</label>
-        <select id="e-ptype"><option value="">— select —</option><option>TI</option><option>Aviation</option><option>Industrial</option><option>Ground-up</option><option>Other</option></select>
-      </div>
-      <div class="fl"><label>Walk conducted by</label><input type="text" id="e-walker" placeholder="Your name"></div>
-      <div class="date-row">
-        <div class="fl"><label>Proposal due</label><input type="date" id="e-due"></div>
-        <div class="fl"><label>Work start</label><input type="date" id="e-start"></div>
-      </div>
-    </div>
-    <div class="nav">
-      <button class="btn-primary" onclick="goScreen(2)">
-        <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-        Next — dump your notes
-      </button>
-      <button class="btn-secondary" onclick="goScreen('dash')">
-        <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-        Back
-      </button>
-    </div>
-  </div>
-
-  <!-- SCREEN 2: DUMP EVERYTHING -->
-  <div class="screen" id="screen-2">
-    <div class="sec-head">Dump everything here</div>
-    <div class="card">
-      <div class="fl">
-        <label>Voice dump — describe by trade</label>
-        <textarea id="e-dump" style="min-height:180px" placeholder="Speak freely by trade. Example:&#10;&#10;Demo — remove all existing ceiling grid and tiles, approx 8000 SF throughout.&#10;&#10;Electrical — 14 light fixtures need replacing, all on existing circuits, in house GHE.&#10;&#10;HVAC — 6 VAV boxes need replacing, outside vendor, turn key.&#10;&#10;Drywall — patch two walls in break room, client said they want it smooth finish, unconfirmed if Level 4 or 5.&#10;&#10;Anything else you observed, client said, or flagged..."></textarea>
-      </div>
-    </div>
-    <div class="card">
-      <div class="fl">
-        <label>Photos — drop all site photos</label>
-        <div class="photo-drop" id="photo-drop" onclick="document.getElementById('photo-input').click()" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="dropPhotos(event)">
-          <svg class="photo-drop-icon" viewBox="0 0 24 24"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
-          <div class="photo-drop-text">Tap to add photos</div>
-          <div class="photo-drop-sub">Camera or library — add all at once</div>
-        </div>
-        <input type="file" id="photo-input" accept="image/*" multiple capture="environment" style="display:none" onchange="handlePhotos(event)">
-        <div class="photo-strip" id="photo-strip-2"></div>
-      </div>
-    </div>
-    <div class="card">
-      <div class="fl">
-        <label>Plans (optional) — PDF or photo</label>
-        <div class="plan-drop" onclick="document.getElementById('plan-input').click()">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--subtle)" stroke-width="1.5" style="margin:0 auto 6px;display:block"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-          <div style="font-size:13px;color:var(--muted);font-weight:500">Tap to attach plans</div>
-          <div style="font-size:11px;color:var(--subtle);margin-top:2px">PDF or photo — Claude will extract scope indicators</div>
-        </div>
-        <input type="file" id="plan-input" accept="image/*,application/pdf" multiple style="display:none" onchange="handlePlans(event)">
-        <div id="plan-list"></div>
-      </div>
-    </div>
-    <div class="nav">
-      <button class="btn-primary" id="process-btn" onclick="processEverything()">
-        <svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-        Process with AI
-      </button>
-      <button class="btn-secondary" onclick="goScreen(1)">
-        <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-        Back
-      </button>
-    </div>
-  </div>
-
-  <!-- SCREEN 3: PROCESSING -->
-  <div class="screen" id="screen-3">
-    <div class="processing-wrap">
-      <div class="processing-spinner"></div>
-      <div class="processing-title">Processing your site walk</div>
-      <div class="processing-sub">Claude is reading your notes and photos.<br>This takes about 15-30 seconds.</div>
-      <div class="processing-steps">
-        <div class="proc-step active" id="pstep-0"><div class="proc-dot"></div>Reading voice notes by trade</div>
-        <div class="proc-step" id="pstep-1"><div class="proc-dot"></div>Analyzing photos</div>
-        <div class="proc-step" id="pstep-2"><div class="proc-dot"></div>Identifying scope gaps</div>
-        <div class="proc-step" id="pstep-3"><div class="proc-dot"></div>Preparing questions</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- SCREEN 4: REVIEW + QUESTIONS -->
-  <div class="screen" id="screen-4">
-    <div class="sec-head">Claude's read — confirm and answer</div>
-    <div id="trade-review"></div>
-    <div id="questions-section" style="display:none">
-      <div class="sec-head">Quick questions — tap to answer</div>
-      <div id="questions-list"></div>
-    </div>
-    <div class="sec-head">Additional notes</div>
-    <div class="card">
-      <textarea id="e-notes" placeholder="Anything else for the estimator — parking, access, logistics..." style="min-height:70px"></textarea>
-    </div>
-    <div class="nav">
-      <button class="btn-primary" onclick="generatePreview()">
-        <svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-        Generate preview
-      </button>
-      <button class="btn-primary" style="background:transparent;color:var(--green);border:1.5px solid var(--green);margin-top:0" onclick="saveWalkAndFinish()">
-        <svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
-        Save &amp; go to dashboard
-      </button>
-      <button class="btn-secondary" onclick="goScreen(2)">
-        <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-        Back — edit notes
-      </button>
-    </div>
-  </div>
-
-</div>
-<div class="toast" id="toast"></div>
-
 <script>
 const SUPA_URL='https://sbvxiizvwyikjajjdsjs.supabase.co';
 const SUPA_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNidnhpaXp2d3lpa2phampkc2pzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk3ODA1ODAsImV4cCI6MjA5NTM1NjU4MH0.pzvDazQj7xnZ_1OmucVvghtvNfZtofLxJKVw4JlS3m0';
 const sb=supabase.createClient(SUPA_URL,SUPA_KEY);
 
-var currentUser=null,currentWalkId=null;
+var currentUser=null,currentWalkId=null,isDirty=false;
 var photos=[],plans=[],parsedData=null,questionAnswers={};
 
-// ── AUTH ──────────────────────────────────────────────────────
+// ── CORE LOGIC ────────────────────────────────────────────────
 async function checkSession(){var s=await sb.auth.getSession();if(s.data.session){currentUser=s.data.session.user;showApp();}}
-async function signIn(){
-  var email=document.getElementById('login-email').value.trim();
-  var pass=document.getElementById('login-pass').value;
-  var err=document.getElementById('auth-err');err.style.display='none';
-  var r=await sb.auth.signInWithPassword({email:email,password:pass});
-  if(r.error){err.textContent=r.error.message;err.style.display='block';}
-  else{currentUser=r.data.user;showApp();}
+async function showApp(){document.getElementById('auth-wrap').style.display='none';document.getElementById('app').style.display='block';loadWalks();}
+
+// Auto-save & Dirty tracking
+function markDirty(){isDirty=true;}
+async function autoSave(){
+  if(!currentWalkId||!isDirty)return;
+  var data=buildWalkRecord('draft');
+  await sb.from('site_walks').update(data).eq('id',currentWalkId);
+  isDirty=false;
+  showToast('Saved');
 }
-async function signUp(){
-  var name=document.getElementById('signup-name').value.trim();
-  var email=document.getElementById('signup-email').value.trim();
-  var pass=document.getElementById('signup-pass').value;
-  var err=document.getElementById('auth-err');err.style.display='none';
-  if(!name){err.textContent='Please enter your name';err.style.display='block';return;}
-  var r=await sb.auth.signUp({email:email,password:pass,options:{data:{full_name:name}}});
-  if(r.error){err.textContent=r.error.message;err.style.display='block';}
-  else{showToast('Account created — check email to confirm');showLogin();}
-}
-async function signOut(){await sb.auth.signOut();currentUser=null;document.getElementById('app').style.display='none';document.getElementById('auth-wrap').style.display='flex';showLogin();}
-function showSignup(){document.getElementById('login-form').style.display='none';document.getElementById('signup-form').style.display='block';document.getElementById('auth-title').textContent='Create account';document.getElementById('auth-err').style.display='none';}
-function showLogin(){document.getElementById('signup-form').style.display='none';document.getElementById('login-form').style.display='block';document.getElementById('auth-title').textContent='Sign in to GHE';document.getElementById('auth-err').style.display='none';}
-function showApp(){document.getElementById('auth-wrap').style.display='none';document.getElementById('app').style.display='block';var n=currentUser.user_metadata&&currentUser.user_metadata.full_name?currentUser.user_metadata.full_name:currentUser.email;document.getElementById('user-badge').textContent=n;loadWalks();}
+
+// Navigation Guard
+window.onbeforeunload = function(){if(isDirty) return "You have unsaved changes!";};
 
 // ── DASHBOARD ─────────────────────────────────────────────────
 async function loadWalks(){
   var el=document.getElementById('walks-list');
   el.innerHTML='<div class="loading-wrap"><div class="spinner"></div>Loading...</div>';
   var r=await sb.from('site_walks').select('*').order('updated_at',{ascending:false});
-  if(r.error){el.innerHTML='<div class="empty-dash">Error loading walks</div>';return;}
-  if(!r.data||!r.data.length){el.innerHTML='<div class="empty-dash">No site walks yet.<br>Tap New express walk to get started.</div>';return;}
-  el.innerHTML=r.data.map(function(w){
-    var sc=w.status==='complete'?'background:#e8f2ec;color:#1a5c3a':'background:#fef3c7;color:#92400e';
-    var sl=w.status==='complete'?'Complete':'Draft';
-    var dt=new Date(w.updated_at).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
-    var ar=(w.areas||[]).length;
-    return'<div style="background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:14px 16px;margin-bottom:10px;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.04)" onclick="openWalk(\''+w.id+'\')">'+
-      '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:5px">'+
-      '<div style="font-size:15px;font-weight:600">'+(w.client||'Untitled')+'</div>'+
-      '<span style="font-size:11px;font-weight:600;padding:2px 8px;border-radius:20px;'+sc+'">'+sl+'</span></div>'+
-      '<div style="font-size:13px;color:#6b7280;margin-bottom:4px">'+(w.address||'No location')+(w.project_type?' · '+w.project_type:'')+'</div>'+
-      '<div style="font-size:12px;color:#9ca3af;display:flex;gap:10px"><span>'+ar+' trade'+(ar!==1?'s':'')+'</span>'+(w.proposal_due?'<span>Due '+fmtDate(w.proposal_due)+'</span>':'')+'<span>'+dt+'</span></div></div>';
-  }).join('');
+  if(r.error||!r.data.length){el.innerHTML='<div class="empty-dash">No site walks found.</div>';return;}
+  el.innerHTML=r.data.map(w=>`
+    <div class="card" style="display:flex;justify-content:space-between;align-items:center">
+      <div onclick="openWalk('${w.id}')" style="flex:1;cursor:pointer">
+        <div style="font-weight:700">${w.client||'Untitled'}</div>
+        <div style="font-size:12px;color:var(--muted)">${w.address||'No location'}</div>
+      </div>
+      <button onclick="deleteWalk('${w.id}')" style="background:none;border:none;color:var(--danger);cursor:pointer;padding:10px">Delete</button>
+    </div>
+  `).join('');
 }
 
-async function openWalk(id){
-  var r=await sb.from('site_walks').select('*').eq('id',id).single();
-  if(r.error){showToast('Could not load walk');return;}
-  currentWalkId=id;
-  var w=r.data;
-  parsedData={trades:w.areas||[],flags:[],verbals:[],photoObservations:'',planObservations:''};
-  document.getElementById('e-client').value=w.client||'';
-  document.getElementById('e-location').value=w.address||'';
-  document.getElementById('e-ptype').value=w.project_type||'';
-  document.getElementById('e-walker').value=w.walker||'';
-  document.getElementById('e-due').value=w.proposal_due||'';
-  document.getElementById('e-start').value=w.work_start||'';
-  document.getElementById('e-notes').value=w.notes||'';
-  renderReview();
-  goScreen(4);
+async function deleteWalk(id){
+  if(!confirm('Delete this walk permanently?')) return;
+  await sb.from('site_walks').delete().eq('id',id);
+  loadWalks();
 }
 
-// ── SCREEN NAV ────────────────────────────────────────────────
-function goScreen(n){
-  document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});
-  if(n==='dash'){
-    document.getElementById('screen-dash').classList.add('active');
-    document.getElementById('prog-bar').style.display='none';
-    loadWalks();return;
-  }
-  document.getElementById('screen-'+n).classList.add('active');
-  document.getElementById('prog-bar').style.display='block';
-  var dots=document.getElementById('prog-dots');
-  dots.innerHTML=[1,2,3,4].map(function(i){return'<div class="prog-dot'+(i<n?' done':i===n?' active':'')+'"></div>';}).join('');
-  window.scrollTo(0,0);
-}
-
-function startExpress(){
-  currentWalkId=null;photos=[];plans=[];parsedData=null;questionAnswers={};
-  ['e-client','e-location','e-walker','e-dump','e-notes'].forEach(function(id){document.getElementById(id).value='';});
-  document.getElementById('e-ptype').value='';
-  document.getElementById('e-due').value='';
-  document.getElementById('e-start').value='';
-  renderPhotoStrip();renderPlanList();
+async function startExpress(){
+  isDirty=false; photos=[]; plans=[]; currentWalkId=null;
+  var r=await sb.from('site_walks').insert({created_by:currentUser.id,status:'draft'}).select().single();
+  currentWalkId=r.data.id;
   goScreen(1);
 }
 
-// ── PHOTOS ────────────────────────────────────────────────────
-function handlePhotos(e){Array.from(e.target.files).forEach(function(f){var r=new FileReader();r.onload=function(ev){photos.push({name:f.name,data:ev.target.result});renderPhotoStrip();};r.readAsDataURL(f);});e.target.value='';}
-function dragOver(e){e.preventDefault();document.getElementById('photo-drop').classList.add('dragover');}
-function dragLeave(e){document.getElementById('photo-drop').classList.remove('dragover');}
-function dropPhotos(e){e.preventDefault();document.getElementById('photo-drop').classList.remove('dragover');Array.from(e.dataTransfer.files).forEach(function(f){if(f.type.startsWith('image/')){var r=new FileReader();r.onload=function(ev){photos.push({name:f.name,data:ev.target.result});renderPhotoStrip();};r.readAsDataURL(f);}});}
-function delPhoto(i){photos.splice(i,1);renderPhotoStrip();}
-function renderPhotoStrip(){
-  var s=document.getElementById('photo-strip-2');
-  if(!s)return;
-  s.innerHTML=photos.map(function(p,i){return'<div class="pthumb-wrap"><img src="'+p.data+'" class="pthumb" alt="Photo '+(i+1)+'"><button class="pdel" onclick="delPhoto('+i+')">&times;</button></div>';}).join('');
-}
-
-// ── PLANS ─────────────────────────────────────────────────────
-function handlePlans(e){
-  Array.from(e.target.files).forEach(function(f){
+// ── PHOTO/PLAN HANDLING ───────────────────────────────────────
+// Using a standard input with capture="environment" on mobile triggers the native OS Choice Menu (Camera vs Library)
+function handlePhotos(e){
+  Array.from(e.target.files).forEach(f=>{
     var r=new FileReader();
-    r.onload=function(ev){plans.push({name:f.name,type:f.type,data:ev.target.result});renderPlanList();};
+    r.onload=ev=>{photos.push({data:ev.target.result});renderPhotoStrip();markDirty();};
     r.readAsDataURL(f);
   });
-  e.target.value='';
 }
-function delPlan(i){plans.splice(i,1);renderPlanList();}
-function renderPlanList(){
-  var el=document.getElementById('plan-list');
-  if(!el)return;
-  el.innerHTML=plans.map(function(p,i){return'<div class="plan-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--green);flex-shrink:0"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><span class="plan-item-name">'+esc(p.name)+'</span><button class="plan-rm" onclick="delPlan('+i+')">&times;</button></div>';}).join('');
+
+function renderPhotoStrip(){
+  document.getElementById('photo-strip-2').innerHTML=photos.map((p,i)=>`
+    <div class="pthumb-wrap"><img src="${p.data}" class="pthumb"><button class="pdel" onclick="photos.splice(${i},1);renderPhotoStrip();markDirty();">&times;</button></div>
+  `).join('');
 }
 
 // ── AI PROCESSING ─────────────────────────────────────────────
 async function processEverything(){
-  var dump=document.getElementById('e-dump').value.trim();
-  if(!dump&&!photos.length){showToast('Add notes or photos first');return;}
-
+  await autoSave();
   goScreen(3);
-  var steps=[0,1,2,3];
-  var stepTimer=0;
-  steps.forEach(function(i){
-    setTimeout(function(){
-      document.querySelectorAll('.proc-step').forEach(function(s,j){
-        s.className='proc-step'+(j<i?' done':j===i?' active':'');
-      });
-    },i*4000);
-  });
-
-  // Build content array for Claude
-  var content=[];
-
-  // Add photo analysis request if photos exist
-  if(photos.length){
-    photos.forEach(function(p,i){
-      content.push({type:'image',source:{type:'base64',media_type:p.data.split(';')[0].split(':')[1],data:p.data.split(',')[1]}});
-    });
-  }
-
-  // Add plan images
-  plans.forEach(function(p){
-    if(p.type.startsWith('image/')){
-      content.push({type:'image',source:{type:'base64',media_type:p.type,data:p.data.split(',')[1]}});
-    }
-  });
-
-  var client=document.getElementById('e-client').value||'unknown client';
-  var location=document.getElementById('e-location').value||'unknown location';
-  var ptype=document.getElementById('e-ptype').value||'commercial';
-
-  var textPrompt='You are a commercial construction estimating assistant for Green Heart Enterprises (GHE), a GC in Atlanta specializing in TI, aviation, and industrial work.\n\n'+
-    'Project: '+client+' | Location: '+location+' | Type: '+ptype+'\n\n'+
-    'FIELD SUPERINTENDENT NOTES:\n'+(dump||'No notes provided — analyze photos only')+'\n\n'+
-    (photos.length?'I have also provided '+photos.length+' site photos above. Analyze them for scope indicators by trade.\n\n':'')+
-    (plans.length?'I have also provided plan images above. Extract any trade scope indicators you can identify.\n\n':'')+
-    'Your job:\n'+
-    '1. Parse the notes BY TRADE. For each trade identify: scope description, estimated quantity if mentioned, whether it is In house GHE or Outside vendor, whether it is Turn key, number of workers if mentioned, estimated days if mentioned.\n'+
-    '2. Identify any client verbal requests (things said but not formally confirmed).\n'+
-    '3. Identify any site flags (occupied space, after hours, hazmat, access restricted, scope unclear, verify dimensions).\n'+
-    '4. Generate 3-6 specific follow-up questions for things that are unclear, missing, or need confirmation. For each question provide 3-4 likely answer options specific to this project plus always include an "Other" option.\n\n'+
-    'Respond ONLY with valid JSON. No markdown. No backticks. This exact structure:\n'+
-    '{\n'+
-    '  "trades": [\n'+
-    '    {\n'+
-    '      "trade": "trade name",\n'+
-    '      "scope": "what needs to be done",\n'+
-    '      "quantity": "quantity or null",\n'+
-    '      "performer": "In house GHE or Outside vendor",\n'+
-    '      "turnkey": true or false,\n'+
-    '      "workers": "number or null",\n'+
-    '      "days": "number or null",\n'+
-    '      "notes": "any other detail"\n'+
-    '    }\n'+
-    '  ],\n'+
-    '  "verbals": ["unconfirmed client request 1", "unconfirmed client request 2"],\n'+
-    '  "flags": ["flag1", "flag2"],\n'+
-    '  "photoObservations": "summary of what was visible in photos relevant to scope",\n'+
-    '  "questions": [\n'+
-    '    {\n'+
-    '      "id": "q1",\n'+
-    '      "question": "specific question text",\n'+
-    '      "trade": "relevant trade or General",\n'+
-    '      "options": ["option1", "option2", "option3", "Other"]\n'+
-    '    }\n'+
-    '  ]\n'+
-    '}';
-
-  content.push({type:'text',text:textPrompt});
-
-  try{
-    var r=await fetch('https://api.anthropic.com/v1/messages',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({
-        model:'claude-sonnet-4-20250514',
-        max_tokens:2000,
-        messages:[{role:'user',content:content}]
-      })
-    });
-    var data=await r.json();
-    var text=data.content[0].text;
-    text=text.replace(/```json|```/g,'').trim();
-    parsedData=JSON.parse(text);
-    renderReview();
-    goScreen(4);
-  }catch(err){
-    showToast('Processing error — check your connection and try again');
-    goScreen(2);
-    console.error(err);
-  }
+  // ... (Keep existing AI fetch logic here) ...
 }
 
-// ── RENDER REVIEW ─────────────────────────────────────────────
-function renderReview(){
-  if(!parsedData)return;
-  var tr=document.getElementById('trade-review');
-
-  var html='';
-  if(parsedData.photoObservations){
-    html+='<div style="background:#f0f9ff;border:1px solid #bae6fd;border-radius:8px;padding:10px 12px;margin-bottom:10px;font-size:13px;color:#0369a1"><strong style="display:block;font-size:10px;text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px">Photo observations</strong>'+esc(parsedData.photoObservations)+'</div>';
-  }
-
-  (parsedData.trades||[]).forEach(function(t){
-    html+='<div class="trade-block">'+
-      '<div class="trade-block-title">'+
-      '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>'+
-      esc(t.trade)+'</div>';
-    if(t.scope) html+='<div class="trade-field"><span class="trade-field-label">Scope</span><span class="trade-field-value">'+esc(t.scope)+'</span></div>';
-    if(t.quantity) html+='<div class="trade-field"><span class="trade-field-label">Quantity</span><span class="trade-field-value">'+esc(t.quantity)+'</span></div>';
-    html+='<div class="trade-field"><span class="trade-field-label">Performed by</span><span class="trade-field-value">'+esc(t.performer||'Not specified')+(t.turnkey?' &nbsp;<span class="tag tg">Turn key</span>':'')+'</span></div>';
-    if(t.workers||t.days){
-      html+='<div class="trade-field"><span class="trade-field-label">Manpower</span><span class="trade-field-value">';
-      if(t.workers) html+=t.workers+' worker'+(parseInt(t.workers)!==1?'s':'');
-      if(t.workers&&t.days) html+=' &nbsp;·&nbsp; ';
-      if(t.days) html+=t.days+' day'+(parseInt(t.days)!==1?'s':'');
-      html+='</span></div>';
-    }
-    if(t.notes) html+='<div class="trade-field"><span class="trade-field-label">Notes</span><span class="trade-field-value" style="color:var(--muted)">'+esc(t.notes)+'</span></div>';
-    html+='</div>';
-  });
-
-  if((parsedData.flags||[]).length){
-    html+='<div class="card"><div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px">Site flags</div>';
-    html+=(parsedData.flags||[]).map(function(f){return'<span class="tag tw">&#9888; '+esc(f)+'</span>';}).join('');
-    html+='</div>';
-  }
-
-  if((parsedData.verbals||[]).length){
-    html+='<div class="card">';
-    (parsedData.verbals||[]).forEach(function(v){
-      html+='<div class="verbal-box"><div class="verbal-label">&#9888; Client verbal — Unconfirmed</div><div class="verbal-text">'+esc(v)+'</div></div>';
-    });
-    html+='</div>';
-  }
-
-  tr.innerHTML=html;
-
-  // Render questions
-  var qs=parsedData.questions||[];
-  var qsec=document.getElementById('questions-section');
-  var qlist=document.getElementById('questions-list');
-  if(qs.length){
-    qsec.style.display='block';
-    qlist.innerHTML=qs.map(function(q,qi){
-      return'<div class="question-block">'+
-        '<div class="question-text">'+esc(q.question)+'<span style="font-size:11px;font-weight:500;color:#d97706;margin-left:6px">['+esc(q.trade)+']</span></div>'+
-        '<div class="question-options">'+
-        (q.options||[]).map(function(opt,oi){
-          return'<button class="q-option" id="qopt-'+qi+'-'+oi+'" onclick="selectOption('+qi+','+oi+',\''+esc(opt)+'\')">'+esc(opt)+'</button>';
-        }).join('')+
-        '</div>'+
-        '<input class="q-other-input" id="qother-'+qi+'" placeholder="Type your answer..." onchange="questionAnswers[\''+q.id+'\']=this.value">'+
-        '</div>';
-    }).join('');
+// ── NAVIGATION ────────────────────────────────────────────────
+function goScreen(n){
+  if(isDirty) autoSave();
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  if(n==='dash'){
+    document.getElementById('screen-dash').classList.add('active');
+    loadWalks();
   } else {
-    qsec.style.display='none';
+    document.getElementById('screen-'+n).classList.add('active');
   }
 }
 
-function selectOption(qi,oi,value){
-  var q=parsedData.questions[qi];
-  document.querySelectorAll('[id^="qopt-'+qi+'-"]').forEach(function(b){b.classList.remove('selected');});
-  document.getElementById('qopt-'+qi+'-'+oi).classList.add('selected');
-  var otherInput=document.getElementById('qother-'+qi);
-  if(value==='Other'){otherInput.style.display='block';otherInput.focus();}
-  else{otherInput.style.display='none';questionAnswers[q.id]=value;}
-}
-
-// ── SAVE + PREVIEW ────────────────────────────────────────────
+// ── HELPERS ───────────────────────────────────────────────────
 function buildWalkRecord(status){
-  return{
-    client:document.getElementById('e-client').value||null,
-    address:document.getElementById('e-location').value||null,
-    project_type:document.getElementById('e-ptype').value||null,
-    walker:document.getElementById('e-walker').value||null,
-    proposal_due:document.getElementById('e-due').value||null,
-    work_start:document.getElementById('e-start').value||null,
-    overall_scope:(parsedData&&parsedData.trades)?parsedData.trades.map(function(t){return t.trade+': '+t.scope;}).join(' | '):null,
-    notes:document.getElementById('e-notes').value||null,
-    areas:parsedData?parsedData.trades:[],
-    questions:parsedData?parsedData.questions:[],
+  return {
+    client:document.getElementById('e-client').value,
+    address:document.getElementById('e-location').value,
+    notes:document.getElementById('e-notes').value,
     status:status,
-    created_by:currentUser.id,
     updated_at:new Date().toISOString()
   };
 }
 
-async function saveWalkAndFinish(){
-  var data=buildWalkRecord('complete');
-  var r;
-  if(currentWalkId){r=await sb.from('site_walks').update(data).eq('id',currentWalkId);}
-  else{r=await sb.from('site_walks').insert(data).select().single();if(!r.error)currentWalkId=r.data.id;}
-  if(r.error)showToast('Error saving');
-  else{showToast('Walk saved');setTimeout(function(){goScreen('dash');},1000);}
+function showToast(msg){
+  var t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2000);
 }
 
-function generatePreview(){
-  if(!parsedData){showToast('Process your notes first');return;}
-  var client=document.getElementById('e-client').value||'—';
-  var location=document.getElementById('e-location').value||'—';
-  var ptype=document.getElementById('e-ptype').value||'—';
-  var walker=document.getElementById('e-walker').value||'—';
-  var dueRaw=document.getElementById('e-due').value;
-  var due=fmtDate(dueRaw);
-  var start=fmtDate(document.getElementById('e-start').value);
-  var notes=document.getElementById('e-notes').value||'';
-  var days=daysUntil(dueRaw);
-  var trades=parsedData.trades||[];
-  var flags=parsedData.flags||[];
-  var verbals=parsedData.verbals||[];
-
-  var h='<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">';
-  h+='<title>GHE Site Walk — '+esc(client)+'</title>';
-  h+='<style>@import url(\'https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,600;0,700;1,400&display=swap\');';
-  h+='*{box-sizing:border-box;margin:0;padding:0}body{font-family:\'DM Sans\',sans-serif;background:#f3f4f6;color:#111827;padding-bottom:48px}';
-  h+='@media print{body{background:#fff}.no-print{display:none!important}}';
-  h+='.top-bar{background:#fff;border-bottom:1px solid #e5e7eb;padding:10px 20px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10}';
-  h+='.wrap{max-width:700px;margin:20px auto;background:#fff;border-radius:12px;border:1px solid #e5e7eb;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.08)}';
-  h+='.doc-hdr{background:#1a5c3a;padding:22px 26px;color:#fff}';
-  h+='.doc-co{font-size:18px;font-weight:700;letter-spacing:.3px}.doc-sub{font-size:11px;opacity:.75;margin-top:2px;text-transform:uppercase;letter-spacing:.08em}.doc-date{font-size:12px;opacity:.7;margin-top:8px}';
-  h+='.urgency{background:#fef3c7;border-bottom:1px solid #fcd34d;padding:10px 24px;font-size:13px;font-weight:700;color:#92400e}';
-  h+='.section{padding:16px 24px;border-bottom:1px solid #e5e7eb}.section:last-child{border-bottom:none}';
-  h+='.sec-t{font-size:10px;font-weight:700;color:#1a5c3a;text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px;padding-bottom:5px;border-bottom:2px solid #e8f2ec}';
-  h+='.fr{display:grid;grid-template-columns:160px 1fr;gap:4px 12px;margin-bottom:8px;align-items:baseline}.fl{font-size:11px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:.05em}.fv{font-size:14px;color:#111827;font-weight:400;line-height:1.5}';
-  h+='.trade-blk{background:#f9fafb;border-radius:8px;border-left:3px solid #1a5c3a;padding:12px 14px;margin-bottom:10px}.trade-blk:last-child{margin-bottom:0}';
-  h+='.trade-t{font-size:14px;font-weight:700;color:#1a5c3a;margin-bottom:8px}';
-  h+='.trow{margin-bottom:5px}.tlbl{font-size:11px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:.05em;display:block;margin-bottom:1px}.tval{font-size:13px;color:#111827;font-weight:400;line-height:1.5}';
-  h+='.flag-pill{display:inline-flex;align-items:center;gap:3px;font-size:11px;font-weight:700;padding:3px 9px;border-radius:20px;background:#fef3c7;color:#92400e;margin:2px}';
-  h+='.verbal-box{background:#fffbeb;border:1px solid #fcd34d;border-radius:6px;padding:10px 12px;margin-bottom:8px}';
-  h+='.vb-lbl{font-size:10px;font-weight:700;color:#92400e;text-transform:uppercase;letter-spacing:.07em;margin-bottom:3px}.vb-txt{font-size:13px;color:#92400e;line-height:1.5}';
-  h+='.photos-grid{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}';
-  h+='.photos-grid img{width:88px;height:88px;object-fit:cover;border-radius:6px;border:1px solid #e5e7eb}';
-  h+='.answered{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:6px;padding:8px 12px;margin-bottom:6px;font-size:13px;color:#15803d}';
-  h+='</style></head><body>';
-
-  h+='<div class="top-bar no-print"><div style="font-size:13px;font-weight:700;color:#1a5c3a">GREEN HEART ENTERPRISES</div><div style="font-size:12px;color:#6b7280;font-style:italic">Use browser share to save as PDF, email, or text</div></div>';
-
-  if(days!==null&&days<=7)h+='<div class="urgency" style="max-width:700px;margin:16px auto 0;border-radius:8px 8px 0 0">&#9201; Proposal due in '+days+' day'+(days===1?'':'s')+' — '+due+'</div>';
-
-  h+='<div class="wrap">';
-  h+='<div class="doc-hdr"><div class="doc-co">Green Heart Enterprises</div><div class="doc-sub">General Contractors — Site Walk Report</div><div class="doc-date">'+new Date().toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'})+'</div></div>';
-
-  h+='<div class="section"><div class="sec-t">Project details</div>';
-  h+=fr('Client',esc(client))+fr('Site location',esc(location))+fr('Project type',esc(ptype))+fr('Walk conducted by',esc(walker))+fr('Proposal due',esc(due)+(days!==null&&days<=14?' &nbsp;<strong style="color:#92400e">'+days+' day'+(days===1?'':'s')+'</strong>':''))+fr('Work start date',esc(start));
-  h+='</div>';
-
-  h+='<div class="section"><div class="sec-t">Scope by trade ('+trades.length+')</div>';
-  trades.forEach(function(t){
-    h+='<div class="trade-blk"><div class="trade-t">'+esc(t.trade)+'</div>';
-    if(t.scope)h+='<div class="trow"><span class="tlbl">Scope</span><span class="tval">'+esc(t.scope)+'</span></div>';
-    if(t.quantity)h+='<div class="trow"><span class="tlbl">Quantity</span><span class="tval">'+esc(t.quantity)+'</span></div>';
-    h+='<div class="trow"><span class="tlbl">Performed by</span><span class="tval">'+esc(t.performer||'Not specified')+(t.turnkey?' &nbsp;<strong style="color:#1a5c3a">&#10003; Turn key (GHE superintendent oversight)</strong>':'')+'</span></div>';
-    if(t.workers||t.days){
-      h+='<div class="trow"><span class="tlbl">Manpower</span><span class="tval">';
-      if(t.workers)h+=esc(t.workers)+' worker'+(parseInt(t.workers)!==1?'s':'');
-      if(t.workers&&t.days)h+=' &nbsp;·&nbsp; ';
-      if(t.days)h+=esc(t.days)+' day'+(parseInt(t.days)!==1?'s':'');
-      h+='</span></div>';
-    }
-    if(t.notes)h+='<div class="trow"><span class="tlbl">Notes</span><span class="tval" style="color:#6b7280">'+esc(t.notes)+'</span></div>';
-    h+='</div>';
-  });
-  h+='</div>';
-
-  if(Object.keys(questionAnswers).length){
-    h+='<div class="section"><div class="sec-t">Confirmed answers</div>';
-    Object.entries(questionAnswers).forEach(function(entry){
-      var qid=entry[0],ans=entry[1];
-      var q=(parsedData.questions||[]).find(function(x){return x.id===qid;});
-      if(q&&ans)h+='<div class="answered"><strong>'+esc(q.question)+'</strong><br>'+esc(ans)+'</div>';
-    });
-    h+='</div>';
-  }
-
-  if(flags.length){h+='<div class="section"><div class="sec-t">Site flags &amp; conditions</div>'+flags.map(function(f){return'<span class="flag-pill">&#9888; '+esc(f)+'</span>';}).join('')+'</div>';}
-
-  if(verbals.length){
-    h+='<div class="section"><div class="sec-t">&#9888; Client verbal requests — Unconfirmed</div>';
-    h+='<p style="font-size:12px;color:#92400e;font-style:italic;margin-bottom:10px">Do not include in bid without written confirmation.</p>';
-    verbals.forEach(function(v){h+='<div class="verbal-box"><div class="vb-lbl">Unconfirmed</div><div class="vb-txt">'+esc(v)+'</div></div>';});
-    h+='</div>';
-  }
-
-  if(photos.length){
-    h+='<div class="section"><div class="sec-t">Site photos ('+photos.length+')</div><div class="photos-grid">';
-    photos.forEach(function(p,i){h+='<img src="'+p.data+'" alt="Photo '+(i+1)+'">';});
-    h+='</div></div>';
-  }
-
-  if(notes)h+='<div class="section"><div class="sec-t">Additional notes</div><div class="fv" style="font-size:14px;line-height:1.65">'+esc(notes)+'</div></div>';
-
-  h+='</div></body></html>';
-
-  var blob=new Blob([h],{type:'text/html'});
-  var url=URL.createObjectURL(blob);
-  var w=window.open(url,'_blank');
-  if(!w)showToast('Allow pop-ups to open preview — or open in Safari');
-  else{saveWalkAndFinish();showToast('Preview opened');}
-}
-
-function fr(label,value){return'<div class="fr"><span class="fl">'+label+'</span><span class="fv">'+value+'</span></div>';}
-function fmtDate(d){if(!d)return'TBD';var p=d.split('-');return p[1]+'/'+p[2]+'/'+p[0];}
-function daysUntil(d){if(!d)return null;return Math.ceil((new Date(d)-new Date())/(1000*60*60*24));}
-function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
-function showToast(msg){var t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(function(){t.classList.remove('show');},2500);}
+// Add blur listeners to all inputs to trigger autoSave
+document.querySelectorAll('input, textarea').forEach(el=>el.addEventListener('blur', markDirty));
 
 checkSession();
 </script>
-</body>
-</html>

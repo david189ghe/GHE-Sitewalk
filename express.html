@@ -487,7 +487,7 @@ async function processEverything(){
    var r=await fetch('/api/process',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:2000,messages:[{role:'user',content:content}]})
+      body:JSON.stringify({model:'claude-sonnet-4-20251001',max_tokens:2000,messages:[{role:'user',content:content}]})
     });
     var data=await r.json();
     var text=data.content[0].text.replace(/```json|```/g,'').trim();

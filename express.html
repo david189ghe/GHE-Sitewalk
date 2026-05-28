@@ -429,11 +429,21 @@ function getReviewedTrades(){
 }
 
 async function saveDraftSilent(){
-  var data=getWalkData();data.status='draft';data.created_by=currentUser.id;
-  var r;
-  if(currentWalkId){r=await sb.from('site_walks').update(data).eq('id',currentWalkId);}
-  else{r=await sb.from('site_walks').insert(data).select().single();if(!r.error){currentWalkId=r.data.id;}}
-  if(!r.error){isDirty=false;flashAutosave();}
+  try{
+    var data=getWalkData();
+    data.status='draft';
+    data.created_by=currentUser.id;
+    var r;
+    if(currentWalkId){
+      r=await sb.from('site_walks').update(data).eq('id',currentWalkId);
+    }else{
+      r=await sb.from('site_walks').insert(data).select().single();
+      if(!r.error)currentWalkId=r.data.id;
+    }
+    if(!r.error){isDirty=false;flashAutosave();}
+  }catch(e){
+    console.log('Save skipped:',e.message);
+  }
 }
 
 function autoSave(){isDirty=true;clearTimeout(autoSaveTimer);autoSaveTimer=setTimeout(function(){if(document.getElementById('e-client').value||document.getElementById('e-location').value){saveDraftSilent();}},1500);}

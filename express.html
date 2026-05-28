@@ -519,16 +519,33 @@ async function processEverything(){
     parsedData=JSON.parse(text.replace(/```json|```/g,'').trim());
     clearInterval(stepTimer);
     isDirty=true;
-    renderReview();
-    goScreen(4);
-    saveDraftSilent();
-  }catch(err){
-    clearInterval(stepTimer);
-    showToast('Processing error: '+err.message);
-    goScreen(2);
-    console.error(err);
-  }
-}
+renderReview();
+goScreen(4);
+async function saveDraftSilent(){
+  try{
+    var data=getWalkData();
+    data.status='draft';
+    data.created_by=currentUser.id;
+    // Only save text fields — skip areas and questions on mobile to avoid payload issues
+    var safeData={
+      client:data.client,
+      address:data.address,
+      project_type:data.project_type,
+      walker:data.walker,
+      proposal_due:data.proposal_due,
+      work_start:data.work_start,
+      overall_scope:data.overall_scope,
+      notes:data.notes,
+      status:data.status,
+      created_by:data.created_by,
+      updated_at:data.updated_at
+    };
+    var r;
+    if(currentWalkId){r=await sb.from('site_walks').update(safeData).eq('id',currentWalkId);}
+    else{r=await sb.from('site_walks').insert(safeData).select().single();if(r.data&&r.data.id)currentWalkId=r.data.id;}
+    if(!r||r.error){console.log('Save skipped:',r&&r.error?r.error.message:'unknown');}
+    else{isDirty=false;flashAutosave();}
+  }catch(e){console.log('Save skipped:',e.message);}
 
 function renderReview(){
   if(!parsedData)return;

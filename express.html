@@ -395,9 +395,14 @@ function closeSheet(){document.getElementById('sheet-overlay').classList.remove(
 async function saveAndLeave(){await saveDraftSilent();closeSheet();if(pendingNav==='dash')showDash();}
 function discardAndLeave(){isDirty=false;closeSheet();if(pendingNav==='dash')showDash();}
 
-function getWalkData(){
+ffunction getWalkData(){
   var due=document.getElementById('e-due').value||null;
   var start=document.getElementById('e-start').value||null;
+  var tradesNoPhotos=(parsedData?getReviewedTrades():[]).map(function(t){
+    var copy=Object.assign({},t);
+    delete copy.photos;
+    return copy;
+  });
   return{
     client:document.getElementById('e-client').value||null,
     address:document.getElementById('e-location').value||null,
@@ -407,10 +412,11 @@ function getWalkData(){
     work_start:start&&start.match(/^\d{4}-\d{2}-\d{2}$/)?start:null,
     overall_scope:parsedData?(parsedData.trades||[]).map(function(t){return t.trade+': '+t.scope;}).join(' | '):null,
     notes:document.getElementById('e-notes').value||null,
-    areas:parsedData?getReviewedTrades():[],
+    areas:tradesNoPhotos,
     questions:[],
     updated_at:new Date().toISOString()
   };
+}
 }
 
 function getReviewedTrades(){

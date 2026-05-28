@@ -113,7 +113,7 @@ textarea{resize:vertical;line-height:1.6}
 .walk-status{font-size:11px;font-weight:600;padding:2px 8px;border-radius:20px}
 .status-draft{background:var(--warn-bg);color:var(--warn)}
 .status-complete{background:var(--green-light);color:var(--green)}
-.delete-btn{background:none;border:none;cursor:pointer;color:var(--subtle);padding:4px 6px;border-radius:4px;font-size:18px;line-height:1;-webkit-tap-highlight-color:transparent}
+.delete-btn{background:none;border:none;cursor:pointer;color:var(--subtle);padding:6px 8px;border-radius:4px;font-size:18px;line-height:1;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
 .delete-btn:hover{color:var(--danger)}
 .walk-card-meta{font-size:12px;color:var(--muted);display:flex;gap:10px;flex-wrap:wrap}
 .empty-dash{text-align:center;padding:40px 20px;color:var(--subtle);font-size:14px}
@@ -142,6 +142,7 @@ textarea{resize:vertical;line-height:1.6}
 </style>
 </head>
 <body>
+
 <div class="auth-wrap" id="auth-wrap">
   <div class="auth-card">
     <div style="font-size:22px;font-weight:700;color:var(--green);text-align:center;line-height:1.2;margin-bottom:4px">GREEN HEART<br>ENTERPRISES</div>
@@ -181,6 +182,7 @@ textarea{resize:vertical;line-height:1.6}
   </div>
   <div id="prog-bar" style="display:none"><div class="prog-wrap" id="prog-dots"></div></div>
 
+  <!-- DASHBOARD -->
   <div class="screen active" id="screen-dash">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;padding-top:4px">
       <div style="font-size:18px;font-weight:700">Site walks</div>
@@ -192,6 +194,7 @@ textarea{resize:vertical;line-height:1.6}
     <div id="walks-list"><div class="loading-wrap"><div class="spinner"></div>Loading...</div></div>
   </div>
 
+  <!-- SCREEN 1 -->
   <div class="screen" id="screen-1">
     <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;padding-top:4px">
       <button onclick="tryGoBack()" style="padding:8px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--surface);cursor:pointer;display:flex;align-items:center;color:var(--muted)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg></button>
@@ -217,13 +220,14 @@ textarea{resize:vertical;line-height:1.6}
     </div>
   </div>
 
+  <!-- SCREEN 2 -->
   <div class="screen" id="screen-2">
     <div style="font-size:17px;font-weight:700;margin-bottom:6px;padding-top:4px">Dump everything <span class="autosave-dot" id="autosave-dot-2"></span></div>
-    <div style="font-size:13px;color:var(--muted);margin-bottom:12px">Describe by trade. Be as specific or vague as you want — Claude will organize it and ask what's missing.</div>
+    <div style="font-size:13px;color:var(--muted);margin-bottom:12px">Describe by trade. As specific or vague as you want — Claude organizes it and asks what's missing.</div>
     <div class="card">
       <div class="fl">
         <label>Voice dump — describe by trade</label>
-        <textarea id="e-dump" style="min-height:200px" oninput="autoSave()" placeholder="Examples:&#10;&#10;Ceiling — replace all tiles, about 3000 SF, no grid work needed&#10;Electrical — replace lights, not sure how many yet, in house&#10;HVAC — 4 VAV boxes need replacing, outside vendor, turn key&#10;Demo — remove 2 walls in break room area&#10;Plumbing — new sink in back office&#10;Client said after hours only — unconfirmed&#10;&#10;Say as much or as little as you know. Claude will ask for what is missing."></textarea>
+        <textarea id="e-dump" style="min-height:200px" oninput="autoSave()" placeholder="Examples:&#10;&#10;Ceiling — replace all tiles, about 3000 SF, no grid work needed&#10;Electrical — replace lights, not sure how many yet, in house&#10;HVAC — 4 VAV boxes need replacing, outside vendor, turn key&#10;Demo — remove 2 walls in break room area&#10;Plumbing — new sink in back office&#10;Client said after hours only — unconfirmed&#10;&#10;Say as much or as little as you know."></textarea>
       </div>
     </div>
     <div class="card">
@@ -248,7 +252,7 @@ textarea{resize:vertical;line-height:1.6}
         <div class="plan-drop" onclick="document.getElementById('plan-input').click()">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--subtle)" stroke-width="1.5" style="margin:0 auto 6px;display:block"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
           <div style="font-size:13px;color:var(--muted);font-weight:500">Tap to attach plans</div>
-          <div style="font-size:11px;color:var(--subtle);margin-top:2px">PDF or photo — supporting context only, your notes take priority</div>
+          <div style="font-size:11px;color:var(--subtle);margin-top:2px">Your notes always take priority over plans</div>
         </div>
         <input type="file" id="plan-input" accept="image/*,application/pdf" multiple style="display:none" onchange="handlePlans(event)">
         <div id="plan-list"></div>
@@ -266,11 +270,12 @@ textarea{resize:vertical;line-height:1.6}
     </div>
   </div>
 
+  <!-- SCREEN 3: PROCESSING -->
   <div class="screen" id="screen-3">
     <div class="processing-wrap">
       <div class="processing-spinner"></div>
-      <div class="processing-title" id="proc-title">Organizing your notes</div>
-      <div class="processing-sub" id="proc-sub">Claude is reading your dump and building the trade list. About 10-20 seconds.</div>
+      <div class="processing-title">Organizing your notes</div>
+      <div class="processing-sub">Claude is reading your dump and building the trade list.<br>About 10-20 seconds.</div>
       <div class="proc-steps">
         <div class="proc-step active" id="pstep-0"><div class="proc-dot"></div>Reading your notes by trade</div>
         <div class="proc-step" id="pstep-1"><div class="proc-dot"></div>Organizing scope items</div>
@@ -280,13 +285,14 @@ textarea{resize:vertical;line-height:1.6}
     </div>
   </div>
 
+  <!-- SCREEN 4: REVIEW -->
   <div class="screen" id="screen-4">
     <div style="font-size:17px;font-weight:700;margin-bottom:4px;padding-top:4px">Review &amp; fill gaps</div>
     <div style="font-size:13px;color:var(--muted);margin-bottom:14px">Edit any field. Answer the questions below. Then generate your document.</div>
     <div id="trade-review"></div>
     <div id="missing-section" style="display:none">
       <div class="sec-head" style="color:var(--warn)">&#9888; Missing info — tap to answer</div>
-      <div style="font-size:12px;color:var(--muted);margin-bottom:8px">Claude needs these to complete the scope. Other and I don't know are always options.</div>
+      <div style="font-size:12px;color:var(--muted);margin-bottom:8px">Other and I don't know are always options.</div>
       <div id="missing-list"></div>
     </div>
     <div class="sec-head">Additional notes</div>
@@ -328,75 +334,144 @@ const sb=supabase.createClient(SUPA_URL,SUPA_KEY);
 var currentUser=null,currentWalkId=null,isDirty=false,autoSaveTimer=null,pendingNav=null;
 var photos=[],plans=[],parsedData=null,missingAnswers={};
 
-async function checkSession(){var s=await sb.auth.getSession();if(s.data.session){currentUser=s.data.session.user;showApp();}}
-async function signIn(){var email=document.getElementById('login-email').value.trim(),pass=document.getElementById('login-pass').value,err=document.getElementById('auth-err');err.style.display='none';var r=await sb.auth.signInWithPassword({email:email,password:pass});if(r.error){err.textContent=r.error.message;err.style.display='block';}else{currentUser=r.data.user;showApp();}}
-async function signUp(){var name=document.getElementById('signup-name').value.trim(),email=document.getElementById('signup-email').value.trim(),pass=document.getElementById('signup-pass').value,err=document.getElementById('auth-err');err.style.display='none';if(!name){err.textContent='Please enter your name';err.style.display='block';return;}var r=await sb.auth.signUp({email:email,password:pass,options:{data:{full_name:name}}});if(r.error){err.textContent=r.error.message;err.style.display='block';}else{showToast('Account created — check email to confirm');showLogin();}}
-async function signOut(){await sb.auth.signOut();currentUser=null;document.getElementById('app').style.display='none';document.getElementById('auth-wrap').style.display='flex';showLogin();}
+// ─── AUTH ───────────────────────────────────────────────────────
+async function checkSession(){
+  try{var s=await sb.auth.getSession();if(s.data&&s.data.session){currentUser=s.data.session.user;showApp();}}catch(e){console.log('Session error:',e.message);}
+}
+async function signIn(){
+  var email=document.getElementById('login-email').value.trim();
+  var pass=document.getElementById('login-pass').value;
+  var err=document.getElementById('auth-err');
+  err.style.display='none';
+  try{
+    var r=await sb.auth.signInWithPassword({email:email,password:pass});
+    if(r.error){err.textContent=r.error.message;err.style.display='block';}
+    else{currentUser=r.data.user;showApp();}
+  }catch(e){err.textContent='Login failed — check your connection';err.style.display='block';}
+}
+async function signUp(){
+  var name=document.getElementById('signup-name').value.trim();
+  var email=document.getElementById('signup-email').value.trim();
+  var pass=document.getElementById('signup-pass').value;
+  var err=document.getElementById('auth-err');
+  err.style.display='none';
+  if(!name){err.textContent='Please enter your name';err.style.display='block';return;}
+  try{
+    var r=await sb.auth.signUp({email:email,password:pass,options:{data:{full_name:name}}});
+    if(r.error){err.textContent=r.error.message;err.style.display='block';}
+    else{showToast('Account created — check email to confirm');showLogin();}
+  }catch(e){err.textContent='Sign up failed';err.style.display='block';}
+}
+async function signOut(){
+  try{await sb.auth.signOut();}catch(e){}
+  currentUser=null;
+  document.getElementById('app').style.display='none';
+  document.getElementById('auth-wrap').style.display='flex';
+  showLogin();
+}
 function showSignup(){document.getElementById('login-form').style.display='none';document.getElementById('signup-form').style.display='block';document.getElementById('auth-title').textContent='Create account';document.getElementById('auth-err').style.display='none';}
 function showLogin(){document.getElementById('signup-form').style.display='none';document.getElementById('login-form').style.display='block';document.getElementById('auth-title').textContent='Sign in to GHE';document.getElementById('auth-err').style.display='none';}
-function showApp(){document.getElementById('auth-wrap').style.display='none';document.getElementById('app').style.display='block';var n=currentUser.user_metadata&&currentUser.user_metadata.full_name?currentUser.user_metadata.full_name:currentUser.email;document.getElementById('user-badge').textContent=n;loadWalks();}
+function showApp(){
+  document.getElementById('auth-wrap').style.display='none';
+  document.getElementById('app').style.display='block';
+  var n=currentUser.user_metadata&&currentUser.user_metadata.full_name?currentUser.user_metadata.full_name:currentUser.email;
+  document.getElementById('user-badge').textContent=n;
+  loadWalks();
+}
 
+// ─── DASHBOARD ──────────────────────────────────────────────────
 async function loadWalks(){
   var el=document.getElementById('walks-list');
   el.innerHTML='<div class="loading-wrap"><div class="spinner"></div>Loading...</div>';
-  var r=await sb.from('site_walks').select('*').order('updated_at',{ascending:false});
-  if(r.error){el.innerHTML='<div class="empty-dash">Error loading walks</div>';return;}
-  if(!r.data||!r.data.length){el.innerHTML='<div class="empty-dash">No site walks yet. Tap New express walk to get started.</div>';return;}
-  el.innerHTML=r.data.map(function(w){
-    var sc=w.status==='complete'?'status-complete':'status-draft',sl=w.status==='complete'?'Complete':'Draft';
-    var ar=(w.areas||[]).length,dt=new Date(w.updated_at).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
-    var wid=w.id;
-    return '<div class="walk-card">'+
-      '<div class="walk-card-hd">'+
-      '<div class="walk-card-name" onclick="openWalk(\''+wid+'\')">'+(w.client||'Untitled walk')+'</div>'+
-      '<div class="walk-card-actions">'+
-      '<span class="walk-status '+sc+'">'+sl+'</span>'+
-      '<button class="delete-btn" data-id="'+wid+'" ontouchend="event.stopPropagation();event.preventDefault();deleteWalk(this.getAttribute(\'data-id\'))" onclick="event.stopPropagation();event.preventDefault();deleteWalk(this.getAttribute(\'data-id\'))">&#x2715;</button>'+
-      '</div></div>'+
-      '<div style="font-size:13px;color:var(--muted);margin-bottom:4px;cursor:pointer" onclick="openWalk(\''+wid+'\')">'+(w.address||'No location')+(w.project_type?' &middot; '+w.project_type:'')+'</div>'+
-      '<div class="walk-card-meta" onclick="openWalk(\''+wid+'\')"><span>'+ar+' trade'+(ar!==1?'s':'')+'</span>'+(w.proposal_due?'<span>Due '+fmtDate(w.proposal_due)+'</span>':'')+'<span>'+dt+'</span></div>'+
-      '</div>';
-  }).join('');
+  try{
+    var r=await sb.from('site_walks').select('*').order('updated_at',{ascending:false});
+    if(r.error){el.innerHTML='<div class="empty-dash">Error loading walks</div>';return;}
+    if(!r.data||!r.data.length){el.innerHTML='<div class="empty-dash">No site walks yet.<br>Tap New express walk to get started.</div>';return;}
+    el.innerHTML=r.data.map(function(w){
+      var sc=w.status==='complete'?'status-complete':'status-draft';
+      var sl=w.status==='complete'?'Complete':'Draft';
+      var ar=(w.areas||[]).length;
+      var dt=new Date(w.updated_at).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+      return '<div class="walk-card">'+
+        '<div class="walk-card-hd">'+
+        '<div class="walk-card-name" onclick="openWalk(\''+w.id+'\')">'+(w.client||'Untitled walk')+'</div>'+
+        '<div class="walk-card-actions">'+
+        '<span class="walk-status '+sc+'">'+sl+'</span>'+
+        '<button class="delete-btn" data-walkid="'+w.id+'" ontouchend="event.stopPropagation();event.preventDefault();deleteWalk(this.getAttribute(\'data-walkid\'))" onclick="event.stopPropagation();event.preventDefault();deleteWalk(this.getAttribute(\'data-walkid\'))">&#x2715;</button>'+
+        '</div></div>'+
+        '<div style="font-size:13px;color:var(--muted);margin-bottom:4px;cursor:pointer" onclick="openWalk(\''+w.id+'\')">'+(w.address||'No location')+(w.project_type?' &middot; '+w.project_type:'')+'</div>'+
+        '<div class="walk-card-meta" onclick="openWalk(\''+w.id+'\')">'+
+        '<span>'+ar+' trade'+(ar!==1?'s':'')+'</span>'+
+        (w.proposal_due?'<span>Due '+fmtDate(w.proposal_due)+'</span>':'')+
+        '<span>'+dt+'</span>'+
+        '</div></div>';
+    }).join('');
+  }catch(e){el.innerHTML='<div class="empty-dash">Error loading walks</div>';}
 }
 
 async function deleteWalk(id){
+  if(!id)return;
   try{
     var r=await sb.from('site_walks').delete().eq('id',id);
     if(!r.error){showToast('Walk deleted');loadWalks();}
-    else showToast('Error deleting walk');
-  }catch(e){showToast('Error deleting walk');}
+    else showToast('Error deleting');
+  }catch(e){showToast('Error deleting');}
 }
 
 async function openWalk(id){
-  var r=await sb.from('site_walks').select('*').eq('id',id).single();
-  if(r.error){showToast('Could not load walk');return;}
-  var w=r.data;currentWalkId=id;isDirty=false;
-  parsedData={trades:w.areas||[],flags:[],verbals:[],missing:[]};
-  document.getElementById('e-client').value=w.client||'';
-  document.getElementById('e-location').value=w.address||'';
-  document.getElementById('e-ptype').value=w.project_type||'';
-  document.getElementById('e-walker').value=w.walker||'';
-  document.getElementById('e-due').value=w.proposal_due||'';
-  document.getElementById('e-start').value=w.work_start||'';
-  document.getElementById('e-notes').value=w.notes||'';
-  photos=[];plans=[];missingAnswers={};
-  renderPhotoStrip();renderPlanList();renderReview();goScreen(4);
+  try{
+    var r=await sb.from('site_walks').select('*').eq('id',id).single();
+    if(r.error){showToast('Could not load walk');return;}
+    var w=r.data;
+    currentWalkId=id;isDirty=false;
+    var areas=w.areas;
+    if(typeof areas==='string'){try{areas=JSON.parse(areas);}catch(e){areas=[];}}
+    parsedData={trades:areas||[],flags:[],verbals:[],missing:[]};
+    document.getElementById('e-client').value=w.client||'';
+    document.getElementById('e-location').value=w.address||'';
+    document.getElementById('e-ptype').value=w.project_type||'';
+    document.getElementById('e-walker').value=w.walker||'';
+    document.getElementById('e-due').value=w.proposal_due||'';
+    document.getElementById('e-start').value=w.work_start||'';
+    document.getElementById('e-notes').value=w.notes||'';
+    photos=[];plans=[];missingAnswers={};
+    renderPhotoStrip();renderPlanList();renderReview();goScreen(4);
+  }catch(e){showToast('Could not load walk');}
 }
 
+// ─── NAVIGATION ─────────────────────────────────────────────────
 function goToDash(){if(isDirty){pendingNav='dash';openSheet();}else{showDash();}}
 function tryGoBack(){if(isDirty){pendingNav='dash';openSheet();}else{showDash();}}
-function showDash(){document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});document.getElementById('screen-dash').classList.add('active');document.getElementById('prog-bar').style.display='none';loadWalks();window.scrollTo(0,0);}
-function goScreen(n){document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});document.getElementById('screen-'+n).classList.add('active');document.getElementById('prog-bar').style.display='block';var dots=document.getElementById('prog-dots');dots.innerHTML=[1,2,3,4].map(function(i){return'<div class="prog-dot'+(i<n?' done':i===n?' active':'')+'"></div>';}).join('');window.scrollTo(0,0);}
-function startExpress(){currentWalkId=null;isDirty=false;photos=[];plans=[];parsedData=null;missingAnswers={};['e-client','e-location','e-walker','e-dump','e-notes'].forEach(function(id){document.getElementById(id).value='';});document.getElementById('e-ptype').value='';document.getElementById('e-due').value='';document.getElementById('e-start').value='';renderPhotoStrip();renderPlanList();goScreen(1);}
+function showDash(){
+  document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});
+  document.getElementById('screen-dash').classList.add('active');
+  document.getElementById('prog-bar').style.display='none';
+  loadWalks();window.scrollTo(0,0);
+}
+function goScreen(n){
+  document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});
+  document.getElementById('screen-'+n).classList.add('active');
+  document.getElementById('prog-bar').style.display='block';
+  var dots=document.getElementById('prog-dots');
+  dots.innerHTML=[1,2,3,4].map(function(i){return'<div class="prog-dot'+(i<n?' done':i===n?' active':'')+'"></div>';}).join('');
+  window.scrollTo(0,0);
+}
+function startExpress(){
+  currentWalkId=null;isDirty=false;photos=[];plans=[];parsedData=null;missingAnswers={};
+  ['e-client','e-location','e-walker','e-dump','e-notes'].forEach(function(id){document.getElementById(id).value='';});
+  document.getElementById('e-ptype').value='';document.getElementById('e-due').value='';document.getElementById('e-start').value='';
+  renderPhotoStrip();renderPlanList();goScreen(1);
+}
 function openSheet(){document.getElementById('sheet-overlay').classList.add('open');}
 function closeSheet(){document.getElementById('sheet-overlay').classList.remove('open');pendingNav=null;}
 async function saveAndLeave(){await saveDraftSilent();closeSheet();if(pendingNav==='dash')showDash();}
 function discardAndLeave(){isDirty=false;closeSheet();if(pendingNav==='dash')showDash();}
 
+// ─── DATA ────────────────────────────────────────────────────────
 function getWalkData(){
   var due=document.getElementById('e-due').value||null;
   var start=document.getElementById('e-start').value||null;
-  var tradesNoPhotos=(parsedData?getReviewedTrades():[]).map(function(t){
+  var tradesClean=(parsedData?getReviewedTrades():[]).map(function(t){
     var copy=Object.assign({},t);
     delete copy.photos;
     return copy;
@@ -406,12 +481,12 @@ function getWalkData(){
     address:document.getElementById('e-location').value||null,
     project_type:document.getElementById('e-ptype').value||null,
     walker:document.getElementById('e-walker').value||null,
-    proposal_due:due&&due.match(/^\d{4}-\d{2}-\d{2}$/)?due:null,
-    work_start:start&&start.match(/^\d{4}-\d{2}-\d{2}$/)?start:null,
+    proposal_due:due&&/^\d{4}-\d{2}-\d{2}$/.test(due)?due:null,
+    work_start:start&&/^\d{4}-\d{2}-\d{2}$/.test(start)?start:null,
     overall_scope:parsedData?(parsedData.trades||[]).map(function(t){return t.trade+': '+t.scope;}).join(' | '):null,
     notes:document.getElementById('e-notes').value||null,
-    areas:tradesNoPhotos,
-    questions:[],
+    areas:JSON.stringify(tradesClean),
+    questions:'[]',
     updated_at:new Date().toISOString()
   };
 }
@@ -420,56 +495,100 @@ function getReviewedTrades(){
   var result=[];
   (parsedData.trades||[]).forEach(function(t,i){
     var copy=Object.assign({},t);
-    var scopeEl=document.getElementById('tr-scope-'+i);
-    var qtyEl=document.getElementById('tr-qty-'+i);
-    var vendorEl=document.getElementById('tr-vendor-'+i);
-    if(scopeEl)copy.scope=scopeEl.value;
-    if(qtyEl)copy.quantity=qtyEl.value;
-    if(vendorEl)copy.performer=vendorEl.value;
+    var s=document.getElementById('tr-scope-'+i);
+    var q=document.getElementById('tr-qty-'+i);
+    var v=document.getElementById('tr-vendor-'+i);
+    if(s)copy.scope=s.value;
+    if(q)copy.quantity=q.value;
+    if(v)copy.performer=v.value;
     result.push(copy);
   });
   return result;
 }
 
+// ─── SAVE ────────────────────────────────────────────────────────
 async function saveDraftSilent(){
   try{
     var data=getWalkData();
     data.status='draft';
     data.created_by=currentUser.id;
     var r;
-    if(currentWalkId){r=await sb.from('site_walks').update(data).eq('id',currentWalkId);}
-    else{r=await sb.from('site_walks').insert(data).select().single();if(!r.error)currentWalkId=r.data.id;}
+    if(currentWalkId){
+      r=await sb.from('site_walks').update(data).eq('id',currentWalkId);
+    }else{
+      r=await sb.from('site_walks').insert(data).select().single();
+      if(!r.error&&r.data)currentWalkId=r.data.id;
+    }
     if(!r.error){isDirty=false;flashAutosave();}
+    else console.log('Save note:',r.error.message);
   }catch(e){console.log('Save skipped:',e.message);}
 }
 
-function autoSave(){isDirty=true;clearTimeout(autoSaveTimer);autoSaveTimer=setTimeout(function(){if(document.getElementById('e-client').value||document.getElementById('e-location').value){saveDraftSilent();}},1500);}
-function flashAutosave(){['autosave-dot-1','autosave-dot-2'].forEach(function(id){var dot=document.getElementById(id);if(dot){dot.classList.add('show');setTimeout(function(){dot.classList.remove('show');},1500);}});}
+function autoSave(){
+  isDirty=true;
+  clearTimeout(autoSaveTimer);
+  autoSaveTimer=setTimeout(function(){
+    if(document.getElementById('e-client').value||document.getElementById('e-location').value){saveDraftSilent();}
+  },1500);
+}
+
+function flashAutosave(){
+  ['autosave-dot-1','autosave-dot-2'].forEach(function(id){
+    var dot=document.getElementById(id);
+    if(dot){dot.classList.add('show');setTimeout(function(){dot.classList.remove('show');},1500);}
+  });
+}
 
 async function saveWalkAndFinish(){
   try{
-    var data=getWalkData();data.status='complete';data.created_by=currentUser.id;
+    var data=getWalkData();
+    data.status='complete';
+    data.created_by=currentUser.id;
     var r;
     if(currentWalkId){r=await sb.from('site_walks').update(data).eq('id',currentWalkId);}
-    else{r=await sb.from('site_walks').insert(data).select().single();if(!r.error)currentWalkId=r.data.id;}
-    if(!r||r.error){showToast('Saved locally — sync when connection improves');}
-    else{isDirty=false;showToast('Walk saved');setTimeout(showDash,1000);}
-  }catch(e){showToast('Saved locally');setTimeout(showDash,1000);}
+    else{r=await sb.from('site_walks').insert(data).select().single();if(!r.error&&r.data)currentWalkId=r.data.id;}
+    isDirty=false;
+    showToast('Walk saved');
+    setTimeout(showDash,1000);
+  }catch(e){
+    showToast('Walk saved locally');
+    setTimeout(showDash,1000);
+  }
 }
 
-function handlePhotos(e){Array.from(e.target.files).forEach(function(f){var r=new FileReader();r.onload=function(ev){photos.push({name:f.name,data:ev.target.result});renderPhotoStrip();isDirty=true;};r.readAsDataURL(f);});e.target.value='';}
+// ─── PHOTOS / PLANS ──────────────────────────────────────────────
+function handlePhotos(e){
+  Array.from(e.target.files).forEach(function(f){
+    var reader=new FileReader();
+    reader.onload=function(ev){photos.push({name:f.name,data:ev.target.result});renderPhotoStrip();isDirty=true;};
+    reader.readAsDataURL(f);
+  });
+  e.target.value='';
+}
 function delPhoto(i){photos.splice(i,1);renderPhotoStrip();}
 function renderPhotoStrip(){
   var s=document.getElementById('photo-strip-2');if(!s)return;
-  s.innerHTML=photos.map(function(p,i){return'<div class="pthumb-wrap"><img src="'+p.data+'" class="pthumb" alt="Photo '+(i+1)+'"><button class="pdel" onclick="delPhoto('+i+')">&times;</button></div>';}).join('');
+  s.innerHTML=photos.map(function(p,i){
+    return'<div class="pthumb-wrap"><img src="'+p.data+'" class="pthumb"><button class="pdel" onclick="delPhoto('+i+')">&times;</button></div>';
+  }).join('');
 }
-function handlePlans(e){Array.from(e.target.files).forEach(function(f){var r=new FileReader();r.onload=function(ev){plans.push({name:f.name,type:f.type,data:ev.target.result});renderPlanList();};r.readAsDataURL(f);});e.target.value='';}
+function handlePlans(e){
+  Array.from(e.target.files).forEach(function(f){
+    var reader=new FileReader();
+    reader.onload=function(ev){plans.push({name:f.name,type:f.type,data:ev.target.result});renderPlanList();};
+    reader.readAsDataURL(f);
+  });
+  e.target.value='';
+}
 function delPlan(i){plans.splice(i,1);renderPlanList();}
 function renderPlanList(){
   var el=document.getElementById('plan-list');if(!el)return;
-  el.innerHTML=plans.map(function(p,i){return'<div class="plan-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2" style="flex-shrink:0"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><span class="plan-item-name">'+esc(p.name)+'</span><button class="plan-rm" onclick="delPlan('+i+')">&times;</button></div>';}).join('');
+  el.innerHTML=plans.map(function(p,i){
+    return'<div class="plan-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><span class="plan-item-name">'+esc(p.name)+'</span><button class="plan-rm" onclick="delPlan('+i+')">&times;</button></div>';
+  }).join('');
 }
 
+// ─── AI CALL ─────────────────────────────────────────────────────
 async function callAI(messages){
   var r=await fetch('/api/process',{
     method:'POST',
@@ -481,158 +600,150 @@ async function callAI(messages){
   return data.content[0].text;
 }
 
+// ─── PROCESS ─────────────────────────────────────────────────────
 async function processEverything(){
   var dump=document.getElementById('e-dump').value.trim();
   if(!dump&&!photos.length){showToast('Add notes or photos first');return;}
-  goScreen(3);
 
+  goScreen(3);
   var stepIdx=0;
   var stepTimer=setInterval(function(){
     stepIdx++;if(stepIdx>3){clearInterval(stepTimer);return;}
-    document.querySelectorAll('.proc-step').forEach(function(s,j){s.className='proc-step'+(j<stepIdx?' done':j===stepIdx?' active':'');});
+    document.querySelectorAll('.proc-step').forEach(function(s,j){
+      s.className='proc-step'+(j<stepIdx?' done':j===stepIdx?' active':'');
+    });
   },3000);
 
   var content=[];
-  photos.forEach(function(p){content.push({type:'image',source:{type:'base64',media_type:p.data.split(';')[0].split(':')[1],data:p.data.split(',')[1]}});});
-  plans.forEach(function(p){if(p.type.startsWith('image/'))content.push({type:'image',source:{type:'base64',media_type:p.type,data:p.data.split(',')[1]}});});
+  // Only include supported image types — filter out HEIC/HEIF which Anthropic rejects
+  var supported=['image/jpeg','image/png','image/gif','image/webp'];
+  photos.forEach(function(p){
+    var mt=p.data.split(';')[0].split(':')[1];
+    if(supported.indexOf(mt)!==-1){
+      content.push({type:'image',source:{type:'base64',media_type:'image/jpeg',data:p.data.split(',')[1]}});
+    }
+  });
+  plans.forEach(function(p){
+    if(p.type.startsWith('image/')&&supported.indexOf(p.type)!==-1){
+      content.push({type:'image',source:{type:'base64',media_type:'image/jpeg',data:p.data.split(',')[1]}});
+    }
+  });
 
-  var client=document.getElementById('e-client').value||'unknown',loc=document.getElementById('e-location').value||'unknown',ptype=document.getElementById('e-ptype').value||'commercial';
+  var client=document.getElementById('e-client').value||'unknown';
+  var loc=document.getElementById('e-location').value||'unknown';
+  var ptype=document.getElementById('e-ptype').value||'commercial';
 
   var prompt='You are a commercial construction scope organizer for Green Heart Enterprises (GHE), a GC in Atlanta.\n\n'+
     'Project: '+client+' | '+loc+' | '+ptype+'\n\n'+
     'THE SUPERINTENDENT\'S NOTES (PRIMARY source — trust exactly what they say):\n'+dump+'\n\n'+
-    (photos.length?'PHOTOS: '+photos.length+' site photos included. Use ONLY to add context for things mentioned in notes. Never invent scope from photos.\n\n':'')+
-    (plans.length?'PLANS: Use only as reference context.\n\n':'')+
+    (content.length?'PHOTOS: '+content.length+' site photos included. Use ONLY to add context for things mentioned in notes. Never invent scope from photos.\n\n':'')+
     'YOUR JOB:\n'+
     '1. Extract every trade and scope item from the notes.\n'+
-    '2. For each trade: scope description, quantity if stated (blank if not), performer (In house GHE / Outside vendor / Unknown), turnkey true/false.\n'+
+    '2. For each trade: scope description, quantity if stated (blank if not — do NOT guess), performer (In house GHE / Outside vendor / Unknown), turnkey true/false.\n'+
     '3. Identify client verbal requests (unconfirmed statements).\n'+
     '4. Identify site flags (occupied, after hours, hazmat, access restricted, scope unclear, verify dimensions).\n'+
-    '5. For MISSING info that estimators need — only for things mentioned but incomplete — generate specific questions with 3-4 realistic options plus "Other" plus "I don\'t know yet".\n\n'+
-    'Respond ONLY with valid JSON. No markdown. No backticks.\n'+
-    '{"trades":[{"trade":"string","scope":"string","quantity":"string or empty","performer":"In house GHE or Outside vendor or Unknown","turnkey":false,"notes":"string or empty"}],"verbals":["string"],"flags":["string"],"missing":[{"id":"m1","trade":"string","question":"string","options":["opt1","opt2","opt3","Other","I don\'t know yet"]}]}';
+    '5. For MISSING info that estimators need — only for things mentioned but incomplete — generate specific questions.\n'+
+    '   Each question must have 3-4 specific likely answers PLUS "Other" PLUS "I don\'t know yet".\n'+
+    '   Only ask about things that were mentioned but incomplete — not things never mentioned.\n\n'+
+    'Respond ONLY with valid JSON. No markdown. No backticks. No extra text.\n'+
+    '{"trades":[{"trade":"string","scope":"string","quantity":"string or empty string","performer":"In house GHE or Outside vendor or Unknown","turnkey":false,"notes":"string or empty string"}],"verbals":["string"],"flags":["string"],"missing":[{"id":"m1","trade":"string","question":"string","options":["specific opt1","specific opt2","specific opt3","Other","I don\'t know yet"]}]}';
 
   content.push({type:'text',text:prompt});
-async function saveDraftSilent(){
-  try{
-    var data=getWalkData();
-    data.status='draft';
-    data.created_by=currentUser.id;
-    var safeData={
-      client:data.client,
-      address:data.address,
-      project_type:data.project_type,
-      walker:data.walker,
-      proposal_due:data.proposal_due,
-      work_start:data.work_start,
-      overall_scope:data.overall_scope,
-      notes:data.notes,
-      status:data.status,
-      created_by:data.created_by,
-      updated_at:data.updated_at
-    };
-    var r;
-    if(currentWalkId){r=await sb.from('site_walks').update(safeData).eq('id',currentWalkId);}
-    else{r=await sb.from('site_walks').insert(safeData).select().single();if(r.data&&r.data.id)currentWalkId=r.data.id;}
-    if(!r||r.error)console.log('Save skipped:',r&&r.error?r.error.message:'unknown');
-    else{isDirty=false;flashAutosave();}
-  }catch(e){console.log('Save skipped:',e.message);}
-}
+
   try{
     var text=await callAI([{role:'user',content:content}]);
     parsedData=JSON.parse(text.replace(/```json|```/g,'').trim());
     clearInterval(stepTimer);
     isDirty=true;
-renderReview();
-goScreen(4);
-saveDraftSilent(){
-  try{
-    var data=getWalkData();
-    data.status='draft';
-    data.created_by=currentUser.id;
-    // Only save text fields — skip areas and questions on mobile to avoid payload issues
-    var safeData={
-      client:data.client,
-      address:data.address,
-      project_type:data.project_type,
-      walker:data.walker,
-      proposal_due:data.proposal_due,
-      work_start:data.work_start,
-      overall_scope:data.overall_scope,
-      notes:data.notes,
-      status:data.status,
-      created_by:data.created_by,
-      updated_at:data.updated_at
-    };
-    var r;
-    if(currentWalkId){r=await sb.from('site_walks').update(safeData).eq('id',currentWalkId);}
-    else{r=await sb.from('site_walks').insert(safeData).select().single();if(r.data&&r.data.id)currentWalkId=r.data.id;}
-    if(!r||r.error){console.log('Save skipped:',r&&r.error?r.error.message:'unknown');}
-    else{isDirty=false;flashAutosave();}
-  }catch(e){console.log('Save skipped:',e.message);}
+    renderReview();
+    goScreen(4);
+    saveDraftSilent(); // runs in background — never blocks UI
+  }catch(err){
+    clearInterval(stepTimer);
+    showToast('Error: '+err.message);
+    goScreen(2);
+    console.error(err);
+  }
+}
 
+// ─── RENDER REVIEW ───────────────────────────────────────────────
 function renderReview(){
   if(!parsedData)return;
-  var tr=document.getElementById('trade-review'),html='';
-  if(!(parsedData.trades||[]).length){html='<div class="card" style="text-align:center;color:var(--muted);font-size:13px;padding:20px">No trades identified. Go back and add more details.</div>';}
+  var tr=document.getElementById('trade-review');
+  var html='';
+
+  if(!(parsedData.trades||[]).length){
+    html='<div class="card" style="text-align:center;color:var(--muted);font-size:13px;padding:20px">No trades identified. Go back and add more details.</div>';
+  }
+
   (parsedData.trades||[]).forEach(function(t,i){
-    html+='<div class="trade-block"><div class="trade-block-title">'+esc(t.trade)+'</div>';
-    html+='<div class="trade-field"><span class="trade-field-label">Scope</span><input class="trade-field-input" id="tr-scope-'+i+'" value="'+esc(t.scope||'')+'" placeholder="Describe scope..." oninput="isDirty=true"></div>';
-    html+='<div class="trade-field"><span class="trade-field-label">Quantity</span><input class="trade-field-input" id="tr-qty-'+i+'" value="'+esc(t.quantity||'')+'" placeholder="'+(t.quantity?'':'Not specified — answer questions below')+'" oninput="isDirty=true"></div>';
-    html+='<div class="trade-field"><span class="trade-field-label">Performed by</span>';
-    html+='<select class="trade-field-select" id="tr-vendor-'+i+'" onchange="isDirty=true">';
-    html+='<option value="In house GHE"'+(t.performer==='In house GHE'?' selected':'')+'>In house (GHE)</option>';
-    html+='<option value="Outside vendor"'+(t.performer==='Outside vendor'?' selected':'')+'>Outside vendor</option>';
-    html+='<option value="Unknown"'+((!t.performer||t.performer==='Unknown')?' selected':'')+'>Unknown</option>';
-    html+='</select></div>';
+    html+='<div class="trade-block">';
+    html+='<div class="trade-block-title">'+esc(t.trade)+'</div>';
+    html+='<div class="trade-field"><span class="trade-field-label">Scope</span>'+
+      '<input class="trade-field-input" id="tr-scope-'+i+'" value="'+esc(t.scope||'')+'" placeholder="Describe scope..." oninput="isDirty=true"></div>';
+    html+='<div class="trade-field"><span class="trade-field-label">Quantity</span>'+
+      '<input class="trade-field-input" id="tr-qty-'+i+'" value="'+esc(t.quantity||'')+'" placeholder="'+(t.quantity?'':'Not specified — answer questions below')+'" oninput="isDirty=true"></div>';
+    html+='<div class="trade-field"><span class="trade-field-label">Performed by</span>'+
+      '<select class="trade-field-select" id="tr-vendor-'+i+'" onchange="isDirty=true">'+
+      '<option value="In house GHE"'+(t.performer==='In house GHE'?' selected':'')+'>In house (GHE)</option>'+
+      '<option value="Outside vendor"'+(t.performer==='Outside vendor'?' selected':'')+'>Outside vendor</option>'+
+      '<option value="Unknown"'+((!t.performer||t.performer==='Unknown')?' selected':'')+'>Unknown</option>'+
+      '</select></div>';
     if(t.turnkey)html+='<div style="font-size:12px;font-weight:600;color:var(--green);margin-top:4px">&#10003; Turn key (GHE superintendent oversight)</div>';
     html+='</div>';
   });
+
   if((parsedData.verbals||[]).length){
     html+='<div class="card">';
-    (parsedData.verbals||[]).forEach(function(v){html+='<div class="verbal-box"><div class="verbal-label">&#9888; Client verbal \u2014 Unconfirmed</div><div class="verbal-text">'+esc(v)+'</div></div>';});
+    (parsedData.verbals||[]).forEach(function(v){
+      html+='<div class="verbal-box"><div class="verbal-label">&#9888; Client verbal \u2014 Unconfirmed</div><div class="verbal-text">'+esc(v)+'</div></div>';
+    });
     html+='</div>';
   }
+
   tr.innerHTML=html;
+
   var missing=parsedData.missing||[];
-  var msec=document.getElementById('missing-section'),mlist=document.getElementById('missing-list');
+  var msec=document.getElementById('missing-section');
+  var mlist=document.getElementById('missing-list');
+
   if(missing.length){
     msec.style.display='block';
     mlist.innerHTML=missing.map(function(m,mi){
-      return'<div class="missing-block">'+
+      return '<div class="missing-block">'+
         '<div class="missing-trade">'+esc(m.trade)+'</div>'+
         '<div class="missing-q">'+esc(m.question)+'</div>'+
-        '<div class="missing-opts">'+
-        (m.options||[]).map(function(opt,oi){return'<button class="missing-opt" id="mopt-'+mi+'-'+oi+'" onclick="selectMissing('+mi+','+oi+',this)">'+esc(opt)+'</button>';}).join('')+
+        '<div class="missing-opts" id="mopts-'+mi+'">'+
+        (m.options||[]).map(function(opt,oi){
+          return '<button class="missing-opt" data-mi="'+mi+'" data-oi="'+oi+'" data-mid="'+esc(m.id)+'" data-val="'+esc(opt)+'" onclick="selectMissing(this)">'+esc(opt)+'</button>';
+        }).join('')+
         '</div>'+
         '<input class="missing-other" id="mother-'+mi+'" data-mid="'+esc(m.id)+'" placeholder="Type your answer..." oninput="missingAnswers[this.getAttribute(\'data-mid\')]=this.value;isDirty=true">'+
         '</div>';
     }).join('');
-    missing.forEach(function(m,mi){
-      document.getElementById('mopt-'+mi+'-0').setAttribute('data-mid',m.id);
-      (m.options||[]).forEach(function(opt,oi){
-        document.getElementById('mopt-'+mi+'-'+oi).setAttribute('data-mid',m.id);
-        document.getElementById('mopt-'+mi+'-'+oi).setAttribute('data-val',opt);
-      });
-    });
-  }else{msec.style.display='none';}
+  }else{
+    msec.style.display='none';
+  }
 }
 
-function selectMissing(mi,oi,btn){
+function selectMissing(btn){
+  var mi=btn.getAttribute('data-mi');
   var mid=btn.getAttribute('data-mid');
   var val=btn.getAttribute('data-val');
-  document.querySelectorAll('[id^="mopt-'+mi+'-"]').forEach(function(b){b.classList.remove('sel');});
+  document.querySelectorAll('[data-mi="'+mi+'"]').forEach(function(b){b.classList.remove('sel');});
   btn.classList.add('sel');
   var other=document.getElementById('mother-'+mi);
   if(val==='Other'){other.classList.add('open');other.focus();}
   else{other.classList.remove('open');if(mid)missingAnswers[mid]=val;}
-  isDirty=true;autoSave();
+  isDirty=true;
 }
 
+// ─── GENERATE PREVIEW ────────────────────────────────────────────
 async function generatePreview(){
+  // Open window FIRST — must be synchronous from user gesture
   var pw=window.open('','_blank');
   if(!pw){showToast('Allow pop-ups to open preview');return;}
-  pw.document.write('<html><head><title>Building...</title></head><body style="font-family:sans-serif;padding:40px;text-align:center;color:#6b7280"><p style="font-size:16px;margin-bottom:8px">Finalizing your document...</p><p style="font-size:13px">Claude is combining your notes and answers into a clean scope.</p></body></html>');
+  pw.document.write('<html><head><title>Building...</title></head><body style="font-family:sans-serif;padding:40px;text-align:center;color:#6b7280"><p style="font-size:16px;margin-bottom:8px">Finalizing your document...</p><p style="font-size:13px">Combining notes and answers into clean scope.</p></body></html>');
 
   if(!parsedData){showToast('Process your notes first');pw.close();return;}
 
@@ -645,15 +756,13 @@ async function generatePreview(){
   });
 
   var rebuildPrompt='You are finalizing a commercial construction scope document for Green Heart Enterprises.\n\n'+
-    'TRADES:\n'+
-    reviewedTrades.map(function(t){
-      return 'Trade: '+t.trade+'\nInitial scope: '+(t.scope||'not specified')+'\nQuantity: '+(t.quantity||'not specified')+'\nPerformed by: '+(t.performer||'Unknown')+(t.turnkey?' (Turn key)':'')+'\n';
+    'TRADES:\n'+reviewedTrades.map(function(t){
+      return 'Trade: '+t.trade+'\nScope: '+(t.scope||'not specified')+'\nQuantity: '+(t.quantity||'not specified')+'\nPerformed by: '+(t.performer||'Unknown')+(t.turnkey?' (Turn key)':'')+'\n';
     }).join('\n')+
-    '\nCLARIFICATIONS PROVIDED:\n'+
-    (answeredQs.length?answeredQs.map(function(a){return'- ['+a.trade+'] '+a.question+' -> '+a.answer;}).join('\n'):'None provided')+
-    '\n\nRewrite each trade scope as one clean professional statement incorporating the original scope AND all clarifications naturally. Write as if the superintendent knew everything from the start. No meta language. Clean final scope statements only. Keep quantity, performer, and turnkey as separate fields.\n\n'+
+    '\nCLARIFICATIONS:\n'+(answeredQs.length?answeredQs.map(function(a){return'['+a.trade+'] '+a.question+' -> '+a.answer;}).join('\n'):'None')+
+    '\n\nRewrite each trade scope as one clean professional statement naturally incorporating the original scope AND all clarifications. Write as if the superintendent knew everything from the start. No meta language. No "as confirmed" or "based on clarification". Just clean final scope.\n\n'+
     'Respond ONLY with valid JSON. No markdown. No backticks.\n'+
-    '{"trades":[{"trade":"string","scope":"clean final scope statement","quantity":"final quantity or empty","performer":"final performer","turnkey":true or false}]}';
+    '{"trades":[{"trade":"string","scope":"clean final scope","quantity":"final quantity or empty","performer":"final performer","turnkey":true or false}]}';
 
   try{
     var rebuildText=await callAI([{role:'user',content:rebuildPrompt}]);
@@ -661,8 +770,8 @@ async function generatePreview(){
     var finalTrades=rebuilt.trades||reviewedTrades;
     var resolvedTopics=answeredQs.map(function(a){return a.question.toLowerCase();});
     var remainingFlags=(parsedData.flags||[]).filter(function(f){
-      var flagLower=f.toLowerCase();
-      return !resolvedTopics.some(function(topic){return topic.indexOf(flagLower.substring(0,10))!==-1||flagLower.indexOf(topic.substring(0,10))!==-1;});
+      var fl=f.toLowerCase();
+      return !resolvedTopics.some(function(t){return t.indexOf(fl.substring(0,10))!==-1||fl.indexOf(t.substring(0,10))!==-1;});
     });
     buildAndWritePreview(pw,finalTrades,remainingFlags);
   }catch(err){
@@ -673,7 +782,15 @@ async function generatePreview(){
 }
 
 function buildAndWritePreview(pw,trades,flags){
-  var client=document.getElementById('e-client').value||'\u2014',loc=document.getElementById('e-location').value||'\u2014',ptype=document.getElementById('e-ptype').value||'\u2014',walker=document.getElementById('e-walker').value||'\u2014',dueRaw=document.getElementById('e-due').value,due=fmtDate(dueRaw),start=fmtDate(document.getElementById('e-start').value),notes=document.getElementById('e-notes').value||'',days=daysUntil(dueRaw);
+  var client=document.getElementById('e-client').value||'\u2014';
+  var loc=document.getElementById('e-location').value||'\u2014';
+  var ptype=document.getElementById('e-ptype').value||'\u2014';
+  var walker=document.getElementById('e-walker').value||'\u2014';
+  var dueRaw=document.getElementById('e-due').value;
+  var due=fmtDate(dueRaw);
+  var start=fmtDate(document.getElementById('e-start').value);
+  var notes=document.getElementById('e-notes').value||'';
+  var days=daysUntil(dueRaw);
   var verbals=parsedData.verbals||[];
 
   var h='<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>GHE Site Walk \u2014 '+esc(client)+'</title>';
@@ -683,7 +800,11 @@ function buildAndWritePreview(pw,trades,flags){
   if(days!==null&&days<=7)h+='<div class="urgency" style="max-width:700px;margin:16px auto 0;border-radius:8px 8px 0 0">&#9201; Proposal due in '+days+' day'+(days===1?'':'s')+' \u2014 '+due+'</div>';
 
   h+='<div class="wrap"><div class="doc-hdr"><div class="doc-co">Green Heart Enterprises</div><div class="doc-sub">General Contractors \u2014 Site Walk Report</div><div class="doc-date">'+new Date().toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'})+'</div></div>';
-  h+='<div class="section"><div class="sec-t">Project details</div>'+fr('Client',esc(client))+fr('Site location',esc(loc))+fr('Project type',esc(ptype))+fr('Walk conducted by',esc(walker))+fr('Proposal due',esc(due)+(days!==null&&days<=14?' &nbsp;<strong style="color:#92400e">'+days+' day'+(days===1?'':'s')+'</strong>':''))+fr('Work start date',esc(start))+'</div>';
+  h+='<div class="section"><div class="sec-t">Project details</div>'+
+    fr('Client',esc(client))+fr('Site location',esc(loc))+fr('Project type',esc(ptype))+
+    fr('Walk conducted by',esc(walker))+
+    fr('Proposal due',esc(due)+(days!==null&&days<=14?' &nbsp;<strong style="color:#92400e">'+days+' day'+(days===1?'':'s')+'</strong>':''))+
+    fr('Work start date',esc(start))+'</div>';
 
   h+='<div class="section"><div class="sec-t">Scope by trade ('+trades.length+')</div>';
   if(!trades.length)h+='<div style="font-size:13px;color:#9ca3af">No trades captured.</div>';
@@ -696,27 +817,39 @@ function buildAndWritePreview(pw,trades,flags){
   });
   h+='</div>';
 
-  if(flags.length)h+='<div class="section"><div class="sec-t">&#9888; Open items \u2014 needs follow-up</div>'+flags.map(function(f){return'<span class="flag-pill">&#9888; '+esc(f)+'</span>';}).join('')+'</div>';
+  if(flags.length){
+    h+='<div class="section"><div class="sec-t">&#9888; Open items \u2014 needs follow-up</div>';
+    h+=flags.map(function(f){return'<span class="flag-pill">&#9888; '+esc(f)+'</span>';}).join('');
+    h+='</div>';
+  }
 
   if(verbals.length){
-    h+='<div class="section"><div class="sec-t">&#9888; Client verbal requests \u2014 Unconfirmed</div><p style="font-size:12px;color:#92400e;font-style:italic;margin-bottom:10px">Do not include in bid without written confirmation.</p>';
+    h+='<div class="section"><div class="sec-t">&#9888; Client verbal requests \u2014 Unconfirmed</div>';
+    h+='<p style="font-size:12px;color:#92400e;font-style:italic;margin-bottom:10px">Do not include in bid without written confirmation.</p>';
     verbals.forEach(function(v){h+='<div class="verbal-box"><div class="vb-lbl">Unconfirmed</div><div class="vb-txt">'+esc(v)+'</div></div>';});
     h+='</div>';
   }
 
-  if(photos.length){h+='<div class="section"><div class="sec-t">Site photos ('+photos.length+')</div><div class="photos-grid">'+photos.map(function(p,i){return'<img src="'+p.data+'" alt="Photo '+(i+1)+'">';}).join('')+'</div></div>';}
-  if(notes)h+='<div class="section"><div class="sec-t">Additional notes</div><div class="fv" style="font-size:14px;line-height:1.65">'+esc(notes)+'</div></div>';
-  h+='</div></body></html>';
+  if(photos.length){
+    h+='<div class="section"><div class="sec-t">Site photos ('+photos.length+')</div><div class="photos-grid">';
+    photos.forEach(function(p,i){h+='<img src="'+p.data+'" alt="Photo '+(i+1)+'">';});
+    h+='</div></div>';
+  }
 
+  if(notes)h+='<div class="section"><div class="sec-t">Additional notes</div><div class="fv" style="font-size:14px;line-height:1.65">'+esc(notes)+'</div></div>';
+
+  h+='</div></body></html>';
   pw.document.open();pw.document.write(h);pw.document.close();
   showToast('Preview opened');
 }
 
+// ─── HELPERS ─────────────────────────────────────────────────────
 function fr(l,v){return'<div class="fr"><span class="fl">'+l+'</span><span class="fv">'+v+'</span></div>';}
-function fmtDate(d){if(!d)return'TBD';var p=d.split('-');return p[1]+'/'+p[2]+'/'+p[0];}
-function daysUntil(d){if(!d)return null;return Math.ceil((new Date(d)-new Date())/(1000*60*60*24));}
+function fmtDate(d){if(!d)return'TBD';var p=d.split('-');if(p.length!==3)return d;return p[1]+'/'+p[2]+'/'+p[0];}
+function daysUntil(d){if(!d)return null;try{return Math.ceil((new Date(d)-new Date())/(1000*60*60*24));}catch(e){return null;}}
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 function showToast(msg){var t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(function(){t.classList.remove('show');},2500);}
+
 checkSession();
 </script>
 </body>

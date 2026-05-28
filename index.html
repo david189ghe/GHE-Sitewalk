@@ -394,7 +394,7 @@ async function loadWalks(){
       '<div class="walk-card-name" onclick="openWalk(\''+w.id+'\')">'+(w.client||'Untitled walk')+'</div>'+
       '<div class="walk-card-actions">'+
       '<span class="walk-status '+sc+'">'+sl+'</span>'+
-      '<button class="delete-btn" ontouchend="handleDelete(event,\''+w.id+'\')" onclick="handleDelete(event,\''+w.id+'\')">&#x2715;</button>'+
+      ontouchend="event.stopPropagation();event.preventDefault();deleteWalk(this.dataset.id)" onclick="event.stopPropagation();event.preventDefault();deleteWalk(this.dataset.id)"
       '</div></div>'+
       '<div style="font-size:13px;color:var(--muted);margin-bottom:5px;cursor:pointer" onclick="openWalk(\''+w.id+'\')">'+(w.address||'No location')+(w.project_type?' &middot; '+w.project_type:'')+'</div>'+
       '<div class="walk-card-meta" onclick="openWalk(\''+w.id+'\')"><span>'+ar+' area'+(ar!==1?'s':'')+'</span>'+(w.proposal_due?'<span>Due '+fmtDate(w.proposal_due)+'</span>':'')+'<span>'+dt+'</span></div>'+

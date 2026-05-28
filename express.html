@@ -484,7 +484,7 @@ async function processEverything(){
   content.push({type:'text',text:prompt});
 
   try{
-    var r=await fetch('https://api.anthropic.com/v1/messages',{
+   var r=await fetch('/api/process',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:2000,messages:[{role:'user',content:content}]})
@@ -499,7 +499,7 @@ async function processEverything(){
     goScreen(4);
   }catch(err){
     clearInterval(stepTimer);
-    showToast('Processing error — try again');
+    showToast('Processing error');
     goScreen(2);
     console.error(err);
   }

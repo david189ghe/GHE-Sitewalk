@@ -6,6 +6,29 @@ export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).end();
 
   try {
+    const supportedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+
+    const messages = (req.body.messages || []).map(msg => {
+      if (!Array.isArray(msg.content)) return msg;
+      return {
+        ...msg,
+        content: msg.content.filter(block => {
+          if (block.type !== 'image') return true;
+          const mediaType = block.source && block.source.media_type;
+          return supportedTypes.includes(mediaType);
+        }).map(block => {
+          if (block.type !== 'image') return block;
+          return {
+            ...block,
+            source: {
+              ...block.source,
+              media_type: 'image/jpeg'
+            }
+          };
+        })
+      };
+    });
+
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
@@ -16,9 +39,10 @@ export default async function handler(req, res) {
       body: JSON.stringify({
         model: 'claude-sonnet-4-6',
         max_tokens: 2000,
-        messages: req.body.messages
+        messages: messages
       })
     });
+
     const data = await response.json();
     res.status(200).json(data);
   } catch (err) {

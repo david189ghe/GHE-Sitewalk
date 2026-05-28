@@ -396,13 +396,15 @@ async function saveAndLeave(){await saveDraftSilent();closeSheet();if(pendingNav
 function discardAndLeave(){isDirty=false;closeSheet();if(pendingNav==='dash')showDash();}
 
 function getWalkData(){
+  var due=document.getElementById('e-due').value||null;
+  var start=document.getElementById('e-start').value||null;
   return{
     client:document.getElementById('e-client').value||null,
     address:document.getElementById('e-location').value||null,
     project_type:document.getElementById('e-ptype').value||null,
     walker:document.getElementById('e-walker').value||null,
-    proposal_due:document.getElementById('e-due').value||null,
-    work_start:document.getElementById('e-start').value||null,
+    proposal_due:due&&due.match(/^\d{4}-\d{2}-\d{2}$/)?due:null,
+    work_start:start&&start.match(/^\d{4}-\d{2}-\d{2}$/)?start:null,
     overall_scope:parsedData?(parsedData.trades||[]).map(function(t){return t.trade+': '+t.scope;}).join(' | '):null,
     notes:document.getElementById('e-notes').value||null,
     areas:parsedData?getReviewedTrades():[],

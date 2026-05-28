@@ -41,7 +41,7 @@ textarea{resize:vertical;line-height:1.6}
 .mode-tab.active{background:var(--surface);color:var(--green);box-shadow:0 1px 3px rgba(0,0,0,.1)}
 .mode-tab:hover:not(.active){color:var(--text)}
 .app-bar-right{display:flex;align-items:center;gap:8px}
-.user-badge{font-size:12px;color:var(--muted);font-weight:500;max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.user-badge{font-size:12px;color:var(--muted);font-weight:500;max-width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .signout-btn{padding:6px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--surface);color:var(--muted);font-family:'DM Sans',sans-serif;font-size:12px;cursor:pointer}
 .signout-btn:hover{border-color:var(--danger);color:var(--danger)}
 .screen{display:none;padding:16px;max-width:600px;margin:0 auto}
@@ -53,11 +53,11 @@ textarea{resize:vertical;line-height:1.6}
 .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:12px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
 .sec-head{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin:14px 0 7px}
 .date-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.photo-strip{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.photo-strip{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}
 .pthumb-wrap{position:relative}
 .pthumb{width:70px;height:70px;object-fit:cover;border-radius:var(--radius-sm);border:1px solid var(--border)}
 .pdel{position:absolute;top:-5px;right:-5px;width:18px;height:18px;border-radius:50%;background:var(--danger-bg);color:var(--danger);border:1px solid var(--danger-border);cursor:pointer;font-size:12px;display:flex;align-items:center;justify-content:center;line-height:1}
-.photo-btns{display:flex;gap:8px;margin-top:8px}
+.photo-btns{display:flex;gap:8px}
 .photo-btn{flex:1;padding:10px 8px;border:1.5px dashed var(--border);border-radius:var(--radius-sm);background:var(--bg);cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;color:var(--subtle);font-size:12px;font-family:'DM Sans',sans-serif;transition:all .15s;font-weight:500}
 .photo-btn:hover{border-color:var(--green);color:var(--green)}
 .photo-btn svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.5}
@@ -88,18 +88,27 @@ textarea{resize:vertical;line-height:1.6}
 .proc-dot{width:8px;height:8px;border-radius:50%;background:var(--border);flex-shrink:0;transition:background .3s}
 .proc-step.active .proc-dot{background:var(--green)}
 .proc-step.done .proc-dot{background:var(--muted)}
+/* TRADE REVIEW */
 .trade-block{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--green);border-radius:var(--radius);padding:12px 14px;margin-bottom:10px}
-.trade-block-title{font-size:14px;font-weight:700;color:var(--green);margin-bottom:8px}
-.trade-field{margin-bottom:6px}
-.trade-field-label{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;display:block;margin-bottom:1px}
-.trade-field-value{font-size:14px;color:var(--text);font-weight:400;line-height:1.5}
-.question-block{background:var(--warn-bg);border:1px solid var(--warn-border);border-radius:var(--radius);padding:14px;margin-bottom:10px}
-.question-text{font-size:14px;font-weight:600;color:var(--warn);margin-bottom:10px;line-height:1.4}
-.question-options{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:6px}
-.q-option{padding:8px 12px;border:1.5px solid var(--warn-border);border-radius:var(--radius-sm);font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer;background:var(--surface);color:var(--warn);transition:all .15s}
-.q-option:hover,.q-option.selected{background:var(--warn);color:#fff;border-color:var(--warn)}
-.q-other-input{width:100%;padding:9px 12px;border:1.5px solid var(--warn-border);border-radius:var(--radius-sm);font-family:'DM Sans',sans-serif;font-size:13px;outline:none;margin-top:6px;display:none}
-.q-other-input.open{display:block}
+.trade-block-title{font-size:14px;font-weight:700;color:var(--green);margin-bottom:10px}
+.trade-field{margin-bottom:8px}
+.trade-field:last-child{margin-bottom:0}
+.trade-field-label{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;display:block;margin-bottom:3px}
+.trade-field-input{width:100%;padding:8px 10px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-family:'DM Sans',sans-serif;font-size:13px;color:var(--text);background:var(--surface);outline:none;transition:border-color .15s}
+.trade-field-input:focus{border-color:var(--green)}
+.trade-field-select{width:100%;padding:8px 10px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-family:'DM Sans',sans-serif;font-size:13px;color:var(--text);background:var(--surface);outline:none;-webkit-appearance:none}
+.trade-field-select:focus{border-color:var(--green)}
+.assumption-badge{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;padding:2px 8px;border-radius:20px;background:#fef9c3;color:#854d0e;border:1px solid #fde047;margin-bottom:6px}
+/* MISSING INFO QUESTIONS */
+.missing-block{background:var(--warn-bg);border:1px solid var(--warn-border);border-radius:var(--radius);padding:14px;margin-bottom:10px}
+.missing-trade{font-size:11px;font-weight:700;color:var(--warn);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px}
+.missing-q{font-size:14px;font-weight:600;color:var(--text);margin-bottom:10px;line-height:1.4}
+.missing-opts{display:flex;flex-wrap:wrap;gap:6px}
+.missing-opt{padding:8px 12px;border:1.5px solid var(--warn-border);border-radius:var(--radius-sm);font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer;background:var(--surface);color:var(--warn);transition:all .15s}
+.missing-opt:hover,.missing-opt.sel{background:var(--warn);color:#fff;border-color:var(--warn)}
+.missing-other{width:100%;padding:8px 10px;border:1.5px solid var(--warn-border);border-radius:var(--radius-sm);font-family:'DM Sans',sans-serif;font-size:13px;outline:none;margin-top:6px;display:none}
+.missing-other.open{display:block}
+/* WALK CARDS */
 .walk-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;margin-bottom:10px;transition:all .15s;box-shadow:0 1px 3px rgba(0,0,0,.04)}
 .walk-card:hover{border-color:var(--green)}
 .walk-card-hd{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:5px}
@@ -108,7 +117,7 @@ textarea{resize:vertical;line-height:1.6}
 .walk-status{font-size:11px;font-weight:600;padding:2px 8px;border-radius:20px}
 .status-draft{background:var(--warn-bg);color:var(--warn)}
 .status-complete{background:var(--green-light);color:var(--green)}
-.delete-btn{background:none;border:none;cursor:pointer;color:var(--subtle);padding:4px;border-radius:4px;font-size:16px;line-height:1;transition:color .15s}
+.delete-btn{background:none;border:none;cursor:pointer;color:var(--subtle);padding:4px 6px;border-radius:4px;font-size:18px;line-height:1;-webkit-tap-highlight-color:transparent}
 .delete-btn:hover{color:var(--danger)}
 .walk-card-meta{font-size:12px;color:var(--muted);display:flex;gap:10px;flex-wrap:wrap}
 .empty-dash{text-align:center;padding:40px 20px;color:var(--subtle);font-size:14px}
@@ -124,13 +133,12 @@ textarea{resize:vertical;line-height:1.6}
 .autosave-dot.show{opacity:1}
 .sheet-overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:50;display:none;align-items:flex-end;justify-content:center}
 .sheet-overlay.open{display:flex}
-.sheet{background:var(--surface);border-radius:16px 16px 0 0;padding:20px 16px 32px;width:100%;max-width:600px;transform:translateY(100%);transition:transform .3s cubic-bezier(.4,0,.2,1)}
+.sheet{background:var(--surface);border-radius:16px 16px 0 0;padding:20px 16px 36px;width:100%;max-width:600px;transform:translateY(100%);transition:transform .3s cubic-bezier(.4,0,.2,1)}
 .sheet-overlay.open .sheet{transform:translateY(0)}
 .sheet-title{font-size:16px;font-weight:700;margin-bottom:6px;text-align:center}
 .sheet-sub{font-size:13px;color:var(--muted);text-align:center;margin-bottom:20px;line-height:1.5}
-.sheet-btn{width:100%;padding:14px;border:none;border-radius:var(--radius-sm);font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;margin-bottom:8px;transition:all .15s}
+.sheet-btn{width:100%;padding:14px;border:none;border-radius:var(--radius-sm);font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;margin-bottom:8px}
 .sheet-btn-save{background:var(--green);color:#fff}
-.sheet-btn-save:hover{background:var(--green-dark)}
 .sheet-btn-discard{background:var(--bg);color:var(--danger);border:1.5px solid var(--danger-border)}
 .sheet-btn-cancel{background:transparent;color:var(--muted);border:1.5px solid var(--border)}
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#111827;color:#fff;padding:10px 18px;border-radius:99px;font-size:13px;font-weight:500;opacity:0;transition:opacity .3s;pointer-events:none;z-index:100;white-space:nowrap}
@@ -160,6 +168,7 @@ textarea{resize:vertical;line-height:1.6}
     </div>
   </div>
 </div>
+
 <div class="app" id="app">
   <div class="app-bar">
     <div class="app-bar-left">
@@ -176,6 +185,7 @@ textarea{resize:vertical;line-height:1.6}
   </div>
   <div id="prog-bar" style="display:none"><div class="prog-wrap" id="prog-dots"></div></div>
 
+  <!-- DASHBOARD -->
   <div class="screen active" id="screen-dash">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;padding-top:4px">
       <div style="font-size:18px;font-weight:700">Site walks</div>
@@ -187,6 +197,7 @@ textarea{resize:vertical;line-height:1.6}
     <div id="walks-list"><div class="loading-wrap"><div class="spinner"></div>Loading...</div></div>
   </div>
 
+  <!-- SCREEN 1 -->
   <div class="screen" id="screen-1">
     <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;padding-top:4px">
       <button onclick="tryGoBack()" style="padding:8px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--surface);cursor:pointer;display:flex;align-items:center;color:var(--muted)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg></button>
@@ -212,12 +223,14 @@ textarea{resize:vertical;line-height:1.6}
     </div>
   </div>
 
+  <!-- SCREEN 2 -->
   <div class="screen" id="screen-2">
-    <div style="font-size:17px;font-weight:700;margin-bottom:14px;padding-top:4px">Dump everything <span class="autosave-dot" id="autosave-dot-2"></span></div>
+    <div style="font-size:17px;font-weight:700;margin-bottom:6px;padding-top:4px">Dump everything <span class="autosave-dot" id="autosave-dot-2"></span></div>
+    <div style="font-size:13px;color:var(--muted);margin-bottom:12px">Describe by trade. Be as specific or vague as you want — Claude will organize it and ask what's missing.</div>
     <div class="card">
       <div class="fl">
         <label>Voice dump — describe by trade</label>
-        <textarea id="e-dump" style="min-height:180px" oninput="autoSave()" placeholder="Speak freely by trade. Example:&#10;&#10;Demo — remove all existing ceiling grid and tiles throughout, approx 8000 SF.&#10;&#10;Electrical — 14 light fixtures need replacing, all on existing circuits, in house GHE.&#10;&#10;HVAC — 6 VAV boxes need replacing, outside vendor, turn key.&#10;&#10;Drywall — patch two walls in break room, client said Level 5 finish, unconfirmed.&#10;&#10;Anything else you observed or the client said..."></textarea>
+        <textarea id="e-dump" style="min-height:200px" oninput="autoSave()" placeholder="Examples:&#10;&#10;Ceiling — replace all tiles, about 3000 SF, no grid work needed&#10;Electrical — replace lights, not sure how many yet, in house&#10;HVAC — 4 VAV boxes need replacing, outside vendor, turn key&#10;Demo — remove 2 walls in break room area&#10;Plumbing — new sink in back office&#10;Client said after hours only — unconfirmed&#10;&#10;Say as much or as little as you know. Claude will ask for what is missing."></textarea>
       </div>
     </div>
     <div class="card">
@@ -226,12 +239,10 @@ textarea{resize:vertical;line-height:1.6}
         <div class="photo-strip" id="photo-strip-2"></div>
         <div class="photo-btns">
           <button class="photo-btn" onclick="document.getElementById('pf-lib').click()">
-            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-            Library
+            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>Library
           </button>
           <button class="photo-btn" onclick="document.getElementById('pf-cam').click()">
-            <svg viewBox="0 0 24 24"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
-            Camera
+            <svg viewBox="0 0 24 24"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>Camera
           </button>
         </div>
         <input type="file" id="pf-lib" accept="image/*" multiple style="display:none" onchange="handlePhotos(event)">
@@ -240,11 +251,11 @@ textarea{resize:vertical;line-height:1.6}
     </div>
     <div class="card">
       <div class="fl">
-        <label>Plans (optional) — PDF or photo</label>
+        <label>Plans (optional)</label>
         <div class="plan-drop" onclick="document.getElementById('plan-input').click()">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--subtle)" stroke-width="1.5" style="margin:0 auto 6px;display:block"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
           <div style="font-size:13px;color:var(--muted);font-weight:500">Tap to attach plans</div>
-          <div style="font-size:11px;color:var(--subtle);margin-top:2px">PDF or photo — Claude extracts scope indicators</div>
+          <div style="font-size:11px;color:var(--subtle);margin-top:2px">PDF or photo — supporting context only, your notes take priority</div>
         </div>
         <input type="file" id="plan-input" accept="image/*,application/pdf" multiple style="display:none" onchange="handlePlans(event)">
         <div id="plan-list"></div>
@@ -262,27 +273,30 @@ textarea{resize:vertical;line-height:1.6}
     </div>
   </div>
 
+  <!-- SCREEN 3: PROCESSING -->
   <div class="screen" id="screen-3">
     <div class="processing-wrap">
       <div class="processing-spinner"></div>
-      <div class="processing-title">Processing your site walk</div>
-      <div class="processing-sub">Claude is reading your notes and photos.<br>This takes about 15–30 seconds.</div>
+      <div class="processing-title">Organizing your notes</div>
+      <div class="processing-sub">Claude is reading your dump and building the trade list.<br>About 10–20 seconds.</div>
       <div class="proc-steps">
-        <div class="proc-step active" id="pstep-0"><div class="proc-dot"></div>Reading voice notes by trade</div>
-        <div class="proc-step" id="pstep-1"><div class="proc-dot"></div>Analyzing photos</div>
-        <div class="proc-step" id="pstep-2"><div class="proc-dot"></div>Identifying scope gaps</div>
-        <div class="proc-step" id="pstep-3"><div class="proc-dot"></div>Preparing questions</div>
+        <div class="proc-step active" id="pstep-0"><div class="proc-dot"></div>Reading your notes by trade</div>
+        <div class="proc-step" id="pstep-1"><div class="proc-dot"></div>Organizing scope items</div>
+        <div class="proc-step" id="pstep-2"><div class="proc-dot"></div>Checking for missing info</div>
+        <div class="proc-step" id="pstep-3"><div class="proc-dot"></div>Building your list</div>
       </div>
     </div>
   </div>
 
+  <!-- SCREEN 4: REVIEW -->
   <div class="screen" id="screen-4">
-    <div style="font-size:17px;font-weight:700;margin-bottom:4px;padding-top:4px">Review &amp; confirm</div>
-    <div style="font-size:13px;color:var(--muted);margin-bottom:14px">Claude's read — adjust anything below before generating</div>
+    <div style="font-size:17px;font-weight:700;margin-bottom:4px;padding-top:4px">Review &amp; fill gaps</div>
+    <div style="font-size:13px;color:var(--muted);margin-bottom:14px">Edit any field. Answer the questions below each trade. Then generate your document.</div>
     <div id="trade-review"></div>
-    <div id="questions-section" style="display:none">
-      <div class="sec-head">Quick questions — tap to answer</div>
-      <div id="questions-list"></div>
+    <div id="missing-section" style="display:none">
+      <div class="sec-head" style="color:var(--warn)">&#9888; Missing info — tap to answer</div>
+      <div style="font-size:12px;color:var(--muted);margin-bottom:8px">Claude needs these to complete the scope. Other and I don't know are always options.</div>
+      <div id="missing-list"></div>
     </div>
     <div class="sec-head">Additional notes</div>
     <div class="card">
@@ -321,7 +335,8 @@ const SUPA_URL='https://sbvxiizvwyikjajjdsjs.supabase.co';
 const SUPA_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNidnhpaXp2d3lpa2phampkc2pzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk3ODA1ODAsImV4cCI6MjA5NTM1NjU4MH0.pzvDazQj7xnZ_1OmucVvghtvNfZtofLxJKVw4JlS3m0';
 const sb=supabase.createClient(SUPA_URL,SUPA_KEY);
 var currentUser=null,currentWalkId=null,isDirty=false,autoSaveTimer=null,pendingNav=null;
-var photos=[],plans=[],parsedData=null,questionAnswers={};
+var photos=[],plans=[],parsedData=null,missingAnswers={};
+
 async function checkSession(){var s=await sb.auth.getSession();if(s.data.session){currentUser=s.data.session.user;showApp();}}
 async function signIn(){var email=document.getElementById('login-email').value.trim(),pass=document.getElementById('login-pass').value,err=document.getElementById('auth-err');err.style.display='none';var r=await sb.auth.signInWithPassword({email,password:pass});if(r.error){err.textContent=r.error.message;err.style.display='block';}else{currentUser=r.data.user;showApp();}}
 async function signUp(){var name=document.getElementById('signup-name').value.trim(),email=document.getElementById('signup-email').value.trim(),pass=document.getElementById('signup-pass').value,err=document.getElementById('auth-err');err.style.display='none';if(!name){err.textContent='Please enter your name';err.style.display='block';return;}var r=await sb.auth.signUp({email,password:pass,options:{data:{full_name:name}}});if(r.error){err.textContent=r.error.message;err.style.display='block';}else{showToast('Account created — check email to confirm');showLogin();}}
@@ -329,33 +344,281 @@ async function signOut(){await sb.auth.signOut();currentUser=null;document.getEl
 function showSignup(){document.getElementById('login-form').style.display='none';document.getElementById('signup-form').style.display='block';document.getElementById('auth-title').textContent='Create account';document.getElementById('auth-err').style.display='none';}
 function showLogin(){document.getElementById('signup-form').style.display='none';document.getElementById('login-form').style.display='block';document.getElementById('auth-title').textContent='Sign in to GHE';document.getElementById('auth-err').style.display='none';}
 function showApp(){document.getElementById('auth-wrap').style.display='none';document.getElementById('app').style.display='block';var n=currentUser.user_metadata&&currentUser.user_metadata.full_name?currentUser.user_metadata.full_name:currentUser.email;document.getElementById('user-badge').textContent=n;loadWalks();}
-async function loadWalks(){var el=document.getElementById('walks-list');el.innerHTML='<div class="loading-wrap"><div class="spinner"></div>Loading...</div>';var r=await sb.from('site_walks').select('*').order('updated_at',{ascending:false});if(r.error){el.innerHTML='<div class="empty-dash">Error loading walks</div>';return;}if(!r.data||!r.data.length){el.innerHTML='<div class="empty-dash">No site walks yet.<br>Tap New express walk to get started.</div>';return;}el.innerHTML=r.data.map(function(w){var sc=w.status==='complete'?'status-complete':'status-draft',sl=w.status==='complete'?'Complete':'Draft';var ar=(w.areas||[]).length,dt=new Date(w.updated_at).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});return'<div class="walk-card"><div class="walk-card-hd"><div class="walk-card-name" onclick="openWalk(\''+w.id+'\')">'+(w.client||'Untitled walk')+'</div><div class="walk-card-actions"><span class="walk-status '+sc+'">'+sl+'</span><button class="delete-btn" onclick="deleteWalk(\''+w.id+'\',event)">&times;</button></div></div><div style="font-size:13px;color:var(--muted);margin-bottom:4px;cursor:pointer" onclick="openWalk(\''+w.id+'\')">'+(w.address||'No location')+(w.project_type?' · '+w.project_type:'')+'</div><div class="walk-card-meta" style="cursor:pointer" onclick="openWalk(\''+w.id+'\')"><span>'+ar+' trade'+(ar!==1?'s':'')+'</span>'+(w.proposal_due?'<span>Due '+fmtDate(w.proposal_due)+'</span>':'')+'<span>'+dt+'</span></div></div>';}).join('');}
-async function deleteWalk(id,e){e.stopPropagation();var r=await sb.from('site_walks').delete().eq('id',id);if(!r.error){showToast('Walk deleted');loadWalks();}}
-async function openWalk(id){var r=await sb.from('site_walks').select('*').eq('id',id).single();if(r.error){showToast('Could not load walk');return;}var w=r.data;currentWalkId=id;isDirty=false;parsedData={trades:w.areas||[],flags:[],verbals:[],photoObservations:'',questions:w.questions||[]};document.getElementById('e-client').value=w.client||'';document.getElementById('e-location').value=w.address||'';document.getElementById('e-ptype').value=w.project_type||'';document.getElementById('e-walker').value=w.walker||'';document.getElementById('e-due').value=w.proposal_due||'';document.getElementById('e-start').value=w.work_start||'';document.getElementById('e-notes').value=w.notes||'';photos=[];plans=[];renderPhotoStrip();renderPlanList();renderReview();goScreen(4);}
+
+async function loadWalks(){
+  var el=document.getElementById('walks-list');
+  el.innerHTML='<div class="loading-wrap"><div class="spinner"></div>Loading...</div>';
+  var r=await sb.from('site_walks').select('*').order('updated_at',{ascending:false});
+  if(r.error){el.innerHTML='<div class="empty-dash">Error loading walks</div>';return;}
+  if(!r.data||!r.data.length){el.innerHTML='<div class="empty-dash">No site walks yet. Tap New express walk to get started.</div>';return;}
+  el.innerHTML=r.data.map(function(w){
+    var sc=w.status==='complete'?'status-complete':'status-draft',sl=w.status==='complete'?'Complete':'Draft';
+    var ar=(w.areas||[]).length,dt=new Date(w.updated_at).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+    return '<div class="walk-card">'+
+      '<div class="walk-card-hd">'+
+      '<div class="walk-card-name" onclick="openWalk(\''+w.id+'\')">'+(w.client||'Untitled walk')+'</div>'+
+      '<div class="walk-card-actions">'+
+      '<span class="walk-status '+sc+'">'+sl+'</span>'+
+      '<button class="delete-btn" ontouchend="handleDelete(event,\''+w.id+'\')" onclick="handleDelete(event,\''+w.id+'\')">&#x2715;</button>'+
+      '</div></div>'+
+      '<div style="font-size:13px;color:var(--muted);margin-bottom:4px;cursor:pointer" onclick="openWalk(\''+w.id+'\')">'+(w.address||'No location')+(w.project_type?' &middot; '+w.project_type:'')+'</div>'+
+      '<div class="walk-card-meta" onclick="openWalk(\''+w.id+'\')"><span>'+ar+' trade'+(ar!==1?'s':'')+'</span>'+(w.proposal_due?'<span>Due '+fmtDate(w.proposal_due)+'</span>':'')+'<span>'+dt+'</span></div>'+
+      '</div>';
+  }).join('');
+}
+
+function handleDelete(e,id){e.stopPropagation();e.preventDefault();deleteWalk(id);}
+async function deleteWalk(id){var r=await sb.from('site_walks').delete().eq('id',id);if(!r.error){showToast('Walk deleted');loadWalks();}else showToast('Error deleting walk');}
+
+async function openWalk(id){
+  var r=await sb.from('site_walks').select('*').eq('id',id).single();
+  if(r.error){showToast('Could not load walk');return;}
+  var w=r.data;currentWalkId=id;isDirty=false;
+  parsedData={trades:w.areas||[],flags:[],verbals:[],missing:[]};
+  document.getElementById('e-client').value=w.client||'';
+  document.getElementById('e-location').value=w.address||'';
+  document.getElementById('e-ptype').value=w.project_type||'';
+  document.getElementById('e-walker').value=w.walker||'';
+  document.getElementById('e-due').value=w.proposal_due||'';
+  document.getElementById('e-start').value=w.work_start||'';
+  document.getElementById('e-notes').value=w.notes||'';
+  photos=[];plans=[];missingAnswers={};
+  renderPhotoStrip();renderPlanList();renderReview();goScreen(4);
+}
+
 function goToDash(){if(isDirty){pendingNav='dash';openSheet();}else{showDash();}}
 function tryGoBack(){if(isDirty){pendingNav='dash';openSheet();}else{showDash();}}
 function showDash(){document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});document.getElementById('screen-dash').classList.add('active');document.getElementById('prog-bar').style.display='none';loadWalks();window.scrollTo(0,0);}
 function goScreen(n){document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});document.getElementById('screen-'+n).classList.add('active');document.getElementById('prog-bar').style.display='block';var dots=document.getElementById('prog-dots');dots.innerHTML=[1,2,3,4].map(function(i){return'<div class="prog-dot'+(i<n?' done':i===n?' active':'')+'"></div>';}).join('');window.scrollTo(0,0);}
-function startExpress(){currentWalkId=null;isDirty=false;photos=[];plans=[];parsedData=null;questionAnswers={};['e-client','e-location','e-walker','e-dump','e-notes'].forEach(function(id){document.getElementById(id).value='';});document.getElementById('e-ptype').value='';document.getElementById('e-due').value='';document.getElementById('e-start').value='';renderPhotoStrip();renderPlanList();goScreen(1);}
+function startExpress(){currentWalkId=null;isDirty=false;photos=[];plans=[];parsedData=null;missingAnswers={};['e-client','e-location','e-walker','e-dump','e-notes'].forEach(function(id){document.getElementById(id).value='';});document.getElementById('e-ptype').value='';document.getElementById('e-due').value='';document.getElementById('e-start').value='';renderPhotoStrip();renderPlanList();goScreen(1);}
 function openSheet(){document.getElementById('sheet-overlay').classList.add('open');}
 function closeSheet(){document.getElementById('sheet-overlay').classList.remove('open');pendingNav=null;}
 async function saveAndLeave(){await saveDraftSilent();closeSheet();if(pendingNav==='dash')showDash();}
 function discardAndLeave(){isDirty=false;closeSheet();if(pendingNav==='dash')showDash();}
-function getWalkData(){return{client:document.getElementById('e-client').value||null,address:document.getElementById('e-location').value||null,project_type:document.getElementById('e-ptype').value||null,walker:document.getElementById('e-walker').value||null,proposal_due:document.getElementById('e-due').value||null,work_start:document.getElementById('e-start').value||null,overall_scope:parsedData?(parsedData.trades||[]).map(function(t){return t.trade+': '+t.scope;}).join(' | '):null,notes:document.getElementById('e-notes').value||null,areas:parsedData?parsedData.trades:[],questions:parsedData?parsedData.questions:[],updated_at:new Date().toISOString()};}
+function getWalkData(){return{client:document.getElementById('e-client').value||null,address:document.getElementById('e-location').value||null,project_type:document.getElementById('e-ptype').value||null,walker:document.getElementById('e-walker').value||null,proposal_due:document.getElementById('e-due').value||null,work_start:document.getElementById('e-start').value||null,overall_scope:parsedData?(parsedData.trades||[]).map(function(t){return t.trade+': '+t.scope;}).join(' | '):null,notes:document.getElementById('e-notes').value||null,areas:parsedData?getReviewedTrades():[],questions:[],updated_at:new Date().toISOString()};}
+
+function getReviewedTrades(){
+  var result=[];
+  (parsedData.trades||[]).forEach(function(t,i){
+    var copy=Object.assign({},t);
+    var scopeEl=document.getElementById('tr-scope-'+i);
+    var qtyEl=document.getElementById('tr-qty-'+i);
+    var vendorEl=document.getElementById('tr-vendor-'+i);
+    if(scopeEl)copy.scope=scopeEl.value;
+    if(qtyEl)copy.quantity=qtyEl.value;
+    if(vendorEl)copy.performer=vendorEl.value;
+    result.push(copy);
+  });
+  return result;
+}
+
 async function saveDraftSilent(){var data=getWalkData();data.status='draft';data.created_by=currentUser.id;var r;if(currentWalkId){r=await sb.from('site_walks').update(data).eq('id',currentWalkId);}else{r=await sb.from('site_walks').insert(data).select().single();if(!r.error){currentWalkId=r.data.id;}}if(!r.error){isDirty=false;flashAutosave();}}
 function autoSave(){isDirty=true;clearTimeout(autoSaveTimer);autoSaveTimer=setTimeout(function(){if(document.getElementById('e-client').value||document.getElementById('e-location').value){saveDraftSilent();}},1500);}
 function flashAutosave(){['autosave-dot-1','autosave-dot-2'].forEach(function(id){var dot=document.getElementById(id);if(dot){dot.classList.add('show');setTimeout(function(){dot.classList.remove('show');},1500);}});}
 async function saveWalkAndFinish(){var data=getWalkData();data.status='complete';data.created_by=currentUser.id;var r;if(currentWalkId){r=await sb.from('site_walks').update(data).eq('id',currentWalkId);}else{r=await sb.from('site_walks').insert(data).select().single();if(!r.error)currentWalkId=r.data.id;}if(r.error)showToast('Error saving');else{isDirty=false;showToast('Walk saved');setTimeout(showDash,1000);}}
+
 function handlePhotos(e){Array.from(e.target.files).forEach(function(f){var r=new FileReader();r.onload=function(ev){photos.push({name:f.name,data:ev.target.result});renderPhotoStrip();isDirty=true;};r.readAsDataURL(f);});e.target.value='';}
 function delPhoto(i){photos.splice(i,1);renderPhotoStrip();}
 function renderPhotoStrip(){var s=document.getElementById('photo-strip-2');if(!s)return;s.innerHTML=photos.map(function(p,i){return'<div class="pthumb-wrap"><img src="'+p.data+'" class="pthumb" alt="Photo '+(i+1)+'"><button class="pdel" onclick="delPhoto('+i+')">&times;</button></div>';}).join('');}
 function handlePlans(e){Array.from(e.target.files).forEach(function(f){var r=new FileReader();r.onload=function(ev){plans.push({name:f.name,type:f.type,data:ev.target.result});renderPlanList();};r.readAsDataURL(f);});e.target.value='';}
 function delPlan(i){plans.splice(i,1);renderPlanList();}
 function renderPlanList(){var el=document.getElementById('plan-list');if(!el)return;el.innerHTML=plans.map(function(p,i){return'<div class="plan-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2" style="flex-shrink:0"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><span class="plan-item-name">'+esc(p.name)+'</span><button class="plan-rm" onclick="delPlan('+i+')">&times;</button></div>';}).join('');}
-async function processEverything(){var dump=document.getElementById('e-dump').value.trim();if(!dump&&!photos.length){showToast('Add notes or photos first');return;}goScreen(3);var stepIdx=0;var stepTimer=setInterval(function(){stepIdx++;if(stepIdx>3){clearInterval(stepTimer);return;}document.querySelectorAll('.proc-step').forEach(function(s,j){s.className='proc-step'+(j<stepIdx?' done':j===stepIdx?' active':'');});},4000);var content=[];photos.forEach(function(p){content.push({type:'image',source:{type:'base64',media_type:p.data.split(';')[0].split(':')[1],data:p.data.split(',')[1]}});});plans.forEach(function(p){if(p.type.startsWith('image/'))content.push({type:'image',source:{type:'base64',media_type:p.type,data:p.data.split(',')[1]}});});var client=document.getElementById('e-client').value||'unknown client',location=document.getElementById('e-location').value||'unknown location',ptype=document.getElementById('e-ptype').value||'commercial';var textPrompt='You are a commercial construction estimating assistant for Green Heart Enterprises (GHE), a GC in Atlanta specializing in TI, aviation, and industrial work.\n\nProject: '+client+' | Location: '+location+' | Type: '+ptype+'\n\nFIELD SUPERINTENDENT NOTES:\n'+(dump||'No notes — analyze photos only')+'\n\n'+(photos.length?'I have provided '+photos.length+' site photos above. Analyze them for scope indicators by trade.\n\n':'')+(plans.length?'I have provided plan images above. Extract any trade scope indicators visible.\n\n':'')+'Parse the notes BY TRADE. For each trade identify: scope description, estimated quantity if mentioned, whether it is In house GHE or Outside vendor, whether it is Turn key, workers, days.\nIdentify client verbal requests (things said but not formally confirmed).\nIdentify site flags (occupied space, after hours, hazmat, access restricted, scope unclear, verify dimensions).\nGenerate 3-6 follow-up questions for things unclear or missing. Each question should have 3-4 likely answer options specific to this project plus always include an "Other" option.\n\nRespond ONLY with valid JSON. No markdown. No backticks.\n{\n  "trades": [{"trade":"string","scope":"string","quantity":"string or null","performer":"In house GHE or Outside vendor","turnkey":true or false,"workers":"string or null","days":"string or null","notes":"string or null"}],\n  "verbals": ["string"],\n  "flags": ["string"],\n  "photoObservations": "string",\n  "questions": [{"id":"q1","question":"string","trade":"string","options":["opt1","opt2","opt3","Other"]}]\n}';content.push({type:'text',text:textPrompt});try{var r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:2000,messages:[{role:'user',content:content}]})});var data=await r.json();var text=data.content[0].text.replace(/```json|```/g,'').trim();parsedData=JSON.parse(text);clearInterval(stepTimer);isDirty=true;await saveDraftSilent();renderReview();goScreen(4);}catch(err){clearInterval(stepTimer);showToast('Processing error — try again');goScreen(2);console.error(err);}}
-function renderReview(){if(!parsedData)return;var tr=document.getElementById('trade-review'),html='';if(parsedData.photoObservations){html+='<div style="background:#f0f9ff;border:1px solid #bae6fd;border-radius:8px;padding:10px 12px;margin-bottom:10px;font-size:13px;color:#0369a1"><strong style="display:block;font-size:10px;text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px">Photo observations</strong>'+esc(parsedData.photoObservations)+'</div>';}(parsedData.trades||[]).forEach(function(t){html+='<div class="trade-block"><div class="trade-block-title">'+esc(t.trade)+'</div>';if(t.scope)html+='<div class="trade-field"><span class="trade-field-label">Scope</span><span class="trade-field-value">'+esc(t.scope)+'</span></div>';if(t.quantity)html+='<div class="trade-field"><span class="trade-field-label">Quantity</span><span class="trade-field-value">'+esc(t.quantity)+'</span></div>';html+='<div class="trade-field"><span class="trade-field-label">Performed by</span><span class="trade-field-value">'+esc(t.performer||'Not specified')+(t.turnkey?' &nbsp;<span class="tag tg">Turn key</span>':'')+'</span></div>';if(t.workers||t.days){html+='<div class="trade-field"><span class="trade-field-label">Manpower</span><span class="trade-field-value">';if(t.workers)html+=esc(t.workers)+' worker'+(parseInt(t.workers)!==1?'s':'');if(t.workers&&t.days)html+=' · ';if(t.days)html+=esc(t.days)+' day'+(parseInt(t.days)!==1?'s':'');html+='</span></div>';}if(t.notes)html+='<div class="trade-field"><span class="trade-field-label">Notes</span><span class="trade-field-value" style="color:var(--muted)">'+esc(t.notes)+'</span></div>';html+='</div>';});if((parsedData.flags||[]).length){html+='<div class="card"><div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px">Site flags</div>'+(parsedData.flags||[]).map(function(f){return'<span class="tag tw">&#9888; '+esc(f)+'</span>';}).join('')+'</div>';}if((parsedData.verbals||[]).length){html+='<div class="card">'+(parsedData.verbals||[]).map(function(v){return'<div class="verbal-box"><div class="verbal-label">&#9888; Client verbal — Unconfirmed</div><div class="verbal-text">'+esc(v)+'</div></div>';}).join('')+'</div>';}tr.innerHTML=html;var qs=parsedData.questions||[],qsec=document.getElementById('questions-section'),qlist=document.getElementById('questions-list');if(qs.length){qsec.style.display='block';qlist.innerHTML=qs.map(function(q,qi){return'<div class="question-block"><div class="question-text">'+esc(q.question)+'<span style="font-size:11px;font-weight:500;color:#d97706;margin-left:6px">['+esc(q.trade)+']</span></div><div class="question-options">'+(q.options||[]).map(function(opt,oi){return'<button class="q-option" id="qopt-'+qi+'-'+oi+'" onclick="selectOption('+qi+','+oi+',\''+esc(opt)+'\',\''+esc(q.id)+'\')">'+esc(opt)+'</button>';}).join('')+'</div><input class="q-other-input" id="qother-'+qi+'" placeholder="Type your answer..." onchange="questionAnswers[\''+esc(q.id)+'\']=this.value"></div>';}).join('');}else{qsec.style.display='none';}}
-function selectOption(qi,oi,value,qid){document.querySelectorAll('[id^="qopt-'+qi+'-"]').forEach(function(b){b.classList.remove('selected');});document.getElementById('qopt-'+qi+'-'+oi).classList.add('selected');var other=document.getElementById('qother-'+qi);if(value==='Other'){other.classList.add('open');other.focus();}else{other.classList.remove('open');questionAnswers[qid]=value;}isDirty=true;autoSave();}
-function generatePreview(){if(!parsedData){showToast('Process your notes first');return;}var client=document.getElementById('e-client').value||'—',location=document.getElementById('e-location').value||'—',ptype=document.getElementById('e-ptype').value||'—',walker=document.getElementById('e-walker').value||'—',dueRaw=document.getElementById('e-due').value,due=fmtDate(dueRaw),start=fmtDate(document.getElementById('e-start').value),notes=document.getElementById('e-notes').value||'',days=daysUntil(dueRaw);var trades=parsedData.trades||[],flags=parsedData.flags||[],verbals=parsedData.verbals||[];var h='<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>GHE Site Walk — '+esc(client)+'</title><style>@import url(\'https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,600;0,700;1,400&display=swap\');*{box-sizing:border-box;margin:0;padding:0}body{font-family:\'DM Sans\',sans-serif;background:#f3f4f6;color:#111827;padding-bottom:48px}@media print{body{background:#fff}.no-print{display:none!important}}.top-bar{background:#fff;border-bottom:1px solid #e5e7eb;padding:10px 20px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10}.wrap{max-width:700px;margin:20px auto;background:#fff;border-radius:12px;border:1px solid #e5e7eb;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.08)}.doc-hdr{background:#1a5c3a;padding:22px 26px;color:#fff}.doc-co{font-size:18px;font-weight:700}.doc-sub{font-size:11px;opacity:.75;margin-top:2px;text-transform:uppercase;letter-spacing:.08em}.doc-date{font-size:12px;opacity:.7;margin-top:8px}.urgency{background:#fef3c7;border-bottom:1px solid #fcd34d;padding:10px 24px;font-size:13px;font-weight:700;color:#92400e}.section{padding:16px 24px;border-bottom:1px solid #e5e7eb}.section:last-child{border-bottom:none}.sec-t{font-size:10px;font-weight:700;color:#1a5c3a;text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px;padding-bottom:5px;border-bottom:2px solid #e8f2ec}.fr{display:grid;grid-template-columns:160px 1fr;gap:4px 12px;margin-bottom:8px;align-items:baseline}.fl{font-size:11px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:.05em}.fv{font-size:14px;color:#111827;line-height:1.5}.trade-blk{background:#f9fafb;border-radius:8px;border-left:3px solid #1a5c3a;padding:12px 14px;margin-bottom:10px}.trade-t{font-size:14px;font-weight:700;color:#1a5c3a;margin-bottom:8px}.trow{margin-bottom:5px}.tlbl{font-size:11px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:.05em;display:block;margin-bottom:1px}.tval{font-size:13px;color:#111827;line-height:1.5}.flag-pill{display:inline-flex;align-items:center;gap:3px;font-size:11px;font-weight:700;padding:3px 9px;border-radius:20px;background:#fef3c7;color:#92400e;margin:2px}.verbal-box{background:#fffbeb;border:1px solid #fcd34d;border-radius:6px;padding:10px 12px;margin-bottom:8px}.vb-lbl{font-size:10px;font-weight:700;color:#92400e;text-transform:uppercase;letter-spacing:.07em;margin-bottom:3px}.vb-txt{font-size:13px;color:#92400e;line-height:1.5}.answered{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:6px;padding:8px 12px;margin-bottom:6px;font-size:13px;color:#15803d}.photos-grid{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}.photos-grid img{width:88px;height:88px;object-fit:cover;border-radius:6px;border:1px solid #e5e7eb}</style></head><body>';h+='<div class="top-bar no-print"><div style="font-size:13px;font-weight:700;color:#1a5c3a">GREEN HEART ENTERPRISES</div><div style="font-size:12px;color:#6b7280;font-style:italic">Use browser share to save as PDF, email, or text</div></div>';if(days!==null&&days<=7)h+='<div class="urgency" style="max-width:700px;margin:16px auto 0;border-radius:8px 8px 0 0">&#9201; Proposal due in '+days+' day'+(days===1?'':'s')+' — '+due+'</div>';h+='<div class="wrap"><div class="doc-hdr"><div class="doc-co">Green Heart Enterprises</div><div class="doc-sub">General Contractors — Site Walk Report</div><div class="doc-date">'+new Date().toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'})+'</div></div>';h+='<div class="section"><div class="sec-t">Project details</div>'+fr('Client',esc(client))+fr('Site location',esc(location))+fr('Project type',esc(ptype))+fr('Walk conducted by',esc(walker))+fr('Proposal due',esc(due)+(days!==null&&days<=14?' &nbsp;<strong style="color:#92400e">'+days+' day'+(days===1?'':'s')+'</strong>':''))+fr('Work start date',esc(start))+'</div>';h+='<div class="section"><div class="sec-t">Scope by trade ('+trades.length+')</div>';trades.forEach(function(t){h+='<div class="trade-blk"><div class="trade-t">'+esc(t.trade)+'</div>';if(t.scope)h+='<div class="trow"><span class="tlbl">Scope</span><span class="tval">'+esc(t.scope)+'</span></div>';if(t.quantity)h+='<div class="trow"><span class="tlbl">Quantity</span><span class="tval">'+esc(t.quantity)+'</span></div>';h+='<div class="trow"><span class="tlbl">Performed by</span><span class="tval">'+esc(t.performer||'Not specified')+(t.turnkey?' &nbsp;<strong style="color:#1a5c3a">&#10003; Turn key (GHE superintendent oversight)</strong>':'')+'</span></div>';if(t.workers||t.days){h+='<div class="trow"><span class="tlbl">Manpower</span><span class="tval">';if(t.workers)h+=esc(t.workers)+' worker'+(parseInt(t.workers)!==1?'s':'');if(t.workers&&t.days)h+=' · ';if(t.days)h+=esc(t.days)+' day'+(parseInt(t.days)!==1?'s':'');h+='</span></div>';}if(t.notes)h+='<div class="trow"><span class="tlbl">Notes</span><span class="tval" style="color:#6b7280">'+esc(t.notes)+'</span></div>';h+='</div>';});h+='</div>';if(Object.keys(questionAnswers).length){h+='<div class="section"><div class="sec-t">Confirmed answers</div>';Object.entries(questionAnswers).forEach(function(entry){var qid=entry[0],ans=entry[1];var q=(parsedData.questions||[]).find(function(x){return x.id===qid;});if(q&&ans)h+='<div class="answered"><strong>'+esc(q.question)+'</strong><br>'+esc(ans)+'</div>';});h+='</div>';}if(flags.length)h+='<div class="section"><div class="sec-t">Site flags &amp; conditions</div>'+flags.map(function(f){return'<span class="flag-pill">&#9888; '+esc(f)+'</span>';}).join('')+'</div>';if(verbals.length){h+='<div class="section"><div class="sec-t">&#9888; Client verbal requests — Unconfirmed</div><p style="font-size:12px;color:#92400e;font-style:italic;margin-bottom:10px">Do not include in bid without written confirmation.</p>';verbals.forEach(function(v){h+='<div class="verbal-box"><div class="vb-lbl">Unconfirmed</div><div class="vb-txt">'+esc(v)+'</div></div>';});h+='</div>';}if(photos.length){h+='<div class="section"><div class="sec-t">Site photos ('+photos.length+')</div><div class="photos-grid">'+photos.map(function(p,i){return'<img src="'+p.data+'" alt="Photo '+(i+1)+'">';}).join('')+'</div></div>';}if(notes)h+='<div class="section"><div class="sec-t">Additional notes</div><div class="fv" style="font-size:14px;line-height:1.65">'+esc(notes)+'</div></div>';h+='</div></body></html>';var blob=new Blob([h],{type:'text/html'}),url=URL.createObjectURL(blob),w=window.open(url,'_blank');if(!w)showToast('Allow pop-ups to open preview');else{saveWalkAndFinish();showToast('Preview opened');}}
+
+async function processEverything(){
+  var dump=document.getElementById('e-dump').value.trim();
+  if(!dump&&!photos.length){showToast('Add notes or photos first');return;}
+  goScreen(3);
+  var stepIdx=0;
+  var stepTimer=setInterval(function(){stepIdx++;if(stepIdx>3){clearInterval(stepTimer);return;}document.querySelectorAll('.proc-step').forEach(function(s,j){s.className='proc-step'+(j<stepIdx?' done':j===stepIdx?' active':'');});},3000);
+
+  var content=[];
+  if(photos.length){
+    photos.forEach(function(p){content.push({type:'image',source:{type:'base64',media_type:p.data.split(';')[0].split(':')[1],data:p.data.split(',')[1]}});});
+  }
+  plans.forEach(function(p){if(p.type.startsWith('image/'))content.push({type:'image',source:{type:'base64',media_type:p.type,data:p.data.split(',')[1]}});});
+
+  var client=document.getElementById('e-client').value||'unknown',loc=document.getElementById('e-location').value||'unknown',ptype=document.getElementById('e-ptype').value||'commercial';
+
+  var prompt='You are a commercial construction scope organizer for Green Heart Enterprises (GHE), a GC in Atlanta.\n\n'+
+    'Project: '+client+' | '+loc+' | '+ptype+'\n\n'+
+    'THE SUPERINTENDENT\'S NOTES (this is your PRIMARY source — trust exactly what they say):\n'+dump+'\n\n'+
+    (photos.length?'PHOTOS PROVIDED: '+photos.length+' site photos included above. Use them ONLY to add context for things not mentioned in the notes. Never invent scope from photos that was not mentioned in the notes.\n\n':'')+
+    (plans.length?'PLANS PROVIDED: Use only as reference for context the notes do not cover.\n\n':'')+
+    'YOUR JOB:\n'+
+    '1. Read the notes carefully. Extract every trade and scope item mentioned.\n'+
+    '2. For each trade build a clear scope description using ONLY what was stated.\n'+
+    '3. If quantity was stated, include it. If not stated, leave quantity blank — do NOT guess.\n'+
+    '4. Identify performer (In house GHE vs Outside vendor) and turn key from what was said.\n'+
+    '5. Identify anything the superintendent flagged as a client verbal request (unconfirmed).\n'+
+    '6. Identify site flags (occupied, after hours, hazmat, access restricted, scope unclear, verify dimensions).\n'+
+    '7. For each piece of MISSING information that an estimator would need, generate a specific question.\n'+
+    '   - If they said "replace ceiling tiles" but no square footage: ask for square footage\n'+
+    '   - If they said "replace lights" but no count: ask for count\n'+
+    '   - If performer not specified for a trade: ask in house or outside vendor\n'+
+    '   - Always offer 3-4 specific likely options plus "Other" plus "I don\'t know yet"\n'+
+    '   - Only ask questions for things ACTUALLY mentioned but incomplete — not for things not mentioned at all\n\n'+
+    'Respond ONLY with valid JSON. No markdown. No backticks. No extra text.\n'+
+    '{\n'+
+    '  "trades": [\n'+
+    '    {\n'+
+    '      "trade": "trade name",\n'+
+    '      "scope": "what needs to be done — from the notes",\n'+
+    '      "quantity": "stated quantity or empty string if not stated",\n'+
+    '      "performer": "In house GHE or Outside vendor or Unknown",\n'+
+    '      "turnkey": true or false,\n'+
+    '      "notes": "any other relevant detail from notes"\n'+
+    '    }\n'+
+    '  ],\n'+
+    '  "verbals": ["unconfirmed client statement 1"],\n'+
+    '  "flags": ["flag1"],\n'+
+    '  "missing": [\n'+
+    '    {\n'+
+    '      "id": "m1",\n'+
+    '      "trade": "trade name",\n'+
+    '      "question": "specific question about what is missing",\n'+
+    '      "options": ["specific option 1", "specific option 2", "specific option 3", "Other", "I don\'t know yet"]\n'+
+    '    }\n'+
+    '  ]\n'+
+    '}';
+
+  content.push({type:'text',text:prompt});
+
+  try{
+    var r=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:2000,messages:[{role:'user',content:content}]})
+    });
+    var data=await r.json();
+    var text=data.content[0].text.replace(/```json|```/g,'').trim();
+    parsedData=JSON.parse(text);
+    clearInterval(stepTimer);
+    isDirty=true;
+    await saveDraftSilent();
+    renderReview();
+    goScreen(4);
+  }catch(err){
+    clearInterval(stepTimer);
+    showToast('Processing error — try again');
+    goScreen(2);
+    console.error(err);
+  }
+}
+
+function renderReview(){
+  if(!parsedData)return;
+  var tr=document.getElementById('trade-review');
+  var html='';
+
+  if((parsedData.trades||[]).length===0){
+    html='<div class="card" style="text-align:center;color:var(--muted);font-size:13px;padding:20px">No trades identified. Go back and add more details to your notes.</div>';
+  }
+
+  (parsedData.trades||[]).forEach(function(t,i){
+    html+='<div class="trade-block">';
+    html+='<div class="trade-block-title">'+esc(t.trade)+'</div>';
+    html+='<div class="trade-field"><span class="trade-field-label">Scope</span><input class="trade-field-input" id="tr-scope-'+i+'" value="'+esc(t.scope||'')+'" placeholder="Describe scope..." oninput="isDirty=true"></div>';
+    html+='<div class="trade-field"><span class="trade-field-label">Quantity</span><input class="trade-field-input" id="tr-qty-'+i+'" value="'+esc(t.quantity||'')+'" placeholder="'+(t.quantity?'':'Not specified — check questions below')+'" oninput="isDirty=true"></div>';
+    html+='<div class="trade-field"><span class="trade-field-label">Performed by</span>';
+    html+='<select class="trade-field-select" id="tr-vendor-'+i+'" onchange="isDirty=true">';
+    html+='<option value="In house GHE"'+(t.performer==='In house GHE'?' selected':'')+'>In house (GHE)</option>';
+    html+='<option value="Outside vendor"'+(t.performer==='Outside vendor'?' selected':'')+'>Outside vendor</option>';
+    html+='<option value="Unknown"'+(t.performer==='Unknown'?' selected':'')+'>Unknown — to be determined</option>';
+    html+='</select></div>';
+    if(t.turnkey){html+='<div style="font-size:12px;font-weight:600;color:var(--green);margin-top:4px">&#10003; Turn key (GHE superintendent oversight)</div>';}
+    if(t.notes){html+='<div class="trade-field" style="margin-top:6px"><span class="trade-field-label">Notes from dump</span><div style="font-size:13px;color:var(--muted)">'+esc(t.notes)+'</div></div>';}
+    html+='</div>';
+  });
+
+  if((parsedData.flags||[]).length){
+    html+='<div class="card"><div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px">Site flags</div>';
+    html+=(parsedData.flags||[]).map(function(f){return'<span class="tag tw">&#9888; '+esc(f)+'</span>';}).join('');
+    html+='</div>';
+  }
+
+  if((parsedData.verbals||[]).length){
+    html+='<div class="card">';
+    (parsedData.verbals||[]).forEach(function(v){html+='<div class="verbal-box"><div class="verbal-label">&#9888; Client verbal — Unconfirmed</div><div class="verbal-text">'+esc(v)+'</div></div>';});
+    html+='</div>';
+  }
+
+  tr.innerHTML=html;
+
+  var missing=parsedData.missing||[];
+  var msec=document.getElementById('missing-section');
+  var mlist=document.getElementById('missing-list');
+  if(missing.length){
+    msec.style.display='block';
+    mlist.innerHTML=missing.map(function(m,mi){
+      return'<div class="missing-block">'+
+        '<div class="missing-trade">'+esc(m.trade)+'</div>'+
+        '<div class="missing-q">'+esc(m.question)+'</div>'+
+        '<div class="missing-opts">'+
+        (m.options||[]).map(function(opt,oi){
+          return'<button class="missing-opt" id="mopt-'+mi+'-'+oi+'" onclick="selectMissing('+mi+','+oi+',\''+esc(opt)+'\',\''+esc(m.id)+'\')">'+esc(opt)+'</button>';
+        }).join('')+
+        '</div>'+
+        '<input class="missing-other" id="mother-'+mi+'" placeholder="Type your answer..." onchange="missingAnswers[\''+esc(m.id)+'\']=this.value;isDirty=true">'+
+        '</div>';
+    }).join('');
+  } else {
+    msec.style.display='none';
+  }
+}
+
+function selectMissing(mi,oi,value,mid){
+  document.querySelectorAll('[id^="mopt-'+mi+'-"]').forEach(function(b){b.classList.remove('sel');});
+  document.getElementById('mopt-'+mi+'-'+oi).classList.add('sel');
+  var other=document.getElementById('mother-'+mi);
+  if(value==='Other'){other.classList.add('open');other.focus();}
+  else{other.classList.remove('open');missingAnswers[mid]=value;}
+  isDirty=true;autoSave();
+}
+
+function generatePreview(){
+  var pw=window.open('','_blank');
+  if(!pw){showToast('Allow pop-ups to open preview');return;}
+  pw.document.write('<html><head><title>Building...</title></head><body style="font-family:sans-serif;padding:40px;text-align:center;color:#6b7280"><p style="font-size:16px">Building your document...</p></body></html>');
+
+  if(!parsedData){showToast('Process your notes first');pw.close();return;}
+  var client=document.getElementById('e-client').value||'—',loc=document.getElementById('e-location').value||'—',ptype=document.getElementById('e-ptype').value||'—',walker=document.getElementById('e-walker').value||'—',dueRaw=document.getElementById('e-due').value,due=fmtDate(dueRaw),start=fmtDate(document.getElementById('e-start').value),notes=document.getElementById('e-notes').value||'',days=daysUntil(dueRaw);
+  var trades=getReviewedTrades(),flags=parsedData.flags||[],verbals=parsedData.verbals||[];
+
+  var h='<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>GHE Site Walk \u2014 '+esc(client)+'</title>';
+  h+='<style>@import url(\'https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,600;0,700;1,400&display=swap\');*{box-sizing:border-box;margin:0;padding:0}body{font-family:\'DM Sans\',sans-serif;background:#f3f4f6;color:#111827;padding-bottom:48px}@media print{body{background:#fff}.no-print{display:none!important}}.top-bar{background:#fff;border-bottom:1px solid #e5e7eb;padding:10px 20px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10}.wrap{max-width:700px;margin:20px auto;background:#fff;border-radius:12px;border:1px solid #e5e7eb;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.08)}.doc-hdr{background:#1a5c3a;padding:22px 26px;color:#fff}.doc-co{font-size:18px;font-weight:700}.doc-sub{font-size:11px;opacity:.75;margin-top:2px;text-transform:uppercase;letter-spacing:.08em}.doc-date{font-size:12px;opacity:.7;margin-top:8px}.urgency{background:#fef3c7;border-bottom:1px solid #fcd34d;padding:10px 24px;font-size:13px;font-weight:700;color:#92400e}.section{padding:16px 24px;border-bottom:1px solid #e5e7eb}.section:last-child{border-bottom:none}.sec-t{font-size:10px;font-weight:700;color:#1a5c3a;text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px;padding-bottom:5px;border-bottom:2px solid #e8f2ec}.fr{display:grid;grid-template-columns:160px 1fr;gap:4px 12px;margin-bottom:8px;align-items:baseline}.fl{font-size:11px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:.05em}.fv{font-size:14px;color:#111827;font-weight:400;line-height:1.5}.trade-blk{background:#f9fafb;border-radius:8px;border-left:3px solid #1a5c3a;padding:12px 14px;margin-bottom:10px}.trade-t{font-size:14px;font-weight:700;color:#1a5c3a;margin-bottom:8px}.trow{margin-bottom:5px}.tlbl{font-size:11px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:.05em;display:block;margin-bottom:1px}.tval{font-size:13px;color:#111827;line-height:1.5}.flag-pill{display:inline-flex;align-items:center;gap:3px;font-size:11px;font-weight:700;padding:3px 9px;border-radius:20px;background:#fef3c7;color:#92400e;margin:2px}.verbal-box{background:#fffbeb;border:1px solid #fcd34d;border-radius:6px;padding:10px 12px;margin-bottom:8px}.vb-lbl{font-size:10px;font-weight:700;color:#92400e;text-transform:uppercase;letter-spacing:.07em;margin-bottom:3px}.vb-txt{font-size:13px;color:#92400e;line-height:1.5}.answered{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:6px;padding:8px 12px;margin-bottom:6px;font-size:13px;color:#15803d}.photos-grid{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}.photos-grid img{width:88px;height:88px;object-fit:cover;border-radius:6px;border:1px solid #e5e7eb}</style></head><body>';
+  h+='<div class="top-bar no-print"><div style="font-size:13px;font-weight:700;color:#1a5c3a">GREEN HEART ENTERPRISES</div><div style="font-size:12px;color:#6b7280;font-style:italic">Use browser share to save as PDF, email, or text</div></div>';
+  if(days!==null&&days<=7)h+='<div class="urgency" style="max-width:700px;margin:16px auto 0;border-radius:8px 8px 0 0">&#9201; Proposal due in '+days+' day'+(days===1?'':'s')+' \u2014 '+due+'</div>';
+  h+='<div class="wrap"><div class="doc-hdr"><div class="doc-co">Green Heart Enterprises</div><div class="doc-sub">General Contractors \u2014 Site Walk Report</div><div class="doc-date">'+new Date().toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'})+'</div></div>';
+  h+='<div class="section"><div class="sec-t">Project details</div>'+fr('Client',esc(client))+fr('Site location',esc(loc))+fr('Project type',esc(ptype))+fr('Walk conducted by',esc(walker))+fr('Proposal due',esc(due)+(days!==null&&days<=14?' &nbsp;<strong style="color:#92400e">'+days+' day'+(days===1?'':'s')+'</strong>':''))+fr('Work start date',esc(start))+'</div>';
+  h+='<div class="section"><div class="sec-t">Scope by trade ('+trades.length+')</div>';
+  if(!trades.length)h+='<div style="font-size:13px;color:#9ca3af">No trades captured.</div>';
+  trades.forEach(function(t){
+    h+='<div class="trade-blk"><div class="trade-t">'+esc(t.trade)+'</div>';
+    if(t.scope)h+='<div class="trow"><span class="tlbl">Scope</span><span class="tval">'+esc(t.scope)+'</span></div>';
+    if(t.quantity)h+='<div class="trow"><span class="tlbl">Quantity</span><span class="tval">'+esc(t.quantity)+'</span></div>';
+    h+='<div class="trow"><span class="tlbl">Performed by</span><span class="tval">'+esc(t.performer||'Not specified')+(t.turnkey?' &nbsp;<strong style="color:#1a5c3a">&#10003; Turn key (GHE superintendent oversight)</strong>':'')+'</span></div>';
+    if(t.notes)h+='<div class="trow"><span class="tlbl">Notes</span><span class="tval" style="color:#6b7280">'+esc(t.notes)+'</span></div>';
+    h+='</div>';
+  });
+  h+='</div>';
+  if(Object.keys(missingAnswers).length){
+    h+='<div class="section"><div class="sec-t">Answered questions</div>';
+    Object.entries(missingAnswers).forEach(function(entry){
+      var mid=entry[0],ans=entry[1];
+      var m=(parsedData.missing||[]).find(function(x){return x.id===mid;});
+      if(m&&ans)h+='<div class="answered"><strong>'+esc(m.question)+'</strong><br>'+esc(ans)+'</div>';
+    });
+    h+='</div>';
+  }
+  if(flags.length)h+='<div class="section"><div class="sec-t">Site flags &amp; conditions</div>'+flags.map(function(f){return'<span class="flag-pill">&#9888; '+esc(f)+'</span>';}).join('')+'</div>';
+  if(verbals.length){h+='<div class="section"><div class="sec-t">&#9888; Client verbal requests \u2014 Unconfirmed</div><p style="font-size:12px;color:#92400e;font-style:italic;margin-bottom:10px">Do not include in bid without written confirmation.</p>';verbals.forEach(function(v){h+='<div class="verbal-box"><div class="vb-lbl">Unconfirmed</div><div class="vb-txt">'+esc(v)+'</div></div>';});h+='</div>';}
+  if(photos.length){h+='<div class="section"><div class="sec-t">Site photos ('+photos.length+')</div><div class="photos-grid">'+photos.map(function(p,i){return'<img src="'+p.data+'" alt="Photo '+(i+1)+'">';}).join('')+'</div></div>';}
+  if(notes)h+='<div class="section"><div class="sec-t">Additional notes</div><div class="fv" style="font-size:14px;line-height:1.65">'+esc(notes)+'</div></div>';
+  h+='</div></body></html>';
+  pw.document.open();pw.document.write(h);pw.document.close();
+  saveWalkAndFinish();
+}
+
 function fr(l,v){return'<div class="fr"><span class="fl">'+l+'</span><span class="fv">'+v+'</span></div>';}
 function fmtDate(d){if(!d)return'TBD';var p=d.split('-');return p[1]+'/'+p[2]+'/'+p[0];}
 function daysUntil(d){if(!d)return null;return Math.ceil((new Date(d)-new Date())/(1000*60*60*24));}
@@ -365,4 +628,3 @@ checkSession();
 </script>
 </body>
 </html>
-

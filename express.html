@@ -512,9 +512,9 @@ async function processEverything(){
     parsedData=JSON.parse(text.replace(/```json|```/g,'').trim());
     clearInterval(stepTimer);
     isDirty=true;
-    await saveDraftSilent();
-    renderReview();
-    goScreen(4);
+renderReview();
+goScreen(4);
+saveDraftSilent().catch(function(){});
   }catch(err){
     clearInterval(stepTimer);
     showToast('Processing error: '+err.message);

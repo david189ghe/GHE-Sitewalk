@@ -181,7 +181,6 @@ textarea{resize:vertical;line-height:1.6}
   </div>
   <div id="prog-bar" style="display:none"><div class="prog-wrap" id="prog-dots"></div></div>
 
-  <!-- DASHBOARD -->
   <div class="screen active" id="screen-dash">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;padding-top:4px">
       <div style="font-size:18px;font-weight:700">Site walks</div>
@@ -193,7 +192,6 @@ textarea{resize:vertical;line-height:1.6}
     <div id="walks-list"><div class="loading-wrap"><div class="spinner"></div>Loading...</div></div>
   </div>
 
-  <!-- SCREEN 1: PROJECT BASICS -->
   <div class="screen" id="screen-1">
     <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;padding-top:4px">
       <button onclick="tryGoBack()" style="padding:8px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--surface);cursor:pointer;display:flex;align-items:center;color:var(--muted)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg></button>
@@ -219,7 +217,6 @@ textarea{resize:vertical;line-height:1.6}
     </div>
   </div>
 
-  <!-- SCREEN 2: DUMP -->
   <div class="screen" id="screen-2">
     <div style="font-size:17px;font-weight:700;margin-bottom:6px;padding-top:4px">Dump everything <span class="autosave-dot" id="autosave-dot-2"></span></div>
     <div style="font-size:13px;color:var(--muted);margin-bottom:12px">Describe by trade. Be as specific or vague as you want — Claude will organize it and ask what's missing.</div>
@@ -269,13 +266,12 @@ textarea{resize:vertical;line-height:1.6}
     </div>
   </div>
 
-  <!-- SCREEN 3: PROCESSING -->
   <div class="screen" id="screen-3">
     <div class="processing-wrap">
       <div class="processing-spinner"></div>
       <div class="processing-title" id="proc-title">Organizing your notes</div>
-      <div class="processing-sub" id="proc-sub">Claude is reading your dump and building the trade list.<br>About 10–20 seconds.</div>
-      <div class="proc-steps" id="proc-steps-wrap">
+      <div class="processing-sub" id="proc-sub">Claude is reading your dump and building the trade list. About 10-20 seconds.</div>
+      <div class="proc-steps">
         <div class="proc-step active" id="pstep-0"><div class="proc-dot"></div>Reading your notes by trade</div>
         <div class="proc-step" id="pstep-1"><div class="proc-dot"></div>Organizing scope items</div>
         <div class="proc-step" id="pstep-2"><div class="proc-dot"></div>Checking for missing info</div>
@@ -284,7 +280,6 @@ textarea{resize:vertical;line-height:1.6}
     </div>
   </div>
 
-  <!-- SCREEN 4: REVIEW -->
   <div class="screen" id="screen-4">
     <div style="font-size:17px;font-weight:700;margin-bottom:4px;padding-top:4px">Review &amp; fill gaps</div>
     <div style="font-size:13px;color:var(--muted);margin-bottom:14px">Edit any field. Answer the questions below. Then generate your document.</div>
@@ -303,7 +298,7 @@ textarea{resize:vertical;line-height:1.6}
         <svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
         Generate preview
       </button>
-      <button class="btn-green-outline" onclick="saveWalkAndFinish().catch(function(){});">
+      <button class="btn-green-outline" onclick="saveWalkAndFinish()">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
         Save &amp; go to dashboard
       </button>
@@ -334,8 +329,8 @@ var currentUser=null,currentWalkId=null,isDirty=false,autoSaveTimer=null,pending
 var photos=[],plans=[],parsedData=null,missingAnswers={};
 
 async function checkSession(){var s=await sb.auth.getSession();if(s.data.session){currentUser=s.data.session.user;showApp();}}
-async function signIn(){var email=document.getElementById('login-email').value.trim(),pass=document.getElementById('login-pass').value,err=document.getElementById('auth-err');err.style.display='none';var r=await sb.auth.signInWithPassword({email,password:pass});if(r.error){err.textContent=r.error.message;err.style.display='block';}else{currentUser=r.data.user;showApp();}}
-async function signUp(){var name=document.getElementById('signup-name').value.trim(),email=document.getElementById('signup-email').value.trim(),pass=document.getElementById('signup-pass').value,err=document.getElementById('auth-err');err.style.display='none';if(!name){err.textContent='Please enter your name';err.style.display='block';return;}var r=await sb.auth.signUp({email,password:pass,options:{data:{full_name:name}}});if(r.error){err.textContent=r.error.message;err.style.display='block';}else{showToast('Account created — check email to confirm');showLogin();}}
+async function signIn(){var email=document.getElementById('login-email').value.trim(),pass=document.getElementById('login-pass').value,err=document.getElementById('auth-err');err.style.display='none';var r=await sb.auth.signInWithPassword({email:email,password:pass});if(r.error){err.textContent=r.error.message;err.style.display='block';}else{currentUser=r.data.user;showApp();}}
+async function signUp(){var name=document.getElementById('signup-name').value.trim(),email=document.getElementById('signup-email').value.trim(),pass=document.getElementById('signup-pass').value,err=document.getElementById('auth-err');err.style.display='none';if(!name){err.textContent='Please enter your name';err.style.display='block';return;}var r=await sb.auth.signUp({email:email,password:pass,options:{data:{full_name:name}}});if(r.error){err.textContent=r.error.message;err.style.display='block';}else{showToast('Account created — check email to confirm');showLogin();}}
 async function signOut(){await sb.auth.signOut();currentUser=null;document.getElementById('app').style.display='none';document.getElementById('auth-wrap').style.display='flex';showLogin();}
 function showSignup(){document.getElementById('login-form').style.display='none';document.getElementById('signup-form').style.display='block';document.getElementById('auth-title').textContent='Create account';document.getElementById('auth-err').style.display='none';}
 function showLogin(){document.getElementById('signup-form').style.display='none';document.getElementById('login-form').style.display='block';document.getElementById('auth-title').textContent='Sign in to GHE';document.getElementById('auth-err').style.display='none';}
@@ -350,23 +345,26 @@ async function loadWalks(){
   el.innerHTML=r.data.map(function(w){
     var sc=w.status==='complete'?'status-complete':'status-draft',sl=w.status==='complete'?'Complete':'Draft';
     var ar=(w.areas||[]).length,dt=new Date(w.updated_at).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+    var wid=w.id;
     return '<div class="walk-card">'+
       '<div class="walk-card-hd">'+
-      '<div class="walk-card-name" onclick="openWalk(\''+w.id+'\')">'+(w.client||'Untitled walk')+'</div>'+
+      '<div class="walk-card-name" onclick="openWalk(\''+wid+'\')">'+(w.client||'Untitled walk')+'</div>'+
       '<div class="walk-card-actions">'+
       '<span class="walk-status '+sc+'">'+sl+'</span>'+
-      '<button class="delete-btn" ontouchend="event.stopPropagation();event.preventDefault();deleteWalk(\''+w.id+'\')" onclick="event.stopPropagation();event.preventDefault();deleteWalk(\''+w.id+'\')">&#x2715;</button>'+
+      '<button class="delete-btn" data-id="'+wid+'" ontouchend="event.stopPropagation();event.preventDefault();deleteWalk(this.getAttribute(\'data-id\'))" onclick="event.stopPropagation();event.preventDefault();deleteWalk(this.getAttribute(\'data-id\'))">&#x2715;</button>'+
       '</div></div>'+
-      '<div style="font-size:13px;color:var(--muted);margin-bottom:4px;cursor:pointer" onclick="openWalk(\''+w.id+'\')">'+(w.address||'No location')+(w.project_type?' &middot; '+w.project_type:'')+'</div>'+
-      '<div class="walk-card-meta" onclick="openWalk(\''+w.id+'\')"><span>'+ar+' trade'+(ar!==1?'s':'')+'</span>'+(w.proposal_due?'<span>Due '+fmtDate(w.proposal_due)+'</span>':'')+'<span>'+dt+'</span></div>'+
+      '<div style="font-size:13px;color:var(--muted);margin-bottom:4px;cursor:pointer" onclick="openWalk(\''+wid+'\')">'+(w.address||'No location')+(w.project_type?' &middot; '+w.project_type:'')+'</div>'+
+      '<div class="walk-card-meta" onclick="openWalk(\''+wid+'\')"><span>'+ar+' trade'+(ar!==1?'s':'')+'</span>'+(w.proposal_due?'<span>Due '+fmtDate(w.proposal_due)+'</span>':'')+'<span>'+dt+'</span></div>'+
       '</div>';
   }).join('');
 }
 
 async function deleteWalk(id){
-  var r=await sb.from('site_walks').delete().eq('id',id);
-  if(!r.error){showToast('Walk deleted');loadWalks();}
-  else showToast('Error deleting walk');
+  try{
+    var r=await sb.from('site_walks').delete().eq('id',id);
+    if(!r.error){showToast('Walk deleted');loadWalks();}
+    else showToast('Error deleting walk');
+  }catch(e){showToast('Error deleting walk');}
 }
 
 async function openWalk(id){
@@ -395,7 +393,7 @@ function closeSheet(){document.getElementById('sheet-overlay').classList.remove(
 async function saveAndLeave(){await saveDraftSilent();closeSheet();if(pendingNav==='dash')showDash();}
 function discardAndLeave(){isDirty=false;closeSheet();if(pendingNav==='dash')showDash();}
 
-ffunction getWalkData(){
+function getWalkData(){
   var due=document.getElementById('e-due').value||null;
   var start=document.getElementById('e-start').value||null;
   var tradesNoPhotos=(parsedData?getReviewedTrades():[]).map(function(t){
@@ -416,7 +414,6 @@ ffunction getWalkData(){
     questions:[],
     updated_at:new Date().toISOString()
   };
-}
 }
 
 function getReviewedTrades(){
@@ -440,28 +437,24 @@ async function saveDraftSilent(){
     data.status='draft';
     data.created_by=currentUser.id;
     var r;
-    if(currentWalkId){
-      r=await sb.from('site_walks').update(data).eq('id',currentWalkId);
-    }else{
-      r=await sb.from('site_walks').insert(data).select().single();
-      if(!r.error)currentWalkId=r.data.id;
-    }
+    if(currentWalkId){r=await sb.from('site_walks').update(data).eq('id',currentWalkId);}
+    else{r=await sb.from('site_walks').insert(data).select().single();if(!r.error)currentWalkId=r.data.id;}
     if(!r.error){isDirty=false;flashAutosave();}
-  }catch(e){
-    console.log('Save skipped:',e.message);
-  }
+  }catch(e){console.log('Save skipped:',e.message);}
 }
 
 function autoSave(){isDirty=true;clearTimeout(autoSaveTimer);autoSaveTimer=setTimeout(function(){if(document.getElementById('e-client').value||document.getElementById('e-location').value){saveDraftSilent();}},1500);}
 function flashAutosave(){['autosave-dot-1','autosave-dot-2'].forEach(function(id){var dot=document.getElementById(id);if(dot){dot.classList.add('show');setTimeout(function(){dot.classList.remove('show');},1500);}});}
 
 async function saveWalkAndFinish(){
-  var data=getWalkData();data.status='complete';data.created_by=currentUser.id;
-  var r;
-  if(currentWalkId){r=await sb.from('site_walks').update(data).eq('id',currentWalkId);}
-  else{r=await sb.from('site_walks').insert(data).select().single();if(!r.error)currentWalkId=r.data.id;}
-  if(r.error)showToast('Error saving');
-  else{isDirty=false;showToast('Walk saved');setTimeout(showDash,1000);}
+  try{
+    var data=getWalkData();data.status='complete';data.created_by=currentUser.id;
+    var r;
+    if(currentWalkId){r=await sb.from('site_walks').update(data).eq('id',currentWalkId);}
+    else{r=await sb.from('site_walks').insert(data).select().single();if(!r.error)currentWalkId=r.data.id;}
+    if(!r||r.error){showToast('Saved locally — sync when connection improves');}
+    else{isDirty=false;showToast('Walk saved');setTimeout(showDash,1000);}
+  }catch(e){showToast('Saved locally');setTimeout(showDash,1000);}
 }
 
 function handlePhotos(e){Array.from(e.target.files).forEach(function(f){var r=new FileReader();r.onload=function(ev){photos.push({name:f.name,data:ev.target.result});renderPhotoStrip();isDirty=true;};r.readAsDataURL(f);});e.target.value='';}
@@ -492,8 +485,6 @@ async function processEverything(){
   var dump=document.getElementById('e-dump').value.trim();
   if(!dump&&!photos.length){showToast('Add notes or photos first');return;}
   goScreen(3);
-  document.getElementById('proc-title').textContent='Organizing your notes';
-  document.getElementById('proc-sub').textContent='Claude is reading your dump and building the trade list. About 10\u201320 seconds.';
 
   var stepIdx=0;
   var stepTimer=setInterval(function(){
@@ -528,9 +519,9 @@ async function processEverything(){
     parsedData=JSON.parse(text.replace(/```json|```/g,'').trim());
     clearInterval(stepTimer);
     isDirty=true;
-renderReview();
-goScreen(4);
-saveDraftSilent().catch(function(){});
+    renderReview();
+    goScreen(4);
+    saveDraftSilent();
   }catch(err){
     clearInterval(stepTimer);
     showToast('Processing error: '+err.message);
@@ -571,35 +562,40 @@ function renderReview(){
         '<div class="missing-trade">'+esc(m.trade)+'</div>'+
         '<div class="missing-q">'+esc(m.question)+'</div>'+
         '<div class="missing-opts">'+
-        (m.options||[]).map(function(opt,oi){return'<button class="missing-opt" id="mopt-'+mi+'-'+oi+'" onclick="selectMissing('+mi+','+oi+',\''+esc(opt)+'\',\''+esc(m.id)+'\')">'+esc(opt)+'</button>';}).join('')+
+        (m.options||[]).map(function(opt,oi){return'<button class="missing-opt" id="mopt-'+mi+'-'+oi+'" onclick="selectMissing('+mi+','+oi+',this)">'+esc(opt)+'</button>';}).join('')+
         '</div>'+
-        '<input class="missing-other" id="mother-'+mi+'" placeholder="Type your answer..." onchange="missingAnswers[\''+esc(m.id)+'\']=this.value;isDirty=true">'+
+        '<input class="missing-other" id="mother-'+mi+'" data-mid="'+esc(m.id)+'" placeholder="Type your answer..." oninput="missingAnswers[this.getAttribute(\'data-mid\')]=this.value;isDirty=true">'+
         '</div>';
     }).join('');
+    missing.forEach(function(m,mi){
+      document.getElementById('mopt-'+mi+'-0').setAttribute('data-mid',m.id);
+      (m.options||[]).forEach(function(opt,oi){
+        document.getElementById('mopt-'+mi+'-'+oi).setAttribute('data-mid',m.id);
+        document.getElementById('mopt-'+mi+'-'+oi).setAttribute('data-val',opt);
+      });
+    });
   }else{msec.style.display='none';}
 }
 
-function selectMissing(mi,oi,value,mid){
+function selectMissing(mi,oi,btn){
+  var mid=btn.getAttribute('data-mid');
+  var val=btn.getAttribute('data-val');
   document.querySelectorAll('[id^="mopt-'+mi+'-"]').forEach(function(b){b.classList.remove('sel');});
-  document.getElementById('mopt-'+mi+'-'+oi).classList.add('sel');
+  btn.classList.add('sel');
   var other=document.getElementById('mother-'+mi);
-  if(value==='Other'){other.classList.add('open');other.focus();}
-  else{other.classList.remove('open');missingAnswers[mid]=value;}
+  if(val==='Other'){other.classList.add('open');other.focus();}
+  else{other.classList.remove('open');if(mid)missingAnswers[mid]=val;}
   isDirty=true;autoSave();
 }
 
 async function generatePreview(){
-  // Open window immediately as first action to avoid popup block
   var pw=window.open('','_blank');
   if(!pw){showToast('Allow pop-ups to open preview');return;}
-  pw.document.write('<html><head><title>Building document...</title></head><body style="font-family:sans-serif;padding:40px;text-align:center;color:#6b7280"><p style="font-size:16px;margin-bottom:8px">Finalizing your document...</p><p style="font-size:13px">Claude is combining your notes and answers into a clean scope.</p></body></html>');
+  pw.document.write('<html><head><title>Building...</title></head><body style="font-family:sans-serif;padding:40px;text-align:center;color:#6b7280"><p style="font-size:16px;margin-bottom:8px">Finalizing your document...</p><p style="font-size:13px">Claude is combining your notes and answers into a clean scope.</p></body></html>');
 
   if(!parsedData){showToast('Process your notes first');pw.close();return;}
 
-  // Collect current reviewed trade data from DOM
   var reviewedTrades=getReviewedTrades();
-
-  // Collect answered questions
   var answeredQs=[];
   (parsedData.missing||[]).forEach(function(m){
     if(missingAnswers[m.id]&&missingAnswers[m.id]!=="I don't know yet"){
@@ -607,22 +603,14 @@ async function generatePreview(){
     }
   });
 
-  // Build the scope rebuild prompt
   var rebuildPrompt='You are finalizing a commercial construction scope document for Green Heart Enterprises.\n\n'+
-    'You have the following trades with their initial scope and any clarifications that were provided.\n\n'+
     'TRADES:\n'+
     reviewedTrades.map(function(t){
       return 'Trade: '+t.trade+'\nInitial scope: '+(t.scope||'not specified')+'\nQuantity: '+(t.quantity||'not specified')+'\nPerformed by: '+(t.performer||'Unknown')+(t.turnkey?' (Turn key)':'')+'\n';
     }).join('\n')+
     '\nCLARIFICATIONS PROVIDED:\n'+
-    (answeredQs.length?answeredQs.map(function(a){return'- ['+a.trade+'] '+a.question+' \u2192 '+a.answer;}).join('\n'):'None provided')+
-    '\n\nYOUR JOB:\n'+
-    'Rewrite each trade scope as one clean, complete, professional sentence or two that incorporates the original scope AND all clarifications naturally.\n'+
-    'Write as if the superintendent knew everything from the start.\n'+
-    'Do not mention that information was clarified or answered in questions.\n'+
-    'Do not say "based on clarification" or "as confirmed" or any meta language.\n'+
-    'Just write clean final scope statements.\n'+
-    'Keep quantity, performer, and turnkey as separate fields.\n\n'+
+    (answeredQs.length?answeredQs.map(function(a){return'- ['+a.trade+'] '+a.question+' -> '+a.answer;}).join('\n'):'None provided')+
+    '\n\nRewrite each trade scope as one clean professional statement incorporating the original scope AND all clarifications naturally. Write as if the superintendent knew everything from the start. No meta language. Clean final scope statements only. Keep quantity, performer, and turnkey as separate fields.\n\n'+
     'Respond ONLY with valid JSON. No markdown. No backticks.\n'+
     '{"trades":[{"trade":"string","scope":"clean final scope statement","quantity":"final quantity or empty","performer":"final performer","turnkey":true or false}]}';
 
@@ -630,28 +618,17 @@ async function generatePreview(){
     var rebuildText=await callAI([{role:'user',content:rebuildPrompt}]);
     var rebuilt=JSON.parse(rebuildText.replace(/```json|```/g,'').trim());
     var finalTrades=rebuilt.trades||reviewedTrades;
-
-    // Determine which flags to keep — only keep flags for unanswered questions
-    var answeredIds=Object.keys(missingAnswers).filter(function(id){return missingAnswers[id]&&missingAnswers[id]!=="I don't know yet";});
     var resolvedTopics=answeredQs.map(function(a){return a.question.toLowerCase();});
     var remainingFlags=(parsedData.flags||[]).filter(function(f){
-      // Check if this flag topic was resolved by an answer
       var flagLower=f.toLowerCase();
-      var resolved=resolvedTopics.some(function(topic){
-        return topic.indexOf(flagLower.substring(0,10))!==-1||flagLower.indexOf(topic.substring(0,10))!==-1;
-      });
-      return !resolved;
+      return !resolvedTopics.some(function(topic){return topic.indexOf(flagLower.substring(0,10))!==-1||flagLower.indexOf(topic.substring(0,10))!==-1;});
     });
-
     buildAndWritePreview(pw,finalTrades,remainingFlags);
-    saveWalkAndFinish();
-
   }catch(err){
-    // If rebuild fails fall back to reviewed trades as-is
     console.error('Rebuild error:',err);
     buildAndWritePreview(pw,reviewedTrades,parsedData.flags||[]);
-    saveWalkAndFinish();
   }
+  saveDraftSilent();
 }
 
 function buildAndWritePreview(pw,trades,flags){
@@ -665,7 +642,6 @@ function buildAndWritePreview(pw,trades,flags){
   if(days!==null&&days<=7)h+='<div class="urgency" style="max-width:700px;margin:16px auto 0;border-radius:8px 8px 0 0">&#9201; Proposal due in '+days+' day'+(days===1?'':'s')+' \u2014 '+due+'</div>';
 
   h+='<div class="wrap"><div class="doc-hdr"><div class="doc-co">Green Heart Enterprises</div><div class="doc-sub">General Contractors \u2014 Site Walk Report</div><div class="doc-date">'+new Date().toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'})+'</div></div>';
-
   h+='<div class="section"><div class="sec-t">Project details</div>'+fr('Client',esc(client))+fr('Site location',esc(loc))+fr('Project type',esc(ptype))+fr('Walk conducted by',esc(walker))+fr('Proposal due',esc(due)+(days!==null&&days<=14?' &nbsp;<strong style="color:#92400e">'+days+' day'+(days===1?'':'s')+'</strong>':''))+fr('Work start date',esc(start))+'</div>';
 
   h+='<div class="section"><div class="sec-t">Scope by trade ('+trades.length+')</div>';
@@ -688,10 +664,9 @@ function buildAndWritePreview(pw,trades,flags){
   }
 
   if(photos.length){h+='<div class="section"><div class="sec-t">Site photos ('+photos.length+')</div><div class="photos-grid">'+photos.map(function(p,i){return'<img src="'+p.data+'" alt="Photo '+(i+1)+'">';}).join('')+'</div></div>';}
-
   if(notes)h+='<div class="section"><div class="sec-t">Additional notes</div><div class="fv" style="font-size:14px;line-height:1.65">'+esc(notes)+'</div></div>';
-
   h+='</div></body></html>';
+
   pw.document.open();pw.document.write(h);pw.document.close();
   showToast('Preview opened');
 }
